@@ -3717,7 +3717,7 @@ function setupScenes() {
 	// ===== INTERACTIVE AREA CONVERSATION (Scene 600 - Empty Plot) =====
 	// Scene 600: Opening
 	scenes[600] = {
-		text: "I haven't planted a thing here yet.\n[1] What will you plant?\n[2] Saving it for something special?\n[3] Why leave all this empty space?",
+		text: "I haven't planted a thing here yet.\n[1] What'll you plant?\n[2] Saving it for something special?\n[3] Why leave all this empty space?",
 		image: assets.shy, 
 		keys: ["1", "2", "3"],
 		nextPages: [610, 620, 630], // Branch 6A, 6B, 6C
@@ -3732,7 +3732,7 @@ function setupScenes() {
 	};
 
 	scenes[611] = {
-		text: "I've been thinking about it, but I don't have an answer.\n[1] Take your time.\n[2] You'll know when you're ready.",
+		text: "I've been thinking about it, but I don't have much of an answer.\n[1] That's fine, take your time.\n[2] I bet you'll know when you're ready.",
 		image: assets.contemplative, 
 		keys: ["1", "2"],
 		nextPages: [612, 615], // Branch 6A-1, 6A-2
@@ -3754,7 +3754,7 @@ function setupScenes() {
 	};
 
 	scenes[614] = {
-		text: "Uncertainty isn't my enemy. It really want to think this through.",
+		text: "Uncertainty shouldnt be my enemy. I need the space to think things through.",
 		image: assets.peaceful, 
 		keys: [],
 		nextPages: [650], // Converge to ending
