@@ -1,0 +1,175 @@
+@font-face {
+	font-family: myFont;
+	src: url(./assets/boldpixels/BoldPixels.ttf);
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	background-color: #271e32;
+	background-repeat: repeat;
+	margin: 0;
+	display: flex;
+
+	/* This centers our sketch horizontally. */
+	justify-content: center;
+
+	/* This centers our sketch vertically. */
+	align-items: center;
+}
+
+/* Game frame container with decorative panels */
+.game-frame {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0;
+	height: 100vh;
+	width: 100%;
+	max-height: 100vh;
+	overflow: hidden;
+}
+
+/* P5.js container */
+#p5-container {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Style canvas when it's inside p5-container */
+#p5-container canvas {
+	display: block;
+}
+
+/* Left decorative panel */
+.left-panel {
+	width: 480px;
+	height: 100vh;
+	max-height: 100vh;
+	background-image: url("/assets/UI/panel-2.png");
+	background-repeat: repeat;
+	flex-shrink: 0;
+	display: none;
+	overflow: hidden;
+}
+
+/* Right decorative panel */
+.right-panel {
+	width: 480px;
+	height: 100vh;
+	max-height: 100vh;
+	background-image: url("/assets/UI/panel-2.png");
+	background-repeat: repeat;
+	flex-shrink: 0;
+	display: none;
+	overflow: hidden;
+}
+
+/* Show panels on screens 1280px and wider */
+@media (min-width: 1280px) {
+	.left-panel {
+		display: block;
+	}
+	.right-panel {
+		display: block;
+	}
+}
+
+/* Use panel-3 during name input screen */
+body.nameInput-active .left-panel {
+	background-image: url("/assets/UI/panel-3.png");
+}
+
+body.nameInput-active .right-panel {
+	background-image: url("/assets/UI/panel-3.png");
+}
+input[type="text"],
+textarea {
+	background-color: rgb(20, 7, 36);
+	color: rgb(255, 253, 191);
+	border: 4px solid rgb(224, 160, 80);
+	border-radius: 15px;
+	text-align: center;
+	font-family: myFont;
+}
+
+canvas {
+}
+
+/* Custom p5.js loading screen styling */
+#p5_loading {
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	background-color: transparent !important;
+	color: rgb(255, 253, 191) !important;
+	font-family: myFont, monospace !important;
+	font-size: 24px !important;
+	width: 100% !important;
+	height: 100% !important;
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	z-index: 9999 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Make each letter wave individually */
+#p5_loading span {
+	display: inline-block;
+	animation: letterWave 1.5s ease-in-out infinite;
+}
+
+/* Stagger the animation for each letter */
+#p5_loading span:nth-child(1) { animation-delay: 0s; }
+#p5_loading span:nth-child(2) { animation-delay: 0.05s; }
+#p5_loading span:nth-child(3) { animation-delay: 0.1s; }
+#p5_loading span:nth-child(4) { animation-delay: 0.15s; }
+#p5_loading span:nth-child(5) { animation-delay: 0.2s; }
+#p5_loading span:nth-child(6) { animation-delay: 0.25s; }
+#p5_loading span:nth-child(7) { animation-delay: 0.3s; }
+#p5_loading span:nth-child(8) { animation-delay: 0.35s; }
+#p5_loading span:nth-child(9) { animation-delay: 0.4s; }
+#p5_loading span:nth-child(10) { animation-delay: 0.45s; }
+#p5_loading span:nth-child(11) { animation-delay: 0.5s; }
+#p5_loading span:nth-child(12) { animation-delay: 0.55s; }
+#p5_loading span:nth-child(13) { animation-delay: 0.6s; }
+#p5_loading span:nth-child(14) { animation-delay: 0.65s; }
+#p5_loading span:nth-child(15) { animation-delay: 0.7s; }
+#p5_loading span:nth-child(16) { animation-delay: 0.75s; }
+#p5_loading span:nth-child(17) { animation-delay: 0.8s; }
+#p5_loading span:nth-child(18) { animation-delay: 0.85s; }
+#p5_loading span:nth-child(19) { animation-delay: 0.9s; }
+#p5_loading span:nth-child(20) { animation-delay: 0.95s; }
+#p5_loading span:nth-child(21) { animation-delay: 1s; }
+#p5_loading span:nth-child(22) { animation-delay: 1.05s; }
+#p5_loading span:nth-child(23) { animation-delay: 1.1s; }
+#p5_loading span:nth-child(24) { animation-delay: 1.15s; }
+#p5_loading span:nth-child(25) { animation-delay: 1.2s; }
+#p5_loading span:nth-child(26) { animation-delay: 1.25s; }
+#p5_loading span:nth-child(27) { animation-delay: 1.3s; }
+#p5_loading span:nth-child(28) { animation-delay: 1.35s; }
+#p5_loading span:nth-child(29) { animation-delay: 1.4s; }
+#p5_loading span:nth-child(30) { animation-delay: 1.45s; }
+#p5_loading span:nth-child(31) { animation-delay: 1.5s; }
+#p5_loading span:nth-child(32) { animation-delay: 1.55s; }
+#p5_loading span:nth-child(33) { animation-delay: 1.6s; }
+#p5_loading span:nth-child(34) { animation-delay: 1.65s; }
+#p5_loading span:nth-child(35) { animation-delay: 1.7s; }
+
+/* Ocean wave animation - letters bounce up and down */
+@keyframes letterWave {
+	0%, 100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
