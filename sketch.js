@@ -2891,10 +2891,10 @@ function setupScenes() {
 	};
 
 	scenes[1001] = {
-		text: "[PLAYER_NAME]? Is that you?\n[1] Slime Tony?!",
+		text: "[PLAYER_NAME]? Is that you?\n[1] Slime Tony?!\n[2] Tony? It's been forever!",
 		image: assets.hopeful,
-		keys: ["1"],
-		nextPages: [1002] // Branch 1 or Branch 2
+		keys: ["1, 2"],
+		nextPages: [1002, 1002] 
 	};
 
 	// ===== BRANCH 1: "Tony?!" =====
@@ -2906,10 +2906,10 @@ function setupScenes() {
 	};
 	
 	scenes[1003] = {
-		text: "It's great seeing you again.\n[1] What are you up to? Someone's been gardening up a storm.",
+		text: "It's great seeing you again.\n[1] What are you up to? Someone's been gardening up a storm.\n[2] You know who's responsible for these plants?",
 		image: assets.smiling_waving,
-		keys: ["1"],
-		nextPages: [1010] // Branch A or Branch B
+		keys: ["1, 2"],
+		nextPages: [1010, 1010] // Branch A or Branch B
 	};
 
 	// ===== BRANCH B: "What are you doing out here?" =====
@@ -2921,17 +2921,17 @@ function setupScenes() {
 	};
 
 	scenes["1010.5"] = {
-		text: "Kind of a long story how I got into it.\n[1] I'm always down for story time.",
+		text: "Kind of a long story how I got into it.\n[1] I'm always down for story time.\n[2] I've got time to kill.",
 		image: assets.explaining, // 
-		keys: ["1"],
-		nextPages: [1011] // Both lead to same convergence
+		keys: ["1, 2"],
+		nextPages: [1011, 1011] // Both lead to same convergence
 	};
 
-	scenes["1010.5"].text = "Kind of a long story how I got into it.\n[1] I'm always down for story time.";
+	scenes["1010.5"].text = "Kind of a long story how I got into it.\n[1] I'm always down for story time.\n[2] I've got time to kill.";
 
 	// ===== BRANCHES A & B CONVERGE HERE + FINAL CHOICE =====
 	scenes[1011] = {
-		text: "Actually... would you mind helping me water? We could catch up while we work.\n[1] Sure!\n[2] Sounds like a plan.",
+		text: "In that case... would you mind helping me water? We could catch up while we work.\n[1] Sure!\n[2] Sounds like a plan.",
 		image: assets.contemplative,
 		keys: ["1", "2"],
 		nextPages: [1050, 1060] // Branch X or Branch Y
@@ -2988,21 +2988,21 @@ function setupScenes() {
 	};
 
 	scenes[11] = {
-		text: "I didn't know a thing about herbs when I started. Had to look everything up.\n[1] That's cool that you taught yourself.",
+		text: "I didn't know a thing about herbs when I started. Had to look everything up.\n[1] That's cool that you taught yourself.\n[2] Must have been a lot of work.",
 		image: assets.shy,
-		keys: ["1"],
-		nextPages: [15]
+		keys: ["1, 2"],
+		nextPages: [15, 15]
 	};
 
 	scenes[15] = {
-		text: "You think so? I'm not all that.\n[1] How'd you end up learning?",
+		text: "You think so? I'm not all that.",
 		image: assets.warm,
-		keys: ["1"],
+		keys: [],
 		nextPages: [12],
 	};
 
 	scenes[12] = {
-		text: "Books and blogs mostly... more trial and error than I'd have liked.",
+		text: "I just read books and blogs mostly. Took more trial and error than I'd have liked.\n",
 		image: assets.smiling_waving,
 		keys: [],
 		nextPages: [],
@@ -3098,7 +3098,7 @@ function setupScenes() {
 
 	// Branch 1C-1: "for the vibes"
 	scenes[32] = {
-		text: "Exactly! They don't have to be useful.",
+		text: "Right! They don't have to be useful.",
 		image: assets.happy, 
 		keys: [],
 		nextPages: [],
@@ -3169,14 +3169,14 @@ function setupScenes() {
 	};
 
 	scenes[113] = {
-		text: "Like since they're just for aesthetics, I didn't need them. Something so indulgent...",
-		image: assets.anxious,
+		text: "Like since they're just for aesthetics, I didn't need them. Something so indulgent...\n",
+		image: assets.rueful,
 		keys: [],
 		nextPages: [114],
 	};
 
 	scenes[114] = {
-		text: "But flowers don't care. They don't even know how pretty they are! They just... exist.",
+		text: "But flowers don't care. They don't even know how pretty they are! They just... exist\n.",
 		image: assets.warm,
 		keys: [],
 		nextPages: [150], // Converge to ending
@@ -3280,10 +3280,10 @@ function setupScenes() {
 	};
 
 	scenes[211] = {
-		text: "Not everything needs my intervention.\n[1] I bet that takes discipline.",
+		text: "Not everything needs my intervention.\n[1] I bet that takes discipline.\n[2] Doesn't that drive you crazy?",
 		image: assets.confident, 
-		keys: ["1"],
-		nextPages: [212],
+		keys: ["1, 2"],
+		nextPages: [212, 212],
 	};
 
 	// Branch 3A-1: "discipline"
@@ -3319,11 +3319,32 @@ function setupScenes() {
 	scenes[221] = {
 		text: "It's not trying to be anything other than what it is.",
 		image: assets.peaceful,
-		keys: ["1"],
-		nextPages: [225], // Branch 3B-1, 3B-2
+		keys: ["1, 2"],
+		nextPages: [225, 222], // Branch 3B-1, 3B-2
 	};
 
-	scenes[221].text = "It's not trying to be anything other than what it is.\n[1] It takes orders from no man.";
+	scenes[221].text = "It's not trying to be anything other than what it is.\n[1] It takes orders from no man.\n[2] Living the dream.";
+
+	scenes[222] = {
+		text: "You can say that again.",
+		image: assets.happy,
+		keys: [],
+		nextPages: [223],
+	};
+
+	scenes[223] = {
+		text: "You know, sometimes I wish I was one of these plants. Or a wild creature.",
+		image: assets.contemplative,
+		keys: [],
+		nextPages: [224],
+	};
+
+	scenes[224] = {
+		text: "It's dumb, but I'd have a clear idea of my objective that way. Wouldn't feel so lost..\n",
+		image: assets.rueful,
+		keys: [],
+		nextPages: [300],
+	}
 
 	// Branch 3B-2: "Permission"
 	scenes[225] = {
@@ -3428,7 +3449,7 @@ function setupScenes() {
 		nextPages: [412, 415], // Branch 4A-1, 4A-2
 	};
 
-	scenes[411].text = "Without them, the plants would collapse under their own weight.\n[1] Talk about high maintenance...\n[2] They'd break otherwise?";
+	scenes[411].text = "Without them, the plants would collapse under the weight of the fruits.\n[1] Talk about high maintenance...\n[2] They'd break otherwise?";
 	scenes[412] = {
 		text: "It's necessary. They're built to climb, and to lean, so their fruit can grow bigger and juicer.\n",
 		image: assets.confident, 
@@ -3445,7 +3466,7 @@ function setupScenes() {
 
 	// Branch 4A-2: "They'd break"
 	scenes[415] = {
-		text: "Sort of. The weight of their own fruit can crush the stems, or they'd grow across the ground.",
+		text: "Sort of. The weight of their own fruit can crush the stems, or they'd grow across the ground.\n",
 		image: assets.assured,
 		keys: [],
 		nextPages: [416],
@@ -3598,7 +3619,7 @@ function setupScenes() {
 	};
 
 	scenes[511] = {
-		text: "Could be the soil, or maybe even disease. It's hard to tell when you can't ask it what's up.",
+		text: "Could be the soil, or maybe even disease. It's hard to tell when you can't ask it what's up.\n",
 		image: assets.contemplative,
 		keys: ["1", "2"],
 		nextPages: [512, 514], // Branch 5A-1, 5A-2
@@ -3608,7 +3629,7 @@ function setupScenes() {
 
 	// Branch 5A-1: "Can you fix it?"
 	scenes[512] = {
-		text: "I've been adjusting things. Sometimes more water, sometimes less water. Been moving it around a bit, too.",
+		text: "I've been adjusting things. Sometimes more water, sometimes less water. Been moving it around a bit, too.\n",
 		image: assets.anxious, 
 		keys: [],
 		nextPages: [513],
@@ -3725,7 +3746,7 @@ function setupScenes() {
 
 	// ===== BRANCH 6A: "What will you plant?" =====
 	scenes[610] = {
-		text: "I'm not sure yet.",
+		text: "Not too sure yet.",
 		image: assets.contemplative,
 		keys: [],
 		nextPages: [611],
@@ -3784,14 +3805,14 @@ function setupScenes() {
 	};
 
 	scenes[621] = {
-		text: "I'm trying teach myself not everything has to be profound.\n[1] Yeah, trust your instincts.",
+		text: "I'm trying teach myself not everything has to be profound.",
 		image: assets.warm, 
-		keys: ["1"],
+		keys: [],
 		nextPages: [625], 
 	};
 
 	scenes[625] = {
-		text: "Working on it! Trusting what I want instead of overthinking all the time.",
+		text: "Trusting what I want instead of overthinking all the time.",
 		image: assets.shy, 
 		nextPages: [626],
 	};
@@ -3912,7 +3933,7 @@ function setupScenes() {
 	};
 
 	scenes["720.5"] = {
-		text: "Can I tell you about it later? After we've watered a bit?",
+		text: "You mind if I tell you about it later? After we've watered a bit?",
 		image: assets.shy,
 		keys: [],
 		nextPages: [740],
@@ -3920,7 +3941,7 @@ function setupScenes() {
 
 	// ===== CONVERGE: Both branches lead here =====
 	scenes[740] = {
-		text: "I promise I'll explain. Just... need to ease into it, you know?\n[1] Of course, no pressure.\n[2] Whenever you're ready.",
+		text: "I promise I'll explain. Just... gotta to ease into it, you know?\n[1] Of course, no pressure.\n[2] Whenever you're ready.",
 		image: assets.wistful, 
 		keys: ["1", "2"],
 		nextPages: [750, 755], // Branch 7C, 7D
@@ -3944,7 +3965,7 @@ function setupScenes() {
 
 	// ===== CONVERGE: Both branches lead here =====
 	scenes[760] = {
-		text: "Let's water some plants. It helps me think.",
+		text: "Let's chill out and water some plants. It helps me think.",
 		image: assets.warm,
 		keys: [],
 		nextPages: [],
