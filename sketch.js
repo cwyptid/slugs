@@ -63,7 +63,7 @@ class Sprite {
 
 // ========================
 // DEBUG FLAG - set to true to replay conversations without restrictions
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
