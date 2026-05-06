@@ -3182,7 +3182,7 @@ function setupScenes() {
 
 	// Branch 2A-2: "You shouldn't feel guilty"
 	scenes[115] = {
-		text: "Thanks. I know it's weird... I just find it hard to believe.",
+		text: "I know it's weird... I just find it hard to believe.",
 		image: assets.shy, 
 		keys: [],
 		nextPages: [116],
@@ -3637,7 +3637,7 @@ function setupScenes() {
 
 	scenes[515] = {
 		text: "All I can do is keep trying. Keep doing my best.",
-		image: assets.wistful,
+		image: assets.assured,
 		keys: [],
 		nextPages: [516],
 	};
@@ -3702,7 +3702,7 @@ function setupScenes() {
 	};
 
 	scenes[527] = {
-		text: "All you can do is keep showing up, regardless of what the outcome may be.",
+		text: "All you can do is keep showing up, whether it makes a difference or not.",
 		image: assets.assured,
 		keys: [],
 		nextPages: [550], // Converge to ending
