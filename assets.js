@@ -1,23 +1,21 @@
-// ========================
-// PRELOAD - Load all assets
-// ========================
+// A Game About Slugs - Asset Loading
 
-function preload() {
+function loadGameAssets() {
 	// Title screen
-	assets.titleImage = loadImage("./assets/titlescreen.gif");
+	assets.titleImage = loadImage("./assets/UI/titlescreen.gif");
 
 	// Name input screen assets
-	nameBoxImage = loadImage("./assets/namebox.png");
-	textButtonImage = loadImage("./assets/text_button.png");
-	otherBoxImage = loadImage("./assets/otherbox.png");
+	nameBoxImage = loadImage("./assets/UI/namebox.png");
+	textButtonImage = loadImage("./assets/UI/text_button.png");
+	otherBoxImage = loadImage("./assets/UI/otherbox.png");
 
 	// Backgrounds for different sections
 	gardenAssets.section1Background = loadImage("./assets/environment/section1_normal.png");
 	gardenAssets.section2Background = loadImage("./assets/environment/section2_normal.png");
 	gardenAssets.section3Background = loadImage("./assets/environment/section3_normal.png");
-	gardenAssets.textbox = loadImage("./assets/textbox.png");
-	gardenAssets.arrowRight = loadImage("./assets/arrow_right.png");
-	gardenAssets.arrowLeft = loadImage("./assets/arrow_left.png");
+	gardenAssets.textbox = loadImage("./assets/UI/textbox.png");
+	gardenAssets.arrowRight = loadImage("./assets/UI/arrow_right.png");
+	gardenAssets.arrowLeft = loadImage("./assets/UI/arrow_left.png");
 
 	// Load sprite frame arrays
 	// Tony VN Sprite (tony_smile) - 3 fps, loops
@@ -36,6 +34,78 @@ function preload() {
 	sprites.tonyAssuredFrames = [
 		loadImage("./assets/sprites/tony_VN/tony_assured/tony_assured-1.png"),
 		loadImage("./assets/sprites/tony_VN/tony_assured/tony_assured-2.png")
+	];
+
+	// Tony VN Sprite (tony_peaceful) - 3 fps, loops
+	sprites.tonyPeacefulFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_peaceful/tony_peaceful-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_peaceful/tony_peaceful-2.png")
+	];
+
+	// Tony VN Sprite (tony_sad_peaceful) - 3 fps, loops
+	sprites.tonySadPeacefulFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_sad_peaceful/tony_sad_peaceful-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_sad_peaceful/tony_sad_peaceful-2.png")
+	];
+
+	// Tony VN Sprite (tony_shy) - 3 fps, loops
+	sprites.tonyShyFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_shy/tony_shy-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_shy/tony_shy-2.png")
+	];
+
+	// Tony VN Sprite (tony_contemplative) - 3 fps, loops
+	sprites.tonyContemplativeFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_contemplative/tony_contemplative-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_contemplative/tony_contemplative-2.png")
+	];
+
+	// Tony VN Sprite (tony_determined) - 3 fps, loops
+	sprites.tonyDeterminedFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_determined/tony_determined-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_determined/tony_determined-2.png")
+	];
+
+	// Tony VN Sprite (tony_anxious) - 3 fps, loops
+	sprites.tonyAnxiousFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_anxious/tony_anxious-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_anxious/tony_anxious-2.png")
+	];
+
+	// Tony VN Sprite (tony_confident) - 3 fps, loops
+	sprites.tonyConfidentFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_confident/tony_confident-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_confident/tony_confident-2.png")
+	];
+
+	// Tony VN Sprite (tony_hopeful) - 3 fps, loops
+	sprites.tonyHopefulFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_hopeful/tony_hopeful-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_hopeful/tony_hopeful-2.png")
+	];
+
+	// Tony VN Sprite (tony_rueful) - 3 fps, loops
+	sprites.tonyRuefulFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_rueful/tony_rueful-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_rueful/tony_rueful-2.png")
+	];
+
+	// Tony VN Sprite (tony_happy) - 3 fps, loops
+	sprites.tonyHappyFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_happy/tony_happy-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_happy/tony_happy-2.png")
+	];
+
+	// Tony VN Sprite (tony_wistful) - 3 fps, loops
+	sprites.tonyWistfulFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_wistful/tony_wistful-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_wistful/tony_wistful-2.png")
+	];
+
+	// Tony VN Sprite (tony_warm) - 3 fps, loops
+	sprites.tonyWarmFrames = [
+		loadImage("./assets/sprites/tony_VN/tony_warm/tony_warm-1.png"),
+		loadImage("./assets/sprites/tony_VN/tony_warm/tony_warm-2.png")
 	];
 
 	// Tony Overworld Sprites
@@ -165,5 +235,5 @@ function preload() {
 		loadImage("./assets/sprites/plants/shell_ready/shell_ready-2.png")
 	];
 	// Font
-	myFont = loadFont("./BoldPixels.ttf");
+	myFont = loadFont("./assets/boldpixels/BoldPixels.ttf");
 }
