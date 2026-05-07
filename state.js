@@ -1,5 +1,8 @@
+// A Game About Slugs - State & Global Variables
+
 // ========================
-// GAME STATE & VARIABLES
+// DEBUG FLAG - set to true to replay conversations without restrictions
+const DEBUG_MODE = false;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
@@ -82,6 +85,11 @@ let cursorOffsetY = 0; // Vertical offset from mouse position
 let cursorQuestionSprite = null;
 let isHoveringInteractiveArea = false; // Track if hovering over interactive area
 let justReturnedFromVN = false; // Flag to skip hover check on frame we return from VN
+
+// Flavor text (shown when clicking plants/shell before meeting Tony)
+let flavorText = "";
+let flavorTextTimer = 0;
+const FLAVOR_TEXT_DURATION = 2500;
 
 // Name input screen
 let currentNameInput = ""; // Name being typed
@@ -277,3 +285,82 @@ let isCurrentlyHoveringPlant = false; // Track hover state for optimized cursor
 
 // Font
 let myFont;
+
+// Declared here because it's used in draw() and elsewhere but never declared in original
+let lastProcessedScene = -1;
+
+// ========================
+// RESET GAME (DEMO END)
+// ========================
+
+function resetGame() {
+	// Reset all game state for a fresh playthrough
+	gameMode = 'title';
+	currentScene = 0;
+	currentSection = 1;
+	currentNameInput = "";
+	playerName = "";
+
+	// Reset intro state
+	introPhase = 'none';
+	introPhaseStartTime = 0;
+	introStarted = false;
+
+	// Reset background to section 1
+	if (gardenState.backgroundImage) {
+		gardenState.backgroundImage = gardenState.section1Background;
+	}
+
+	// Reset intro sprites
+	gardenState.tonyStartSprite.reset();
+	gardenState.tonySurprisedSprite.reset();
+	gardenState.tonyStartIdleSprite.reset();
+
+	// Reset garden state
+	gardenState.tonyState.currentSprite = gardenState.tonyState.tonyIdleSprite;
+	gardenState.tonyState.tonyIdleSprite.reset();
+
+	// Reset all plants in all sections to dry, unwatered state
+	for (let plant of gardenState.section1Plants) {
+		plant.watered = false;
+		if (plant.drySprite) plant.drySprite.reset();
+		if (plant.wateredSprite) plant.wateredSprite.reset();
+	}
+	for (let plant of gardenState.section2Plants) {
+		plant.watered = false;
+		if (plant.drySprite) plant.drySprite.reset();
+		if (plant.wateredSprite) plant.wateredSprite.reset();
+	}
+	for (let plant of gardenState.section3Plants) {
+		plant.watered = false;
+		if (plant.drySprite) plant.drySprite.reset();
+		if (plant.wateredSprite) plant.wateredSprite.reset();
+	}
+
+	// Reset empty plot
+	gardenState.emptyPlot.visited = false;
+
+	// Reset shell
+	gardenState.shell.clicked = false;
+	gardenState.shell.earlyConversationTriggered = false;
+	gardenState.shell.postGameConversationStarted = false;
+	if (gardenState.shell.sprite) gardenState.shell.sprite.reset();
+	if (gardenState.shell.readySprite) gardenState.shell.readySprite.reset();
+
+	// Reset UI state
+	isCurrentlyHoveringPlant = false;
+	isHoveringInteractiveArea = false;
+	justReturnedFromVN = false;
+	currentNameInput = "";
+	selectedButtonIndex = -1; // Reset keyboard selection for name input buttons
+
+	// Reset fade flags
+	fadingToTitleAfterShell = false;
+	fadingOutFromVN = false;
+
+	// Reset typewriter
+	resetTypewriter();
+
+	// Hide nameInput panel when returning to title
+	document.body.classList.remove('nameInput-active');
+}
