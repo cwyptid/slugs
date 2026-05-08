@@ -488,7 +488,7 @@ function setupScenes() {
 
 	// Branch 1C-2: "That's fair"
 	scenes[35] = {
-		text: "Yeah - like, not everything needs a purpose, you know?",
+		text: "Yeah. like, not everything needs a purpose, you know?",
 		image: assets.confident,
 		keys: [],
 		nextPages: [],
@@ -857,7 +857,7 @@ function setupScenes() {
 	};
 
 	scenes[421] = {
-		text: "That's why they need the stakes - to hold the weight they can't carry alone.\n[1] Makes sense.\n[2] Guess we all need support sometimes.",
+		text: "That's why they need the stakes. To hold the weight they can't carry alone.\n[1] Makes sense.\n[2] Guess we all need support sometimes.",
 		image: assets.warm,
 		keys: ["1", "2"],
 		nextPages: [422, 425], // Branch 4B-1, 4B-2
