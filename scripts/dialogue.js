@@ -273,7 +273,7 @@ function setupScenes() {
 	scenes[1001] = {
 		text: "[PLAYER_NAME]? Is that you?\n[1] Slime Tony?!\n[2] Tony? It's been forever!",
 		image: assets.hopeful,
-		keys: ["1, 2"],
+		keys: ["1", "2"],
 		nextPages: [1002, 1002]
 	};
 
@@ -287,8 +287,8 @@ function setupScenes() {
 	scenes[1003] = {
 		text: "It's great seeing you again.\n[1] What are you up to? Someone's been gardening up a storm.\n[2] You know who's responsible for these plants?",
 		image: assets.smiling_waving,
-		keys: ["1, 2"],
-		nextPages: [1010, 1010] 
+		keys: ["1", "2"],
+		nextPages: [1010, 1010]
 	};
 
 	scenes[1010] = {
@@ -300,9 +300,9 @@ function setupScenes() {
 
 	scenes["1010.5"] = {
 		text: "Kind of a long story how I got into it.\n[1] I'm always down for story time.\n[2] I've got time to kill.",
-		image: assets.explaining, 
-		keys: ["1, 2"],
-		nextPages: [1011, 1011] 
+		image: assets.explaining,
+		keys: ["1", "2"],
+		nextPages: [1011, 1011]
 	};
 
 	scenes[1011] = {
@@ -365,7 +365,7 @@ function setupScenes() {
 	scenes[11] = {
 		text: "I didn't know a thing about herbs when I started. Had to look everything up.\n[1] That's cool that you taught yourself.\n[2] Must have been a lot of work.",
 		image: assets.shy,
-		keys: ["1, 2"],
+		keys: ["1", "2"],
 		nextPages: [15, 15]
 	};
 
@@ -654,7 +654,7 @@ function setupScenes() {
 	scenes[211] = {
 		text: "Not everything needs my intervention.\n[1] I bet that takes discipline.\n[2] Doesn't that drive you crazy?",
 		image: assets.confident,
-		keys: ["1, 2"],
+		keys: ["1", "2"],
 		nextPages: [212, 212], // Branch 3A-1, 3A-2 (same path for both)
 	};
 
@@ -691,7 +691,7 @@ function setupScenes() {
 	scenes[221] = {
 		text: "It's not trying to be anything other than what it is.\n[1] It takes orders from no man.\n[2] Living the dream.",
 		image: assets.peaceful,
-		keys: ["1, 2"],
+		keys: ["1", "2"],
 		nextPages: [225, 222], // Branch 3B-1, 3B-2
 	};
 
