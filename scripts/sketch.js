@@ -32,6 +32,30 @@ function setup() {
 	gardenState.backgroundImage = gardenAssets.section1Background;
 	initializeSprites();
 	setupScenes();
+
+	if (DEBUG_CUTSCENE) {
+		playerName = "Debug";
+		gameMode = 'cutscene';
+		currentScene = 1100;
+		vnEntryTime = millis();
+		resetTypewriter();
+	}
+
+	if (DEBUG_ENDING) {
+		playerName = "Debug";
+		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
+			plant.watered = true;
+		}
+		gardenState.emptyPlot.visited = true;
+		isRaining = true;
+		initRainParticles();
+		currentScene = 1605;
+		gameMode = 'vn';
+		currentSection = 2;
+		gardenState.backgroundImage = gardenAssets.section2Background;
+		vnEntryTime = millis() - (vnEntryDuration + 100);
+		resetTypewriter();
+	}
 }
 
 function draw() {
@@ -46,6 +70,9 @@ function draw() {
 
 	// Update all sprites
 	updateAllSprites();
+
+	// Update rain particles each frame when raining
+	if (isRaining) updateRainParticles();
 
 	// Handle intro sequence - display sprite for a moment then start dialogue
 	if (gameMode === 'intro') {
@@ -158,6 +185,31 @@ function draw() {
 				break;
 			case 'vn':
 				drawVNMode(currentTime);
+				break;
+			case 'cutscene':
+				drawCutsceneMode(currentTime);
+				break;
+			case 'storyEnding':
+				drawStoryEndingMode(currentTime);
+				break;
+			case 'rain_ending':
+				drawGardenMode(currentTime);
+				if (showESCOverlay) drawESCOverlay();
+				// Fade to title when triggered from rain_ending
+				if (fadingToTitleFromEnding) {
+					const elapsed = currentTime - fadeToTitleFromEndingStartTime;
+					const progress = Math.min(elapsed / fadeToTitleFromEndingDuration, 1);
+					push();
+					fill(0, 0, 0, progress * 255);
+					noStroke();
+					rect(0, 0, width, height);
+					pop();
+					if (progress >= 1) {
+						fadingToTitleFromEnding = false;
+						resetGame();
+						gameMode = 'title';
+					}
+				}
 				break;
 		}
 	}

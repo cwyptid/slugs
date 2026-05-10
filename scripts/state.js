@@ -3,6 +3,12 @@
 // ========================
 // DEBUG FLAG - set to true to replay conversations without restrictions
 const DEBUG_MODE = false;
+// DEBUG_CUTSCENE - set to true to skip straight to cutscene 1 on load
+// Backtick (`) key also jumps back to cutscene 1 from any screen while this is on
+const DEBUG_CUTSCENE = false;
+// DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
+// ] key also jumps to ending VN from any screen while this is on
+const DEBUG_ENDING = true;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
@@ -278,6 +284,39 @@ let fadingToTitleAfterShell = false; // DEMO END: Fade to white after shell dial
 let fadeToTitleStartTime = 0;
 const fadeToTitleDuration = 2000; // 2 second fade to white
 
+// Cutscene mode transition - fade to black then enter cutscene
+let fadingToCutscene = false;
+let fadeToCutsceneStartTime = 0;
+const fadeToCutsceneDuration = 800;
+let fadeToCutsceneTargetScene = 1100; // which scene to land on after fade
+
+// Cutscene pre-dialogue intro sequence state machine
+let cutsceneIntroSequence = []; // array of Sprite objects to play in order
+let cutsceneIntroStep = -1;     // -1 = not active (show dialogue), 0+ = current step
+
+// Cutscene end - fade to black and hold
+let cutsceneEndFading = false;
+let cutsceneEndFadeStartTime = 0;
+const cutsceneEndFadeDuration = 1500;
+
+// Cutscene-to-VN transition (after cutscene 6 → ending VN with rain)
+let fadingCutsceneToVN = false;
+let fadeCutsceneToVNStartTime = 0;
+const fadeCutsceneToVNDuration = 1000;
+let fadeCutsceneToVNTargetScene = 2000; // which VN scene to land on after fade
+
+// Rain state
+let isRaining = false;
+let rainParticles = [];
+
+// End screen ESC overlay ("Return to title?")
+let showESCOverlay = false;
+
+// Fade to title from ending (black fade)
+let fadingToTitleFromEnding = false;
+let fadeToTitleFromEndingStartTime = 0;
+const fadeToTitleFromEndingDuration = 1000;
+
 // UI and input
 let buttons = [];
 let inp;
@@ -357,6 +396,13 @@ function resetGame() {
 	// Reset fade flags
 	fadingToTitleAfterShell = false;
 	fadingOutFromVN = false;
+	fadingCutsceneToVN = false;
+	fadingToTitleFromEnding = false;
+
+	// Reset rain state
+	isRaining = false;
+	rainParticles = [];
+	showESCOverlay = false;
 
 	// Reset typewriter
 	resetTypewriter();
