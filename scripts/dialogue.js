@@ -1572,12 +1572,23 @@ function setupScenes() {
 		text: "But it wasn't that same, suffocating shell anymore!",
 		cutsceneSprite: assets.cutscene_returning,
 		keys: [],
-		nextPages: [1403]
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1403
 	};
 
+	// ===== CUTSCENE 5 =====
+
 	scenes[1403] = {
-		text: "Moss, vines, little flowers sprouting through the cracks. It was teeming with life.\n",
-		cutsceneSprite: assets.cutscene_returning,
+		text: "Moss, vines, little flowers sprouting through the cracks.",
+		cutsceneSprite: assets.cutscene_returning_shell,
+		keys: [],
+		nextPages: [1404],
+	};
+
+	scenes[1404] = {
+		text: "It was teeming with life.",
+		cutsceneSprite: assets.cutscene_returning_shell,
 		keys: [],
 		nextPages: [],
 		isEndingScene: true,
@@ -1585,13 +1596,13 @@ function setupScenes() {
 		cutsceneTarget: 1500
 	};
 
-	// ===== CUTSCENE 5 =====
+	// ===== CUTSCENE 6 =====
 
 	scenes[1500] = {
 		text: "The shell I left behind had become so much more. I couldn't believe my eyes.",
 		cutsceneSprite: assets.cutscene_kneeling_shell,
 		keys: [],
-		nextPages: [1501]
+		nextPages: [1501],
 	};
 
 	scenes[1501] = {
@@ -1620,19 +1631,24 @@ function setupScenes() {
 		text: "But I just took it in.",
 		cutsceneSprite: assets.cutscene_kneeling_shell,
 		keys: [],
-		nextPages: [1505]
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1505
 	};
+
+	// ===== CUTSCENE 6 =====
 
 	scenes[1505] = {
 		text: "…",
-		cutsceneSprite: assets.cutscene_kneeling_shell,
+		cutsceneSprite: assets.cutscene_kneeling_clouds,
 		keys: [],
 		nextPages: [1506]
 	};
 
 	scenes[1506] = {
 		text: "Eventually, though, it began to rain.",
-		cutsceneSprite: assets.cutscene_kneeling_shell,
+		cutsceneSprite: assets.cutscene_kneeling_clouds,
 		keys: [],
 		nextPages: [],
 		isEndingScene: true,
@@ -1640,100 +1656,102 @@ function setupScenes() {
 		cutsceneTarget: 1600
 	};
 
-	// ===== CUTSCENE 6 =====
+	// ===== CUTSCENE 8 =====
 
 	scenes[1600] = {
 		text: "I almost FLIPPED at first. I didn't have my shell on! Old habits, y'know?",
-		cutsceneSprite: assets.cutscene_rainfall,
+		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [1601]
 	};
 
 	scenes[1601] = {
 		text: "It'd been what seemed like forever since I'd felt rain. The shell had always kept me dry.\n",
-		cutsceneSprite: assets.cutscene_rainfall,
+		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [1602]
 	};
 
 	scenes[1602] = {
 		text: "But it felt… nice. Really, really nice.",
-		cutsceneSprite: assets.cutscene_rainfall,
+		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [1603]
 	};
 
 	scenes[1603] = {
 		text: "That's when I realized that while the shell kept me safe for so long…",
-		cutsceneSprite: assets.cutscene_rainfall,
+		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [1604]
 	};
 
 	scenes[1604] = {
 		text: "It also kept me from feeling anything at all.",
-		cutsceneSprite: assets.cutscene_rainfall,
+		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [],
 		isEndingScene: true,
-		endsToVN: true,
-		cutsceneToVNTarget: 1605 // Hand off to VN mode here
+		startsCutscene: true,
+		cutsceneTarget: 1605
 	};
 
-	// ===== CUTSCENE 6 CONTINUED IN VN MODE =====
-	// Rain is already active when these scenes play
+	// ===== CUTSCENE 9 =====
 
 	scenes[1605] = {
 		text: "See, these plants are exposed! Out in the open.",
-		image: assets.explaining,
+		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
 		nextPages: [1606]
 	};
 
 	scenes[1606] = {
 		text: "Birds could nab 'em, they could get trampled on, anything can happen really.",
-		image: assets.contemplative,
+		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
 		nextPages: [1607]
 	};
 
 	scenes[1607] = {
 		text: "But them being out in the open like this? That's the only way they're gonna grow.",
-		image: assets.assured,
+		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
 		nextPages: [1608]
 	};
 
 	scenes[1608] = {
 		text: "Getting their rain, sunshine, all of it.",
-		image: assets.happy,
+		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
 		nextPages: [1609]
 	};
 
 	scenes[1609] = {
 		text: "I wanted to understand what these plants needed, so that's when I started learning.\n",
-		image: assets.warm,
+		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
 		nextPages: [1610]
 	};
 
 	scenes[1610] = {
 		text: "About soil, light, water, growth. What it takes to live.",
-		image: assets.assured,
+		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
 		nextPages: [1611]
 	};
 
 	scenes[1611] = {
 		text: "Because then, maybe I could find my answer, too.",
-		image: assets.peaceful,
+		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
-		nextPages: [2000]
+		nextPages: [],
+		isEndingScene: true,
+		endsToVN: true,
+		cutsceneToVNTarget: 2000 // Hand off to VN mode here
 	};
 
 	// ===== ENDING SEQUENCE (SCENES 2000-2016) =====
-	// Entered from cutscene 6 via endsToVN transition; isRaining = true at this point
+	// Entered from cutscene 9 via endsToVN transition; isRaining = true at this point
 
 	scenes[2000] = {
 		text: "Oh! It's raining now, actually.",

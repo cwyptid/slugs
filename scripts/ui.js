@@ -500,7 +500,8 @@ function drawGardenMode(currentTime) {
 		}
 	} else if (isHoveringInteractiveArea && cursorQuestionSprite && !(gameMode === 'intro' && introStarted)) {
 		cursor('none'); // Hide default cursor
-		let cursorFrame = cursorQuestionSprite.getCurrentFrame();
+		const activeQuestionSprite = isRaining && cursorQuestionRainSprite ? cursorQuestionRainSprite : cursorQuestionSprite;
+		let cursorFrame = activeQuestionSprite.getCurrentFrame();
 		if (cursorFrame) {
 			push();
 			imageMode(CENTER);

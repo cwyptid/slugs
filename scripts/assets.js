@@ -260,6 +260,11 @@ function loadGameAssets() {
 		loadImage("../assets/sprites/cursor_question/cursor_question-2.png"),
 		loadImage("../assets/sprites/cursor_question/cursor_question-3.png")
 	];
+	sprites.cursorQuestionRainFrames = [
+		loadImage("../assets/sprites/cursor_question_rain/cursor_question_rain-1.png"),
+		loadImage("../assets/sprites/cursor_question_rain/cursor_question_rain-2.png"),
+		loadImage("../assets/sprites/cursor_question_rain/cursor_question_rain-3.png")
+	];
 	// Empty plot animation frames (not a plant, but uses same sprite system)
 	sprites.emptyPlotFrames = [
 		loadImage("../assets/sprites/plants/emptyplot/emptyplot-1.png"),
@@ -285,7 +290,7 @@ function loadGameAssets() {
 		loadImage("../assets/cutscenes/tony_callback_2/tony_callback_2-2.png")
 	];
 
-	// Cutscene sprites - cutscenes 3-6 (simple 2-frame loops at 3fps)
+	// Cutscene sprites - cutscenes 3-9 (simple 2-frame loops at 3fps)
 	sprites.cutsceneLeavingFrames = [
 		loadImage("../assets/cutscenes/tony_leaving/tony_leaving-1.png"),
 		loadImage("../assets/cutscenes/tony_leaving/tony_leaving-2.png")
@@ -294,9 +299,21 @@ function loadGameAssets() {
 		loadImage("../assets/cutscenes/tony_returning/tony_returning-1.png"),
 		loadImage("../assets/cutscenes/tony_returning/tony_returning-2.png")
 	];
+	sprites.cutsceneReturningShellFrames = [
+		loadImage("../assets/cutscenes/shell_return/shell_return-1.png"),
+		loadImage("../assets/cutscenes/shell_return/shell_return-2.png")
+	];
 	sprites.cutsceneKneelingShellFrames = [
 		loadImage("../assets/cutscenes/tony_kneeling_shell/tony_kneeling_shell-1.png"),
 		loadImage("../assets/cutscenes/tony_kneeling_shell/tony_kneeling_shell-2.png")
+	];
+	sprites.cutsceneKneelingCloudsFrames = [
+		loadImage("../assets/cutscenes/tony_kneeling_clouds/tony_kneeling_clouds-1.png"),
+		loadImage("../assets/cutscenes/tony_kneeling_clouds/tony_kneeling_clouds-2.png")
+	];
+	sprites.cutsceneKneelingRainFrames = [
+		loadImage("../assets/cutscenes/tony_kneeling_rain/tony_kneeling_rain-1.png"),
+		loadImage("../assets/cutscenes/tony_kneeling_rain/tony_kneeling_rain-2.png")
 	];
 	sprites.cutsceneRainfallFrames = [
 		loadImage("../assets/cutscenes/tony_rainfall/tony_rainfall-1.png"),
