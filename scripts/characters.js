@@ -141,14 +141,20 @@ function initializeSprites() {
 	assets.cutscene_callback_1 = gardenState.cutsceneCallbackSprite1;
 	assets.cutscene_callback_2 = gardenState.cutsceneCallbackSprite2;
 
-	// Cutscene sprites - cutscenes 3-6 (3fps, looping)
+	// Cutscene sprites - cutscenes 3-9 (3fps, looping)
 	gardenState.cutsceneLeavingSprite = new Sprite(sprites.cutsceneLeavingFrames, 3, true);
 	gardenState.cutsceneReturningSprite = new Sprite(sprites.cutsceneReturningFrames, 3, true);
+	gardenState.cutsceneReturningShellSprite = new Sprite(sprites.cutsceneReturningShellFrames, 3, true);
 	gardenState.cutsceneKneelingShellSprite = new Sprite(sprites.cutsceneKneelingShellFrames, 3, true);
+	gardenState.cutsceneKneelingCloudsSprite = new Sprite(sprites.cutsceneKneelingCloudsFrames, 3, true);
+	gardenState.cutsceneKneelingRainSprite = new Sprite(sprites.cutsceneKneelingRainFrames, 3, true);
 	gardenState.cutsceneRainfallSprite = new Sprite(sprites.cutsceneRainfallFrames, 3, true);
 	assets.cutscene_leaving = gardenState.cutsceneLeavingSprite;
 	assets.cutscene_returning = gardenState.cutsceneReturningSprite;
+	assets.cutscene_returning_shell = gardenState.cutsceneReturningShellSprite;
 	assets.cutscene_kneeling_shell = gardenState.cutsceneKneelingShellSprite;
+	assets.cutscene_kneeling_clouds = gardenState.cutsceneKneelingCloudsSprite;
+	assets.cutscene_kneeling_rain = gardenState.cutsceneKneelingRainSprite;
 	assets.cutscene_rainfall = gardenState.cutsceneRainfallSprite;
 
 	// Cutscene sprites - cutscene 2 intro sequence (plays once, then loops)
@@ -177,6 +183,9 @@ function initializeSprites() {
 	// Initialize cursor question sprite (for interactive areas)
 	if (sprites.cursorQuestionFrames && sprites.cursorQuestionFrames.length > 0) {
 		cursorQuestionSprite = new Sprite(sprites.cursorQuestionFrames, 5, true);
+	}
+	if (sprites.cursorQuestionRainFrames && sprites.cursorQuestionRainFrames.length > 0) {
+		cursorQuestionRainSprite = new Sprite(sprites.cursorQuestionRainFrames, 5, true);
 	}
 
 	// Initialize empty plot sprite (3 fps, looping)
@@ -365,9 +374,8 @@ function updateAllSprites() {
 			}
 		}
 		// Always update cursor sprites during intro (for question mark animation)
-		if (cursorQuestionSprite) {
-			cursorQuestionSprite.update();
-		}
+		if (cursorQuestionSprite) cursorQuestionSprite.update();
+		if (cursorQuestionRainSprite) cursorQuestionRainSprite.update();
 	} else if (gameMode === 'cutscene') {
 		if (cutsceneIntroStep >= 0 && cutsceneIntroSequence.length > 0) {
 			// Update only the currently active intro sprite
@@ -424,9 +432,8 @@ function updateAllSprites() {
 		if (cursorSprite) {
 			cursorSprite.update();
 		}
-		if (cursorQuestionSprite) {
-			cursorQuestionSprite.update();
-		}
+		if (cursorQuestionSprite) cursorQuestionSprite.update();
+		if (cursorQuestionRainSprite) cursorQuestionRainSprite.update();
 
 		// Update empty plot sprite (only in section 3)
 		if (currentSection === 3) {
