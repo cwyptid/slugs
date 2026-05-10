@@ -103,37 +103,57 @@ function initializeSprites() {
 
 	// Tony VN sprites (for dialogue scenes)
 	gardenState.tonySmilingVNSprite = new Sprite(sprites.tonySmilingFrames, 3, true);
+	gardenState.tonySmilingRainVNSprite = new Sprite(sprites.tonySmilingRainFrames, 3, true);
 	gardenState.tonyExplainingVNSprite = new Sprite(sprites.tonyExplainingFrames, 3, true);
 	gardenState.tonyAssuredVNSprite = new Sprite(sprites.tonyAssuredFrames, 3, true);
+	gardenState.tonyAssuredRainVNSprite = new Sprite(sprites.tonyAssuredRainFrames, 3, true);
 	gardenState.tonyPeacefulVNSprite = new Sprite(sprites.tonyPeacefulFrames, 3, true);
+	gardenState.tonyPeacefulRainVNSprite = new Sprite(sprites.tonyPeacefulRainFrames, 3, true);
 	gardenState.tonySadPeacefulVNSprite = new Sprite(sprites.tonySadPeacefulFrames, 3, true);
 	gardenState.tonyShyVNSprite = new Sprite(sprites.tonyShyFrames, 3, true);
+	gardenState.tonyShyRainVNSprite = new Sprite(sprites.tonyShyRainFrames, 3, true);
 	gardenState.tonyContemplativeVNSprite = new Sprite(sprites.tonyContemplativeFrames, 3, true);
+	gardenState.tonyContemplativeRainVNSprite = new Sprite(sprites.tonyContemplativeRainFrames, 3, true);
 	gardenState.tonyDeterminedVNSprite = new Sprite(sprites.tonyDeterminedFrames, 3, true);
 	gardenState.tonyAnxiousVNSprite = new Sprite(sprites.tonyAnxiousFrames, 3, true);
 	gardenState.tonyConfidentVNSprite = new Sprite(sprites.tonyConfidentFrames, 3, true);
+	gardenState.tonyConfidentRainVNSprite = new Sprite(sprites.tonyConfidentRainFrames, 3, true);
 	gardenState.tonyHopefulVNSprite = new Sprite(sprites.tonyHopefulFrames, 3, true);
 	gardenState.tonyRuefulVNSprite = new Sprite(sprites.tonyRuefulFrames, 3, true);
+	gardenState.tonyRuefulRainVNSprite = new Sprite(sprites.tonyRuefulRainFrames, 3, true);
 	gardenState.tonyHappyVNSprite = new Sprite(sprites.tonyHappyFrames, 3, true);
+	gardenState.tonyHappyRainVNSprite = new Sprite(sprites.tonyHappyRainFrames, 3, true);
 	gardenState.tonyWistfulVNSprite = new Sprite(sprites.tonyWistfulFrames, 3, true);
+	gardenState.tonyWistfulRainVNSprite = new Sprite(sprites.tonyWistfulRainFrames, 3, true);
 	gardenState.tonyWarmVNSprite = new Sprite(sprites.tonyWarmFrames, 3, true);
+	gardenState.tonyWarmRainVNSprite = new Sprite(sprites.tonyWarmRainFrames, 3, true);
 
 	// Create asset references for scene definitions
 	assets.smiling_waving = gardenState.tonySmilingVNSprite;
+	assets.smile_rain = gardenState.tonySmilingRainVNSprite;
 	assets.explaining = gardenState.tonyExplainingVNSprite;
 	assets.assured = gardenState.tonyAssuredVNSprite;
+	assets.assured_rain = gardenState.tonyAssuredRainVNSprite;
 	assets.peaceful = gardenState.tonyPeacefulVNSprite;
+	assets.peaceful_rain = gardenState.tonyPeacefulRainVNSprite;
 	assets.sad_peaceful = gardenState.tonySadPeacefulVNSprite;
 	assets.shy = gardenState.tonyShyVNSprite;
+	assets.shy_rain = gardenState.tonyShyRainVNSprite;
 	assets.contemplative = gardenState.tonyContemplativeVNSprite;
+	assets.contemplative_rain = gardenState.tonyContemplativeRainVNSprite;
 	assets.determined = gardenState.tonyDeterminedVNSprite;
 	assets.anxious = gardenState.tonyAnxiousVNSprite;
 	assets.confident = gardenState.tonyConfidentVNSprite;
+	assets.confident_rain = gardenState.tonyConfidentRainVNSprite;
 	assets.hopeful = gardenState.tonyHopefulVNSprite;
 	assets.rueful = gardenState.tonyRuefulVNSprite;
+	assets.rueful_rain = gardenState.tonyRuefulRainVNSprite;
 	assets.happy = gardenState.tonyHappyVNSprite;
+	assets.happy_rain = gardenState.tonyHappyRainVNSprite;
 	assets.wistful = gardenState.tonyWistfulVNSprite;
+	assets.wistful_rain = gardenState.tonyWistfulRainVNSprite;
 	assets.warm = gardenState.tonyWarmVNSprite;
+	assets.warm_rain = gardenState.tonyWarmRainVNSprite;
 
 	// Cutscene sprites - cutscene 1 (3fps, looping)
 	gardenState.cutsceneCallbackSprite1 = new Sprite(sprites.cutsceneCallback1Frames, 3, true);
@@ -245,14 +265,23 @@ function updateAllSprites() {
 		if (gardenState.tonySmilingVNSprite) {
 			gardenState.tonySmilingVNSprite.update();
 		}
+		if (gardenState.tonySmilingRainVNSprite) {
+			gardenState.tonySmilingRainVNSprite.update();
+		}
 		if (gardenState.tonyExplainingVNSprite) {
 			gardenState.tonyExplainingVNSprite.update();
 		}
 		if (gardenState.tonyAssuredVNSprite) {
 			gardenState.tonyAssuredVNSprite.update();
 		}
+		if (gardenState.tonyAssuredRainVNSprite) {
+			gardenState.tonyAssuredRainVNSprite.update();
+		}
 		if (gardenState.tonyPeacefulVNSprite) {
 			gardenState.tonyPeacefulVNSprite.update();
+		}
+		if (gardenState.tonyPeacefulRainVNSprite) {
+			gardenState.tonyPeacefulRainVNSprite.update();
 		}
 		if (gardenState.tonySadPeacefulVNSprite) {
 			gardenState.tonySadPeacefulVNSprite.update();
@@ -260,8 +289,14 @@ function updateAllSprites() {
 		if (gardenState.tonyShyVNSprite) {
 			gardenState.tonyShyVNSprite.update();
 		}
+		if (gardenState.tonyShyRainVNSprite) {
+			gardenState.tonyShyRainVNSprite.update();
+		}
 		if (gardenState.tonyContemplativeVNSprite) {
 			gardenState.tonyContemplativeVNSprite.update();
+		}
+		if (gardenState.tonyContemplativeRainVNSprite) {
+			gardenState.tonyContemplativeRainVNSprite.update();
 		}
 		if (gardenState.tonyDeterminedVNSprite) {
 			gardenState.tonyDeterminedVNSprite.update();
@@ -272,20 +307,35 @@ function updateAllSprites() {
 		if (gardenState.tonyConfidentVNSprite) {
 			gardenState.tonyConfidentVNSprite.update();
 		}
+		if (gardenState.tonyConfidentRainVNSprite) {
+			gardenState.tonyConfidentRainVNSprite.update();
+		}
 		if (gardenState.tonyHopefulVNSprite) {
 			gardenState.tonyHopefulVNSprite.update();
 		}
 		if (gardenState.tonyRuefulVNSprite) {
 			gardenState.tonyRuefulVNSprite.update();
 		}
+		if (gardenState.tonyRuefulRainVNSprite) {
+			gardenState.tonyRuefulRainVNSprite.update();
+		}
 		if (gardenState.tonyHappyVNSprite) {
 			gardenState.tonyHappyVNSprite.update();
+		}
+		if (gardenState.tonyHappyRainVNSprite) {
+			gardenState.tonyHappyRainVNSprite.update();
 		}
 		if (gardenState.tonyWistfulVNSprite) {
 			gardenState.tonyWistfulVNSprite.update();
 		}
+		if (gardenState.tonyWistfulRainVNSprite) {
+			gardenState.tonyWistfulRainVNSprite.update();
+		}
 		if (gardenState.tonyWarmVNSprite) {
 			gardenState.tonyWarmVNSprite.update();
+		}
+			if (gardenState.tonyWarmRainVNSprite) {
+			gardenState.tonyWarmRainVNSprite.update();
 		}
 		// All other sprites are paused during VN mode for better performance
 	} else if (gameMode === 'intro') {

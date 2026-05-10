@@ -115,6 +115,11 @@ function handleVNChoice(choiceIndex) {
 			fadeToCutsceneTargetScene = scenes[currentScene].cutsceneTarget || 1100;
 			fadingToCutscene = true;
 			fadeToCutsceneStartTime = millis();
+		} else if (scenes[currentScene].endsToVNBrief) {
+			// Cutscene → brief VN interlude (no rain), then back to cutscene
+			fadeCutsceneToVNBriefTargetScene = scenes[currentScene].cutsceneToVNBriefTarget || 1350;
+			fadingCutsceneToVNBrief = true;
+			fadeCutsceneToVNBriefStartTime = millis();
 		} else if (scenes[currentScene].endsToVN) {
 			// Cutscene ends - fade to black then enter VN with rain
 			fadeCutsceneToVNTargetScene = scenes[currentScene].cutsceneToVNTarget || 2000;
@@ -1521,63 +1526,65 @@ function setupScenes() {
 		keys: [],
 		nextPages: [],
 		isEndingScene: true,
-		startsCutscene: true,
-		cutsceneTarget: 1300
+		endsToVNBrief: true,
+		cutsceneToVNBriefTarget: 1350
 	};
 
-	// ===== CUTSCENE 3 =====
+	// ===== VN INTERLUDE (replaces cutscenes 3 and 4) =====
 
-	scenes[1300] = {
+	scenes[1350] = {
 		text: "Basically, I ran.",
-		cutsceneSprite: assets.cutscene_leaving,
+		image: assets.shy,
 		keys: [],
-		nextPages: [1301]
+		nextPages: [1351]
 	};
 
-	scenes[1301] = {
-		text: "I needed to be myself again, but I didn't even remember how. So I moved someplace nobody knew me.\n",
-		cutsceneSprite: assets.cutscene_leaving,
+	scenes[1351] = {
+		text: "I needed to be myself again, but I didn't even remember how.",
+		image: assets.assured,
 		keys: [],
-		nextPages: [1302]
+		nextPages: [1356]
 	};
 
-	// Both choices immediately transition to cutscene 4 (no post-choice dialogue)
-	scenes[1302] = {
+	scenes[1356] = {
+		text: "So I moved someplace nobody knew me.",
+		image: assets.wistful,
+		keys: [],
+		nextPages: [1352]
+	};
+
+	scenes[1352] = {
 		text: "Can't really say it helped. I think it made me even worse. But that's what I thought was best for me at the time.\n\n[1] I get it.\n[2] Some things just don't turn out right.",
-		cutsceneSprite: assets.cutscene_leaving,
+		image: assets.rueful,
 		keys: ["1", "2"],
+		nextPages: [1353, 1353]
+	};
+
+	scenes[1353] = {
+		text: "Regardless, when I came back…",
+		image: assets.contemplative,
+		keys: [],
 		nextPages: [],
 		isEndingScene: true,
 		startsCutscene: true,
-		cutsceneTarget: 1400
-	};
-
-	// ===== CUTSCENE 4 =====
-
-	scenes[1400] = {
-		text: "Regardless, when I came back…",
-		cutsceneSprite: assets.cutscene_returning,
-		keys: [],
-		nextPages: [1401]
-	};
-
-	scenes[1401] = {
-		text: "It was still here. Right where I left it.",
-		cutsceneSprite: assets.cutscene_returning,
-		keys: [],
-		nextPages: [1402]
-	};
-
-	scenes[1402] = {
-		text: "But it wasn't that same, suffocating shell anymore!",
-		cutsceneSprite: assets.cutscene_returning,
-		keys: [],
-		isEndingScene: true,
-		startsCutscene: true,
-		cutsceneTarget: 1403
+		cutsceneTarget: 1354
 	};
 
 	// ===== CUTSCENE 5 =====
+
+	scenes[1354] = {
+		text: "It was still here. Right where I left it.",
+		cutsceneSprite: assets.cutscene_returning_shell,
+		keys: [],
+		nextPages: [1355]
+	};
+
+	scenes[1355] = {
+		text: "But it wasn't that same, suffocating shell anymore!",
+		cutsceneSprite: assets.cutscene_returning_shell,
+		keys: [],
+		nextPages: [1403],
+	};
 
 	scenes[1403] = {
 		text: "Moss, vines, little flowers sprouting through the cracks.",
@@ -1755,119 +1762,119 @@ function setupScenes() {
 
 	scenes[2000] = {
 		text: "Oh! It's raining now, actually.",
-		image: assets.contemplative,
+		image: assets.contemplative_rain,
 		keys: [],
 		nextPages: [2017]
 	};
 
 	scenes[2017] = {
 		text: "Funny timing.",
-		image: assets.warm,
+		image: assets.warm_rain,
 		keys: [],
 		nextPages: [2001]
 	};
 
 	scenes[2001] = {
 		text: "I guess we didn't need to water the plants today, after all...\n[1] That's okay, we had a good time!\n[2] Who cares if it was necessary?",
-		image: assets.shy,
+		image: assets.shy_rain,
 		keys: ["1", "2"],
 		nextPages: [2002, 2002]
 	};
 
 	scenes[2002] = {
 		text: "Haha, you're right!",
-		image: assets.happy,
+		image: assets.happy_rain,
 		keys: [],
 		nextPages: [2003]
 	};
 
 	scenes[2003] = {
 		text: "Either way, it was great catching up with you, [PLAYER_NAME].",
-		image: assets.warm,
+		image: assets.warm_rain,
 		keys: [],
 		nextPages: [2005]
 	};
 
 	scenes[2005] = {
 		text: "You know…",
-		image: assets.contemplative,
+		image: assets.contemplative_rain,
 		keys: [],
 		nextPages: [2006]
 	};
 
 	scenes[2006] = {
 		text: "I used to think being a snail was so much better. I hated being a slug for as long as I could remember.\n",
-		image: assets.wistful,
+		image: assets.wistful_rain,
 		keys: [],
 		nextPages: [2007]
 	};
 
 	scenes[2007] = {
 		text: "But it was less…me.",
-		image: assets.rueful,
+		image: assets.rueful_rain,
 		keys: [],
 		nextPages: [2008]
 	};
 
 	scenes[2008] = {
 		text: "After I ditched the shell, I felt ashamed for having tried something different. Really embarrassed that it didn't work out.\n",
-		image: assets.rueful,
+		image: assets.rueful_rain,
 		keys: [],
 		nextPages: [2009]
 	};
 
 	scenes[2009] = {
 		text: "But now, I'm just going to be myself.",
-		image: assets.confident,
+		image: assets.confident_rain,
 		keys: [],
 		nextPages: [2010]
 	};
 
 	scenes[2010] = {
 		text: "Don't get me wrong, it was all me! Even with the shell.",
-		image: assets.happy,
+		image: assets.happy_rain,
 		keys: [],
 		nextPages: [2011]
 	};
 
 	scenes[2011] = {
 		text: "But I just want to be present in the moment. Even if it means a more vulnerable mode of existence.\n",
-		image: assets.peaceful,
+		image: assets.peaceful_rain,
 		keys: [],
 		nextPages: [2012]
 	};
 
 	scenes[2012] = {
 		text: "It has to be worth something.\n[1] I'm happy for you.\n[2] It is. I know it.",
-		image: assets.assured,
+		image: assets.assured_rain,
 		keys: ["1", "2"],
 		nextPages: [2013, 2013]
 	};
 
 	scenes[2013] = {
 		text: "Thanks for hearing me out. It felt good to get that off my chest.",
-		image: assets.warm,
+		image: assets.warm_rain,
 		keys: [],
 		nextPages: [2014]
 	};
 
 	scenes[2014] = {
 		text: "This rain'll keep falling for a while. I think I'll stay out here.",
-		image: assets.smile,
+		image: assets.smile_rain,
 		keys: [],
 		nextPages: [2015]
 	};
 
 	scenes[2015] = {
 		text: "You're welcome to stick around. Or go if you need. Whatever feels right.",
-		image: assets.smile,
+		image: assets.smile_rain,
 		keys: [],
 		nextPages: [2016]
 	};
 
 	scenes[2016] = {
 		text: "Just take care of yourself, okay?",
-		image: assets.warm,
+		image: assets.warm_rain,
 		keys: [],
 		nextPages: [],
 		isEndingScene: true,

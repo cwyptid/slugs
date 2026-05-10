@@ -479,7 +479,7 @@ function drawGardenMode(currentTime) {
 			textFont(myFont);
 			textSize(20 * canvasScale);
 			textAlign(CENTER, CENTER);
-			fill(isRaining ? color(38, 41, 37, alpha * 255) : color(78, 30, 51, alpha * 255));
+			fill(isRaining ? color(152, 77, 123, alpha * 255) : color(78, 30, 51, alpha * 255));
 			noStroke();
 			text(flavorText, tbX + tbW / 2, tbY + tbH / 2);
 			pop();
@@ -606,7 +606,7 @@ function drawVNMode(currentTime) {
 	let fadeSprite = isIntroSequenceVN ? gardenState.tonyStartIdleSprite : gardenState.tonyState.currentSprite;
 	let tonyFadeFrame = fadeSprite ? fadeSprite.getCurrentFrame() : null;
 
-	if (tonyFadeFrame) {
+	if (tonyFadeFrame && !skipVNOverworldFade) {
 		const tonyWidth = tonyFadeFrame.width * tonyScale * canvasScale;
 		const tonyHeight = tonyFadeFrame.height * tonyScale * canvasScale;
 
@@ -660,6 +660,9 @@ function drawVNMode(currentTime) {
 
 	// Animate entry: fade in + slide up (subtle)
 	const fadeInDuration = isIntroSequenceVN ? introVNEntryDuration : vnEntryDuration;
+	if (skipVNOverworldFade && currentTime - vnEntryTime >= fadeInDuration) {
+		skipVNOverworldFade = false; // Entry fade complete, flag no longer needed
+	}
 	if (currentTime - vnEntryTime < fadeInDuration) {
 		const progress = (currentTime - vnEntryTime) / fadeInDuration;
 		// Slide up from 40px below (subtle)
@@ -702,7 +705,7 @@ function drawVNMode(currentTime) {
 	const dialogY = height - (175 * canvasScale);
 
 	// Draw textbox.png at its natural size without stretching
-	let textboxImg = gardenAssets.textbox;
+	let textboxImg = isRaining && gardenAssets.textboxRain ? gardenAssets.textboxRain : gardenAssets.textbox;
 	let textboxWidth = textboxImg.width * canvasScale;
 	let textboxHeight = textboxImg.height * canvasScale;
 
@@ -725,7 +728,7 @@ function drawVNMode(currentTime) {
 	const dialogHeight = textboxHeight;
 
 	// Draw dialogue text (including choices)
-	fill(74, 42, 60); // White text for dark textbox
+	fill(isRaining ? color(30, 25, 83) : color(74, 42, 60));
 	textSize(20);
 	textAlign(LEFT, TOP);
 	textFont(myFont);
@@ -803,9 +806,9 @@ function drawVNMode(currentTime) {
 		let isHovered = hoveredButtonTexts.has(line);
 
 		if (isHovered) {
-			fill(40, 148, 102); // Hovered choices
+			fill(isRaining ? color(152, 77, 123) : color(40, 148, 102));
 		} else {
-			fill(74, 42, 60); // Normal text
+			fill(isRaining ? color(30, 25, 83) : color(74, 42, 60));
 		}
 
 		text(line, dialogX + 30, yPos, dialogWidth - 60);
@@ -1018,18 +1021,44 @@ function drawCutsceneMode(currentTime) {
 		noStroke();
 		rect(0, 0, width, height);
 		pop();
+		// Switch panels when screen is dark enough that the change isn't visible
+		if (progress >= 0.85 && !document.body.classList.contains('rain-active')) {
+			document.body.classList.add('rain-active');
+		}
 		if (progress >= 1) {
 			fadingCutsceneToVN = false;
 			isRaining = true;
 			initRainParticles();
-			document.body.classList.add('rain-active');
 			currentScene = fadeCutsceneToVNTargetScene;
 			gameMode = 'vn';
 			returnToGardenAfterVN = false;
 			currentSection = 2;
 			gardenState.backgroundImage = gardenAssets.section2RainBackground || gardenAssets.section2Background;
-			// Pre-expire Tony fade so she is invisible immediately (she wasn't in the cutscene)
-			vnEntryTime = millis() - (vnEntryDuration + 100);
+			skipVNOverworldFade = true; // No overworld Tony to fade out — came from cutscene
+			vnEntryTime = millis(); // Fade in portrait + textbox from black
+			resetTypewriter();
+			lastClickTime = 0;
+			lastProcessedScene = -1;
+		}
+	}
+
+	// Cutscene → brief VN interlude transition (no rain)
+	if (fadingCutsceneToVNBrief) {
+		const elapsed = currentTime - fadeCutsceneToVNBriefStartTime;
+		const progress = Math.min(elapsed / fadeCutsceneToVNBriefDuration, 1);
+		push();
+		fill(0, 0, 0, progress * 255);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+		if (progress >= 1) {
+			fadingCutsceneToVNBrief = false;
+			currentScene = fadeCutsceneToVNBriefTargetScene;
+			gameMode = 'vn';
+			returnToGardenAfterVN = false;
+			currentSection = 2;
+			gardenState.backgroundImage = gardenAssets.section2Background;
+			vnEntryTime = millis() - (vnEntryDuration + 100); // Skip Tony fade-in, appear immediately
 			resetTypewriter();
 			lastClickTime = 0;
 			lastProcessedScene = -1;
@@ -1139,7 +1168,7 @@ function drawStoryEndingMode(currentTime) {
 		mouseY > buttonY && mouseY < buttonY + buttonH;
 
 	const activeOtherBox = isRaining && otherBoxRainImage ? otherBoxRainImage : otherBoxImage;
-	const activeTextColor = isRaining ? color(38, 41, 37) : color(78, 30, 51);
+	const activeTextColor = isRaining ? color(30, 25, 83) : color(78, 30, 51);
 
 	textFont(myFont);
 	textSize(24);
@@ -1188,7 +1217,7 @@ function drawESCOverlay() {
 		mouseY > buttonY && mouseY < buttonY + buttonH;
 
 	const activeOtherBox = isRaining && otherBoxRainImage ? otherBoxRainImage : otherBoxImage;
-	const activeTextColor = isRaining ? color(38, 41, 37) : color(78, 30, 51);
+	const activeTextColor = isRaining ? color(30, 25, 83) : color(78, 30, 51);
 
 	textFont(myFont);
 	textSize(24);

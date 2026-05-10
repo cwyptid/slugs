@@ -5,10 +5,10 @@
 const DEBUG_MODE = false;
 // DEBUG_CUTSCENE - set to true to skip straight to cutscene 1 on load
 // Backtick (`) key also jumps back to cutscene 1 from any screen while this is on
-const DEBUG_CUTSCENE = true;
+const DEBUG_CUTSCENE = false;
 // DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
 // ] key also jumps to ending VN from any screen while this is on
-const DEBUG_ENDING = false;
+const DEBUG_ENDING = true;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
@@ -307,6 +307,13 @@ let fadingCutsceneToVN = false;
 let fadeCutsceneToVNStartTime = 0;
 const fadeCutsceneToVNDuration = 1000;
 let fadeCutsceneToVNTargetScene = 2000; // which VN scene to land on after fade
+let skipVNOverworldFade = false; // When true, suppresses overworld Tony fade-out (used for cutscene→VN transitions)
+
+// Cutscene-to-VN brief interlude transition (mid-story, no rain)
+let fadingCutsceneToVNBrief = false;
+let fadeCutsceneToVNBriefStartTime = 0;
+const fadeCutsceneToVNBriefDuration = 800;
+let fadeCutsceneToVNBriefTargetScene = 1350;
 
 // Rain state
 let isRaining = false;
@@ -400,7 +407,9 @@ function resetGame() {
 	fadingToTitleAfterShell = false;
 	fadingOutFromVN = false;
 	fadingCutsceneToVN = false;
+	fadingCutsceneToVNBrief = false;
 	fadingToTitleFromEnding = false;
+	skipVNOverworldFade = false;
 
 	// Reset rain state
 	isRaining = false;
