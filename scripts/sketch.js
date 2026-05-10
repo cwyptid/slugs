@@ -35,6 +35,10 @@ function setup() {
 
 	if (DEBUG_CUTSCENE) {
 		playerName = "Debug";
+		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
+			plant.watered = true;
+		}
+		gardenState.emptyPlot.visited = true;
 		gameMode = 'cutscene';
 		currentScene = 1100;
 		vnEntryTime = millis();
