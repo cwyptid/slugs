@@ -234,6 +234,65 @@ function loadGameAssets() {
 		loadImage("../assets/sprites/plants/shell_ready/shell_ready-1.png"),
 		loadImage("../assets/sprites/plants/shell_ready/shell_ready-2.png")
 	];
+	// Cutscene sprites - cutscene 1
+	sprites.cutsceneCallback1Frames = [
+		loadImage("../assets/cutscenes/tony_callback_1/tony_callback_1-1.png"),
+		loadImage("../assets/cutscenes/tony_callback_1/tony_callback_1-2.png")
+	];
+	sprites.cutsceneCallback2Frames = [
+		loadImage("../assets/cutscenes/tony_callback_2/tony_callback_2-1.png"),
+		loadImage("../assets/cutscenes/tony_callback_2/tony_callback_2-2.png")
+	];
+
+	// Cutscene sprites - cutscenes 3-6 (simple 2-frame loops at 3fps)
+	sprites.cutsceneLeavingFrames = [
+		loadImage("../assets/cutscenes/tony_leaving/tony_leaving-1.png"),
+		loadImage("../assets/cutscenes/tony_leaving/tony_leaving-2.png")
+	];
+	sprites.cutsceneReturningFrames = [
+		loadImage("../assets/cutscenes/tony_returning/tony_returning-1.png"),
+		loadImage("../assets/cutscenes/tony_returning/tony_returning-2.png")
+	];
+	sprites.cutsceneKneelingShellFrames = [
+		loadImage("../assets/cutscenes/tony_kneeling_shell/tony_kneeling_shell-1.png"),
+		loadImage("../assets/cutscenes/tony_kneeling_shell/tony_kneeling_shell-2.png")
+	];
+	sprites.cutsceneRainfallFrames = [
+		loadImage("../assets/cutscenes/tony_rainfall/tony_rainfall-1.png"),
+		loadImage("../assets/cutscenes/tony_rainfall/tony_rainfall-2.png")
+	];
+
+	// Cutscene sprites - cutscene 2 intro sequence
+	sprites.cutsceneRemoveShellFrames = [
+		loadImage("../assets/cutscenes/tony_remove_shell/tony_remove_shell-1.png"),
+		loadImage("../assets/cutscenes/tony_remove_shell/tony_remove_shell-2.png"),
+		loadImage("../assets/cutscenes/tony_remove_shell/tony_remove_shell-3.png"),
+		loadImage("../assets/cutscenes/tony_remove_shell/tony_remove_shell-4.png")
+	];
+	sprites.cutsceneRemoveShellAfterFrames = [
+		loadImage("../assets/cutscenes/tony_remove_shell_after/tony_remove_shell_after-1.png"),
+		loadImage("../assets/cutscenes/tony_remove_shell_after/tony_remove_shell_after-2.png")
+	];
+	sprites.cutsceneEarsFrames = [
+		loadImage("../assets/cutscenes/tony_ears/tony_ears-1.png"),
+		loadImage("../assets/cutscenes/tony_ears/tony_ears-2.png"),
+		loadImage("../assets/cutscenes/tony_ears/tony_ears-3.png"),
+		loadImage("../assets/cutscenes/tony_ears/tony_ears-4.png"),
+		loadImage("../assets/cutscenes/tony_ears/tony_ears-5.png")
+	];
+	sprites.cutsceneEarsAfterFrames = [
+		loadImage("../assets/cutscenes/tony_ears_after/tony_ears_after-1.png"),
+		loadImage("../assets/cutscenes/tony_ears_after/tony_ears_after-2.png")
+	];
+
+	// Rain backgrounds - PLACEHOLDER: load regular backgrounds until rain variants are made
+	gardenAssets.section1RainBackground = gardenAssets.section1Background; // PLACEHOLDER
+	gardenAssets.section2RainBackground = gardenAssets.section2Background; // PLACEHOLDER
+	gardenAssets.section3RainBackground = gardenAssets.section3Background; // PLACEHOLDER
+
+	// Tony rain overworld sprite frames - PLACEHOLDER: using tony_idle until rain variant is made
+	sprites.tonyRainFrames = sprites.tonyIdleFrames; // PLACEHOLDER
+
 	// Font
 	myFont = loadFont("../assets/boldpixels/BoldPixels.ttf");
 }

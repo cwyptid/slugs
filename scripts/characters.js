@@ -122,6 +122,35 @@ function initializeSprites() {
 	assets.wistful = gardenState.tonyWistfulVNSprite;
 	assets.warm = gardenState.tonyWarmVNSprite;
 
+	// Cutscene sprites - cutscene 1 (3fps, looping)
+	gardenState.cutsceneCallbackSprite1 = new Sprite(sprites.cutsceneCallback1Frames, 3, true);
+	gardenState.cutsceneCallbackSprite2 = new Sprite(sprites.cutsceneCallback2Frames, 3, true);
+	assets.cutscene_callback_1 = gardenState.cutsceneCallbackSprite1;
+	assets.cutscene_callback_2 = gardenState.cutsceneCallbackSprite2;
+
+	// Cutscene sprites - cutscenes 3-6 (3fps, looping)
+	gardenState.cutsceneLeavingSprite = new Sprite(sprites.cutsceneLeavingFrames, 3, true);
+	gardenState.cutsceneReturningSprite = new Sprite(sprites.cutsceneReturningFrames, 3, true);
+	gardenState.cutsceneKneelingShellSprite = new Sprite(sprites.cutsceneKneelingShellFrames, 3, true);
+	gardenState.cutsceneRainfallSprite = new Sprite(sprites.cutsceneRainfallFrames, 3, true);
+	assets.cutscene_leaving = gardenState.cutsceneLeavingSprite;
+	assets.cutscene_returning = gardenState.cutsceneReturningSprite;
+	assets.cutscene_kneeling_shell = gardenState.cutsceneKneelingShellSprite;
+	assets.cutscene_rainfall = gardenState.cutsceneRainfallSprite;
+
+	// Cutscene sprites - cutscene 2 intro sequence (plays once, then loops)
+	gardenState.cutsceneRemoveShellSprite = new Sprite(sprites.cutsceneRemoveShellFrames, 3, false);
+	gardenState.cutsceneRemoveShellAfterSprite = new Sprite(sprites.cutsceneRemoveShellAfterFrames, 3, false);
+	gardenState.cutsceneEarsSprite = new Sprite(sprites.cutsceneEarsFrames, 6, false);
+	gardenState.cutsceneEarsAfterSprite = new Sprite(sprites.cutsceneEarsAfterFrames, 3, true);
+	assets.cutscene_remove_shell = gardenState.cutsceneRemoveShellSprite;
+	assets.cutscene_remove_shell_after = gardenState.cutsceneRemoveShellAfterSprite;
+	assets.cutscene_ears = gardenState.cutsceneEarsSprite;
+	assets.cutscene_ears_after = gardenState.cutsceneEarsAfterSprite;
+
+	// Tony rain overworld sprite - PLACEHOLDER: uses tonyRainFrames (same as idle until rain variant)
+	gardenState.tonyState.tonyRainSprite = new Sprite(sprites.tonyRainFrames, 3, true);
+
 	// Tony intro animation sprites (for intro sequence)
 	gardenState.tonyStartSprite = new Sprite(sprites.tonyStartFrames, 3, true); // 3fps, looping
 	gardenState.tonySurprisedSprite = new Sprite(sprites.tonySurprisedFrames, 6, false); // 6fps, plays once
@@ -326,6 +355,14 @@ function updateAllSprites() {
 		if (cursorQuestionSprite) {
 			cursorQuestionSprite.update();
 		}
+	} else if (gameMode === 'cutscene') {
+		if (cutsceneIntroStep >= 0 && cutsceneIntroSequence.length > 0) {
+			// Update only the currently active intro sprite
+			cutsceneIntroSequence[cutsceneIntroStep].update();
+		} else if (scenes[currentScene] && scenes[currentScene].cutsceneSprite) {
+			// Update the dialogue-phase sprite
+			scenes[currentScene].cutsceneSprite.update();
+		}
 	} else if (gameMode === 'transitioning') {
 		// During section transitions, pause plant animations (they're hidden by fade overlay)
 		// Only update Tony's animation since it's still visible
@@ -361,6 +398,11 @@ function updateAllSprites() {
 				gardenState.tonyState.currentSprite = gardenState.tonyState.tonyActionIdleSprite;
 				actionIdleStartTime = millis(); // Track when action_idle starts
 			}
+		}
+
+		// Update Tony rain sprite when raining
+		if (isRaining && gardenState.tonyState.tonyRainSprite) {
+			gardenState.tonyState.tonyRainSprite.update();
 		}
 
 		// Update cursor sprites (only in garden mode)
