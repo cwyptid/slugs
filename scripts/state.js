@@ -103,8 +103,10 @@ let nameInputButtons = []; // Button objects for name input
 let hoveredButtonIndex = -1; // Which button is currently hovered by mouse
 let selectedButtonIndex = -1; // Which button is currently selected via keyboard (-1 = none)
 let nameBoxImage = null;
+let nameBoxRainImage = null;
 let textButtonImage = null;
 let otherBoxImage = null;
+let otherBoxRainImage = null;
 const NAME_MAX_LENGTH = 12;
 const LETTER_ROWS = 2;
 const LETTERS_PER_ROW = 13;
@@ -409,4 +411,5 @@ function resetGame() {
 
 	// Hide nameInput panel when returning to title
 	document.body.classList.remove('nameInput-active');
+	document.body.classList.remove('rain-active');
 }

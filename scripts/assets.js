@@ -6,8 +6,10 @@ function loadGameAssets() {
 
 	// Name input screen assets
 	nameBoxImage = loadImage("../assets/UI/namebox.png");
+	nameBoxRainImage = loadImage("../assets/UI/namebox_rain.png");
 	textButtonImage = loadImage("../assets/UI/text_button.png");
 	otherBoxImage = loadImage("../assets/UI/otherbox.png");
+	otherBoxRainImage = loadImage("../assets/UI/otherbox_rain.png");
 
 	// Backgrounds for different sections
 	gardenAssets.section1Background = loadImage("../assets/environment/section1_normal.png");
@@ -16,6 +18,8 @@ function loadGameAssets() {
 	gardenAssets.textbox = loadImage("../assets/UI/textbox.png");
 	gardenAssets.arrowRight = loadImage("../assets/UI/arrow_right.png");
 	gardenAssets.arrowLeft = loadImage("../assets/UI/arrow_left.png");
+	gardenAssets.arrowRightRain = loadImage("../assets/UI/arrow_right_rain.png");
+	gardenAssets.arrowLeftRain = loadImage("../assets/UI/arrow_left_rain.png");
 
 	// Load sprite frame arrays
 	// Tony VN Sprite (tony_smile) - 3 fps, loops
@@ -207,6 +211,43 @@ function loadGameAssets() {
 		loadImage("../assets/sprites/plants/seedling_watered/seedling_watered-1.png"),
 		loadImage("../assets/sprites/plants/seedling_watered/seedling_watered-2.png")
 	];
+	// Rain sprites for all plants, shell, and empty plot
+	sprites.thymeRainFrames = [
+		loadImage("../assets/sprites/plants/thyme_rain/thyme_rain-1.png"),
+		loadImage("../assets/sprites/plants/thyme_rain/thyme_rain-2.png")
+	];
+	sprites.rosemaryRainFrames = [
+		loadImage("../assets/sprites/plants/rosemary_rain/rosemary_rain-1.png"),
+		loadImage("../assets/sprites/plants/rosemary_rain/rosemary_rain-2.png")
+	];
+	sprites.sunflowersRainFrames = [
+		loadImage("../assets/sprites/plants/sunflowers_rain/sunflowers_rain-1.png"),
+		loadImage("../assets/sprites/plants/sunflowers_rain/sunflowers_rain-2.png")
+	];
+	sprites.tulipsRainFrames = [
+		loadImage("../assets/sprites/plants/tulips_rain/tulips_rain-1.png"),
+		loadImage("../assets/sprites/plants/tulips_rain/tulips_rain-2.png")
+	];
+	sprites.wildpatchRainFrames = [
+		loadImage("../assets/sprites/plants/wildpatch_rain/wildpatch_rain-1.png"),
+		loadImage("../assets/sprites/plants/wildpatch_rain/wildpatch_rain-2.png")
+	];
+	sprites.tomatoesRainFrames = [
+		loadImage("../assets/sprites/plants/tomatoes_rain/tomatoes_rain-1.png"),
+		loadImage("../assets/sprites/plants/tomatoes_rain/tomatoes_rain-2.png")
+	];
+	sprites.seedlingRainFrames = [
+		loadImage("../assets/sprites/plants/seedling_rain/seedling_rain-1.png"),
+		loadImage("../assets/sprites/plants/seedling_rain/seedling_rain-2.png")
+	];
+	sprites.emptyPlotRainFrames = [
+		loadImage("../assets/sprites/plants/emptyplot_rain/emptyplot_rain-1.png"),
+		loadImage("../assets/sprites/plants/emptyplot_rain/emptyplot_rain-2.png")
+	];
+	sprites.shellRainFrames = [
+		loadImage("../assets/sprites/plants/shell_rain/shell_rain-1.png"),
+		loadImage("../assets/sprites/plants/shell_rain/shell_rain-2.png")
+	];
 	// Cursor animation frames
 	sprites.cursorFrames = [
 		loadImage("../assets/sprites/cursor/cursor-1.png"),
@@ -285,13 +326,17 @@ function loadGameAssets() {
 		loadImage("../assets/cutscenes/tony_ears_after/tony_ears_after-2.png")
 	];
 
-	// Rain backgrounds - PLACEHOLDER: load regular backgrounds until rain variants are made
-	gardenAssets.section1RainBackground = gardenAssets.section1Background; // PLACEHOLDER
-	gardenAssets.section2RainBackground = gardenAssets.section2Background; // PLACEHOLDER
-	gardenAssets.section3RainBackground = gardenAssets.section3Background; // PLACEHOLDER
+	// Rain backgrounds
+	gardenAssets.section1RainBackground = loadImage("../assets/environment/section1_rain.png");
+	gardenAssets.section2RainBackground = loadImage("../assets/environment/section2_rain.png");
+	gardenAssets.section3RainBackground = loadImage("../assets/environment/section3_rain.png");
 
-	// Tony rain overworld sprite frames - PLACEHOLDER: using tony_idle until rain variant is made
-	sprites.tonyRainFrames = sprites.tonyIdleFrames; // PLACEHOLDER
+	// Tony rain overworld sprite frames
+	sprites.tonyRainFrames = [
+		loadImage("../assets/sprites/tony_overworld/tony_idle_rain/tony_idle_rain-1.png"),
+		loadImage("../assets/sprites/tony_overworld/tony_idle_rain/tony_idle_rain-2.png"),
+		loadImage("../assets/sprites/tony_overworld/tony_idle_rain/tony_idle_rain-3.png")
+	];
 
 	// Font
 	myFont = loadFont("../assets/boldpixels/BoldPixels.ttf");
