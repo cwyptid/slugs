@@ -74,13 +74,26 @@ function initializeSprites() {
 	gardenState.section1Plants[4].drySprite = new Sprite(sprites.wildpatchDryFrames, 3, true);
 	gardenState.section1Plants[4].wateredSprite = new Sprite(sprites.wildpatchWateredFrames, 3, true);
 
+	// Rain sprites for section 1
+	gardenState.section1Plants[0].rainSprite = new Sprite(sprites.thymeRainFrames, 3, true);
+	gardenState.section1Plants[1].rainSprite = new Sprite(sprites.rosemaryRainFrames, 3, true);
+	gardenState.section1Plants[2].rainSprite = new Sprite(sprites.sunflowersRainFrames, 3, true);
+	gardenState.section1Plants[3].rainSprite = new Sprite(sprites.tulipsRainFrames, 3, true);
+	gardenState.section1Plants[4].rainSprite = new Sprite(sprites.wildpatchRainFrames, 3, true);
+
 	// Create both dry and watered sprites for each plant in section 2
 	gardenState.section2Plants[0].drySprite = new Sprite(sprites.tomatoesDryFrames, 3, true);
 	gardenState.section2Plants[0].wateredSprite = new Sprite(sprites.tomatoesWateredFrames, 3, true);
+	gardenState.section2Plants[0].rainSprite = new Sprite(sprites.tomatoesRainFrames, 3, true);
 
 	// Create both dry and watered sprites for each plant in section 3
 	gardenState.section3Plants[0].drySprite = new Sprite(sprites.seedlingDryFrames, 3, true);
 	gardenState.section3Plants[0].wateredSprite = new Sprite(sprites.seedlingWateredFrames, 3, true);
+	gardenState.section3Plants[0].rainSprite = new Sprite(sprites.seedlingRainFrames, 3, true);
+
+	// Rain sprites for shell and empty plot
+	gardenState.shell.rainSprite = new Sprite(sprites.shellRainFrames, 3, true);
+	gardenState.emptyPlot.rainSprite = new Sprite(sprites.emptyPlotRainFrames, 3, true);
 
 	// Initialize Tony sprites
 	gardenState.tonyState.tonyIdleSprite = new Sprite(sprites.tonyIdleFrames, 3, true);
@@ -380,7 +393,9 @@ function updateAllSprites() {
 	} else {
 		// In garden mode, update all visible sprites
 		for (let plant of frameCachedPlants) {
-			if (plant.watered) {
+			if (isRaining) {
+				if (plant.rainSprite) plant.rainSprite.update();
+			} else if (plant.watered) {
 				if (plant.wateredSprite) plant.wateredSprite.update();
 			} else {
 				if (plant.drySprite) plant.drySprite.update();
@@ -414,17 +429,21 @@ function updateAllSprites() {
 		}
 
 		// Update empty plot sprite (only in section 3)
-		if (currentSection === 3 && gardenState.emptyPlot.sprite) {
-			gardenState.emptyPlot.sprite.update();
+		if (currentSection === 3) {
+			if (isRaining && gardenState.emptyPlot.rainSprite) {
+				gardenState.emptyPlot.rainSprite.update();
+			} else if (gardenState.emptyPlot.sprite) {
+				gardenState.emptyPlot.sprite.update();
+			}
 		}
 
 		// Update shell sprite (only in section 2)
 		if (currentSection === 2) {
-			if (gardenState.shell.sprite) {
-				gardenState.shell.sprite.update();
-			}
-			if (gardenState.shell.readySprite) {
-				gardenState.shell.readySprite.update();
+			if (isRaining && gardenState.shell.rainSprite) {
+				gardenState.shell.rainSprite.update();
+			} else {
+				if (gardenState.shell.sprite) gardenState.shell.sprite.update();
+				if (gardenState.shell.readySprite) gardenState.shell.readySprite.update();
 			}
 		}
 	}

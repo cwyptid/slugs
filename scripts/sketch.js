@@ -49,10 +49,11 @@ function setup() {
 		gardenState.emptyPlot.visited = true;
 		isRaining = true;
 		initRainParticles();
+		document.body.classList.add('rain-active');
 		currentScene = 1605;
 		gameMode = 'vn';
 		currentSection = 2;
-		gardenState.backgroundImage = gardenAssets.section2Background;
+		gardenState.backgroundImage = gardenAssets.section2RainBackground || gardenAssets.section2Background;
 		vnEntryTime = millis() - (vnEntryDuration + 100);
 		resetTypewriter();
 	}

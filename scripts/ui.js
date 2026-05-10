@@ -280,42 +280,40 @@ function drawGardenMode(currentTime) {
 		image(isRaining ? gardenAssets.section3RainBackground : gardenAssets.section3Background, 0, 0, width, height);
 	}
 
-	// Draw all plants with sprite animations - only draw the ACTIVE sprite
+	// Draw all plants with sprite animations - rain sprite takes priority when raining
 	for (let plant of currentSectionPlants) {
-		if (plant.watered) {
-			// ONLY draw watered sprite
-			let frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+		let frame = null;
+		if (isRaining && plant.rainSprite) {
+			frame = plant.rainSprite.getCurrentFrame();
+		} else if (plant.watered) {
+			frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
 		} else {
-			// ONLY draw dry sprite
-			let frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+			frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
 		}
+		if (frame) image(frame, plant.x, plant.y, plant.width, plant.height);
 	}
 
 	// Draw empty plot sprite (only in section 3)
-	if (currentSection === 3 && gardenState.emptyPlot.sprite) {
-		let emptyPlotFrame = gardenState.emptyPlot.sprite.getCurrentFrame();
-		if (emptyPlotFrame) {
-			image(emptyPlotFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
+	if (currentSection === 3) {
+		const epSprite = isRaining ? gardenState.emptyPlot.rainSprite : gardenState.emptyPlot.sprite;
+		if (epSprite) {
+			let epFrame = epSprite.getCurrentFrame();
+			if (epFrame) image(epFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
 		}
 	}
 
 	// Draw shell sprite (only in section 2)
 	if (currentSection === 2) {
-		// In rain_ending the game is over, so show the normal shell sprite again
-		const allPlantsWatered = checkAllPlantsWatered() && gameMode !== 'rain_ending';
-		const shellSpriteToUse = allPlantsWatered ? gardenState.shell.readySprite : gardenState.shell.sprite;
-
+		let shellSpriteToUse;
+		if (isRaining) {
+			shellSpriteToUse = gardenState.shell.rainSprite;
+		} else {
+			const allPlantsWatered = checkAllPlantsWatered() && gameMode !== 'rain_ending';
+			shellSpriteToUse = allPlantsWatered ? gardenState.shell.readySprite : gardenState.shell.sprite;
+		}
 		if (shellSpriteToUse) {
 			let shellFrame = shellSpriteToUse.getCurrentFrame();
-			if (shellFrame) {
-				image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
-			}
+			if (shellFrame) image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
 		}
 	}
 
@@ -440,7 +438,7 @@ function drawGardenMode(currentTime) {
 
 		push();
 		tint(255, arrowAlpha);
-		image(gardenAssets.arrowLeft, arrowLeftX, bobY, arrowSize, arrowSize);
+		image(isRaining && gardenAssets.arrowLeftRain ? gardenAssets.arrowLeftRain : gardenAssets.arrowLeft, arrowLeftX, bobY, arrowSize, arrowSize);
 		pop();
 	}
 
@@ -458,7 +456,7 @@ function drawGardenMode(currentTime) {
 
 		push();
 		tint(255, arrowAlpha);
-		image(gardenAssets.arrowRight, arrowRightX, bobY, arrowSize, arrowSize);
+		image(isRaining && gardenAssets.arrowRightRain ? gardenAssets.arrowRightRain : gardenAssets.arrowRight, arrowRightX, bobY, arrowSize, arrowSize);
 		pop();
 	}
 
@@ -472,15 +470,16 @@ function drawGardenMode(currentTime) {
 			const tbH = 116 * canvasScale;
 			const tbX = (width - tbW) / 2;
 			const tbY = height - tbH - 10 * canvasScale;
+			const activeNameBox = isRaining && nameBoxRainImage ? nameBoxRainImage : nameBoxImage;
 			push();
 			tint(255, alpha * 255);
-			image(nameBoxImage, tbX, tbY, tbW, tbH);
+			image(activeNameBox, tbX, tbY, tbW, tbH);
 			pop();
 			push();
 			textFont(myFont);
 			textSize(20 * canvasScale);
 			textAlign(CENTER, CENTER);
-			fill(78, 30, 51, alpha * 255);
+			fill(isRaining ? color(38, 41, 37, alpha * 255) : color(78, 30, 51, alpha * 255));
 			noStroke();
 			text(flavorText, tbX + tbW / 2, tbY + tbH / 2);
 			pop();
@@ -547,42 +546,44 @@ function drawGardenMode(currentTime) {
 // ========================
 
 function drawVNMode(currentTime) {
-	// Draw garden background
-	if (gardenState.backgroundImage) {
-		image(gardenState.backgroundImage, 0, 0, width, height);
+	// Draw garden background (rain variant if raining)
+	let vnBg = gardenState.backgroundImage;
+	if (isRaining) {
+		if (currentSection === 1) vnBg = gardenAssets.section1RainBackground;
+		else if (currentSection === 2) vnBg = gardenAssets.section2RainBackground;
+		else if (currentSection === 3) vnBg = gardenAssets.section3RainBackground;
 	}
+	if (vnBg) image(vnBg, 0, 0, width, height);
 
 	// Draw all plants with sprite animations so they're visible behind the VN UI
 	let currentSectionPlants = frameCachedPlants;
 	for (let plant of currentSectionPlants) {
-		if (plant.watered) {
-			// ONLY draw watered sprite
-			let frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+		let frame = null;
+		if (isRaining && plant.rainSprite) {
+			frame = plant.rainSprite.getCurrentFrame();
+		} else if (plant.watered) {
+			frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
 		} else {
-			// ONLY draw dry sprite
-			let frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+			frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
 		}
+		if (frame) image(frame, plant.x, plant.y, plant.width, plant.height);
 	}
 
 	// Draw empty plot sprite (only in section 3)
-	if (currentSection === 3 && gardenState.emptyPlot.sprite) {
-		let emptyPlotFrame = gardenState.emptyPlot.sprite.getCurrentFrame();
-		if (emptyPlotFrame) {
-			image(emptyPlotFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
+	if (currentSection === 3) {
+		const epSprite = isRaining ? gardenState.emptyPlot.rainSprite : gardenState.emptyPlot.sprite;
+		if (epSprite) {
+			let epFrame = epSprite.getCurrentFrame();
+			if (epFrame) image(epFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
 		}
 	}
 
 	// Draw shell sprite (only in section 2)
-	if (currentSection === 2 && gardenState.shell.sprite) {
-		let shellFrame = gardenState.shell.sprite.getCurrentFrame();
-		if (shellFrame) {
-			image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
+	if (currentSection === 2) {
+		const shellSprite = isRaining ? gardenState.shell.rainSprite : gardenState.shell.sprite;
+		if (shellSprite) {
+			let shellFrame = shellSprite.getCurrentFrame();
+			if (shellFrame) image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
 		}
 	}
 
@@ -1020,6 +1021,7 @@ function drawCutsceneMode(currentTime) {
 			fadingCutsceneToVN = false;
 			isRaining = true;
 			initRainParticles();
+			document.body.classList.add('rain-active');
 			currentScene = fadeCutsceneToVNTargetScene;
 			gameMode = 'vn';
 			returnToGardenAfterVN = false;
@@ -1075,22 +1077,23 @@ function drawCutsceneMode(currentTime) {
 // ========================
 
 function drawStoryEndingMode(currentTime) {
-	// Draw garden background (section 2, rain variant) with all plants visible
-	if (gardenState.backgroundImage) {
-		image(gardenState.backgroundImage, 0, 0, width, height);
-	}
+	// Draw section 2 rain background
+	const endBg = gardenAssets.section2RainBackground || gardenAssets.section2Background;
+	if (endBg) image(endBg, 0, 0, width, height);
 
-	// Draw section 2 watered plants (where the story ends)
+	// Draw section 2 rain plants
 	for (let plant of gardenState.section2Plants) {
-		if (plant.wateredSprite) {
-			let frame = plant.wateredSprite.getCurrentFrame();
+		const sprite = plant.rainSprite || plant.wateredSprite;
+		if (sprite) {
+			let frame = sprite.getCurrentFrame();
 			if (frame) image(frame, plant.x, plant.y, plant.width, plant.height);
 		}
 	}
 
-	// Draw shell (normal sprite — game is over, ready state no longer applies)
-	if (gardenState.shell.sprite) {
-		let shellFrame = gardenState.shell.sprite.getCurrentFrame();
+	// Draw shell rain sprite
+	const endShell = gardenState.shell.rainSprite || gardenState.shell.sprite;
+	if (endShell) {
+		let shellFrame = endShell.getCurrentFrame();
 		if (shellFrame) image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
 	}
 
@@ -1134,6 +1137,9 @@ function drawStoryEndingMode(currentTime) {
 	const returnHovered = mouseX > rightBtnX && mouseX < rightBtnX + buttonW &&
 		mouseY > buttonY && mouseY < buttonY + buttonH;
 
+	const activeOtherBox = isRaining && otherBoxRainImage ? otherBoxRainImage : otherBoxImage;
+	const activeTextColor = isRaining ? color(38, 41, 37) : color(78, 30, 51);
+
 	textFont(myFont);
 	textSize(24);
 	textAlign(CENTER, CENTER);
@@ -1141,8 +1147,8 @@ function drawStoryEndingMode(currentTime) {
 	// "Stay in garden" button
 	push();
 	translate(0, stayHovered ? -12 : 0);
-	if (otherBoxImage) image(otherBoxImage, leftBtnX, buttonY, buttonW, buttonH);
-	fill(78, 30, 51);
+	if (activeOtherBox) image(activeOtherBox, leftBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
 	noStroke();
 	text("STAY IN GARDEN", leftBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
 	pop();
@@ -1150,8 +1156,8 @@ function drawStoryEndingMode(currentTime) {
 	// "Return to title" button
 	push();
 	translate(0, returnHovered ? -12 : 0);
-	if (otherBoxImage) image(otherBoxImage, rightBtnX, buttonY, buttonW, buttonH);
-	fill(78, 30, 51);
+	if (activeOtherBox) image(activeOtherBox, rightBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
 	noStroke();
 	text("RETURN TO TITLE", rightBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
 	pop();
@@ -1180,22 +1186,25 @@ function drawESCOverlay() {
 	const returnHovered = mouseX > rightBtnX && mouseX < rightBtnX + buttonW &&
 		mouseY > buttonY && mouseY < buttonY + buttonH;
 
+	const activeOtherBox = isRaining && otherBoxRainImage ? otherBoxRainImage : otherBoxImage;
+	const activeTextColor = isRaining ? color(38, 41, 37) : color(78, 30, 51);
+
 	textFont(myFont);
 	textSize(24);
 	textAlign(CENTER, CENTER);
 
 	push();
 	translate(0, stayHovered ? -12 : 0);
-	if (otherBoxImage) image(otherBoxImage, leftBtnX, buttonY, buttonW, buttonH);
-	fill(78, 30, 51);
+	if (activeOtherBox) image(activeOtherBox, leftBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
 	noStroke();
 	text("STAY IN GARDEN", leftBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
 	pop();
 
 	push();
 	translate(0, returnHovered ? -12 : 0);
-	if (otherBoxImage) image(otherBoxImage, rightBtnX, buttonY, buttonW, buttonH);
-	fill(78, 30, 51);
+	if (activeOtherBox) image(activeOtherBox, rightBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
 	noStroke();
 	text("RETURN TO TITLE", rightBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
 	pop();
@@ -1352,10 +1361,11 @@ function keyPressed() {
 		gardenState.emptyPlot.visited = true;
 		isRaining = true;
 		initRainParticles();
+		document.body.classList.add('rain-active');
 		currentScene = 2000;
 		gameMode = 'vn';
 		currentSection = 2;
-		gardenState.backgroundImage = gardenAssets.section2Background;
+		gardenState.backgroundImage = gardenAssets.section2RainBackground || gardenAssets.section2Background;
 		vnEntryTime = millis() - (vnEntryDuration + 100);
 		resetTypewriter();
 		return false;
