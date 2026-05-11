@@ -1455,7 +1455,10 @@ function setupScenes() {
 		text: "The shell kept me safe, it protected me.",
 		cutsceneSprite: assets.cutscene_callback_1,
 		keys: [],
-		nextPages: [1102]
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1102
 	};
 
 	// CUTSCENE 1-2: tony_callback_2 frames
