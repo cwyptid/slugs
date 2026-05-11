@@ -1104,6 +1104,7 @@ function drawCutsceneMode(currentTime) {
 			fadingToCutscene = false;
 			currentScene = fadeToCutsceneTargetScene;
 			vnEntryTime = millis();
+			if (fadeToCutsceneTargetScene === 1102) skipCutsceneTextboxFade = true;
 			if (scenes[currentScene] && scenes[currentScene].cutsceneIntroSequence) {
 				cutsceneIntroSequence = scenes[currentScene].cutsceneIntroSequence;
 				cutsceneIntroStep = 0;
