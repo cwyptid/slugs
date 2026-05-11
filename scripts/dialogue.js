@@ -1445,10 +1445,24 @@ function setupScenes() {
 
 	// CUTSCENE 1-1: tony_callback_1 frames
 	scenes[1100] = {
-		text: "And for a while, that was fine! Good, even.",
+		text: "The shell was supposed to solve all my problems, and for a while, it pretty much did.\n",
 		cutsceneSprite: assets.cutscene_callback_1,
 		keys: [],
-		nextPages: [1101]
+		nextPages: [1117],
+	};
+
+	scenes[1117] = {
+		text: "I felt safe. I felt like I could be myself without worrying about what would happen.\n",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1114],
+	};
+
+	scenes[1114] = {
+		text: "I was all like 'Man, being a snail rules! Slugs are totally missing out.'",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1101],
 	};
 
 	scenes[1101] = {
@@ -1458,12 +1472,27 @@ function setupScenes() {
 		nextPages: [],
 		isEndingScene: true,
 		startsCutscene: true,
-		cutsceneTarget: 1102
+		cutsceneTarget: 1115
 	};
 
 	// CUTSCENE 1-2: tony_callback_2 frames
+
+	scenes[1115] = {
+		text: "But after a while… it started to get heavy.",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1116],
+	};
+
+	scenes[1116] = {
+		text: "And being a snail became pretty bogus too.",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1102],
+	};
+
 	scenes[1102] = {
-		text: "But after a while… it started to get heavy. I began to feel like I couldn't be myself and wear the shell.\n\n[1] What do you mean?\n[2] Why?",
+		text: "I began to feel like I couldn't be myself and wear the shell.\n[1] What do you mean?\n[2] Why?",
 		cutsceneSprite: assets.cutscene_callback_2,
 		keys: ["1", "2"],
 		nextPages: [1110, 1110]
@@ -1485,7 +1514,7 @@ function setupScenes() {
 	};
 
 	scenes[1112] = {
-		text: "But if I didn't have that shell on, I had no more protection! It seemed so scary at the time.\n",
+		text: "But I was scared to take it off. Without it, there'd be nothing left to protect me.\n",
 		cutsceneSprite: assets.cutscene_callback_2,
 		keys: [],
 		nextPages: [1113]
@@ -1524,7 +1553,7 @@ function setupScenes() {
 	};
 
 	scenes[1202] = {
-		text: "Thought about throwing it off a bridge. Finding a way to get rid of it and leave no trace.\n",
+		text: "Thought about throwing it off a bridge honestly.",
 		cutsceneSprite: assets.cutscene_ears_after,
 		keys: [],
 		nextPages: [],
