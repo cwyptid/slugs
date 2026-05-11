@@ -5,10 +5,10 @@
 const DEBUG_MODE = false;
 // DEBUG_CUTSCENE - set to true to skip straight to cutscene 1 on load
 // Backtick (`) key also jumps back to cutscene 1 from any screen while this is on
-const DEBUG_CUTSCENE = false;
+const DEBUG_CUTSCENE = true;
 // DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
 // ] key also jumps to ending VN from any screen while this is on
-const DEBUG_ENDING = true;
+const DEBUG_ENDING = false;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
@@ -308,6 +308,7 @@ let fadeCutsceneToVNStartTime = 0;
 const fadeCutsceneToVNDuration = 1000;
 let fadeCutsceneToVNTargetScene = 2000; // which VN scene to land on after fade
 let skipVNOverworldFade = false; // When true, suppresses overworld Tony fade-out (used for cutscene→VN transitions)
+let skipCutsceneTextboxFade = false; // When true, textbox appears instantly (black overlay still fades normally)
 
 // Cutscene-to-VN brief interlude transition (mid-story, no rain)
 let fadingCutsceneToVNBrief = false;

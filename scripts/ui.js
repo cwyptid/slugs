@@ -856,6 +856,7 @@ function drawVNMode(currentTime) {
 			currentScene = fadeToCutsceneTargetScene;
 			gameMode = 'cutscene';
 			vnEntryTime = millis();
+			if (fadeToCutsceneTargetScene === 1100) skipCutsceneTextboxFade = true;
 			// Start pre-dialogue intro sequence if this scene has one
 			if (scenes[currentScene] && scenes[currentScene].cutsceneIntroSequence) {
 				cutsceneIntroSequence = scenes[currentScene].cutsceneIntroSequence;
@@ -877,6 +878,11 @@ function drawVNMode(currentTime) {
 
 function drawCutsceneMode(currentTime) {
 	if (!scenes[currentScene]) return;
+
+	// Switch side panels to rain variant starting at cutscene 6 (scene 1505)
+	if (currentScene >= 1505 && !document.body.classList.contains('rain-active')) {
+		document.body.classList.add('rain-active');
+	}
 
 	// Fade in from black at the very start of a cutscene
 	const fadeInDuration = 600;
@@ -928,14 +934,17 @@ function drawCutsceneMode(currentTime) {
 		background(0);
 	}
 
+	const cutsceneRainMode = currentScene >= 1505;
+
 	// Draw centered textbox
-	let textboxImg = gardenAssets.textbox;
+	let textboxImg = cutsceneRainMode && gardenAssets.textboxRain ? gardenAssets.textboxRain : gardenAssets.textbox;
 	let textboxWidth = textboxImg.width * canvasScale;
 	let textboxHeight = textboxImg.height * canvasScale;
 	let dialogX = (width - textboxWidth) / 2;
 	let dialogY = height - textboxHeight - 20 * canvasScale;
 
-	let textboxAlpha = fadeElapsed < fadeInDuration
+	if (skipCutsceneTextboxFade && fadeElapsed >= fadeInDuration) skipCutsceneTextboxFade = false;
+	let textboxAlpha = skipCutsceneTextboxFade ? 255 : fadeElapsed < fadeInDuration
 		? (fadeElapsed / fadeInDuration) * 255
 		: 255;
 
@@ -979,7 +988,11 @@ function drawCutsceneMode(currentTime) {
 	}
 
 	// Draw text
-	fill(74, 42, 60);
+	const cutsceneNormalColor = color(74, 42, 60);
+	const cutsceneRainColor = color(30, 25, 83);
+	const cutsceneNormalHover = color(40, 148, 102);
+	const cutsceneRainHover = color(152, 77, 123);
+	fill(cutsceneRainMode ? cutsceneRainColor : cutsceneNormalColor);
 	textSize(20);
 	textAlign(LEFT, TOP);
 	textFont(myFont);
@@ -995,7 +1008,9 @@ function drawCutsceneMode(currentTime) {
 		if (button.isHovered) hoveredButtonTexts.add(button.text);
 	}
 	for (let line of lines) {
-		fill(hoveredButtonTexts.has(line) ? color(40, 148, 102) : color(74, 42, 60));
+		fill(hoveredButtonTexts.has(line)
+			? (cutsceneRainMode ? cutsceneRainHover : cutsceneNormalHover)
+			: (cutsceneRainMode ? cutsceneRainColor : cutsceneNormalColor));
 		text(line, dialogX + 30, yPos, dialogWidth - 60);
 		yPos += lineHeight;
 	}

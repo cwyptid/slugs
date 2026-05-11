@@ -1475,7 +1475,7 @@ function setupScenes() {
 	};
 
 	scenes[1111] = {
-		text: "So much of my life started revolving AROUND wearing that shell, to the point where I wasn't actually enjoying the life it was… allowing me to live.\n",
+		text: "So much of my life started revolving AROUND wearing that shell, to the point where I wasn't actually enjoying the life it was… supposed to let me live.\n",
 		cutsceneSprite: assets.cutscene_callback_2,
 		keys: [],
 		nextPages: [1112]
@@ -1866,7 +1866,7 @@ function setupScenes() {
 	};
 
 	scenes[2015] = {
-		text: "You're welcome to stick around. Or go if you need. Whatever feels right.",
+		text: "You're welcome to stick around. Or go if you need. Whatever floats your boat.",
 		image: assets.smile_rain,
 		keys: [],
 		nextPages: [2016]
