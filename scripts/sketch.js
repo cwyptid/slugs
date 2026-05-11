@@ -42,6 +42,7 @@ function setup() {
 		gameMode = 'cutscene';
 		currentScene = 1100;
 		vnEntryTime = millis();
+		skipCutsceneTextboxFade = true;
 		resetTypewriter();
 	}
 
