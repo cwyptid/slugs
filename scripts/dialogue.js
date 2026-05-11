@@ -1462,11 +1462,18 @@ function setupScenes() {
 		text: "I was all like 'Man, being a snail rules! Slugs are totally missing out.'",
 		cutsceneSprite: assets.cutscene_callback_1,
 		keys: [],
+		nextPages: [1118],
+	};
+
+	scenes[1118] = {
+		text: "To me, being a slug meant being born to lose.",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
 		nextPages: [1101],
 	};
 
 	scenes[1101] = {
-		text: "The shell kept me safe, it protected me.",
+		text: "But I just couldn't win.",
 		cutsceneSprite: assets.cutscene_callback_1,
 		keys: [],
 		nextPages: [],
@@ -1478,7 +1485,7 @@ function setupScenes() {
 	// CUTSCENE 1-2: tony_callback_2 frames
 
 	scenes[1115] = {
-		text: "But after a while… it started to get heavy.",
+		text: "After a while… it started to get heavy.",
 		cutsceneSprite: assets.cutscene_callback_2,
 		keys: [],
 		nextPages: [1116],
