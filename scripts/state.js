@@ -2,10 +2,10 @@
 
 // ========================
 // DEBUG FLAG - set to true to replay conversations without restrictions
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 // DEBUG_CUTSCENE - set to true to skip straight to cutscene 1 on load
 // Backtick (`) key also jumps back to cutscene 1 from any screen while this is on
-const DEBUG_CUTSCENE = true;
+const DEBUG_CUTSCENE = false;
 // DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
 // ] key also jumps to ending VN from any screen while this is on
 const DEBUG_ENDING = false;
