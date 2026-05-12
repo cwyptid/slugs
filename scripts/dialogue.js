@@ -633,14 +633,14 @@ function setupScenes() {
 	};
 
 	scenes[126] = {
-		text: "Listen to what I actually want instead of what I think I should want.",
+		text: "Listening to what I want instead of chickening out.",
 		image: assets.confident,
 		keys: [],
 		nextPages: [127],
 	};
 
 	scenes[127] = {
-		text: "It's harder than it sounds, but it's worth it.",
+		text: "It's harder than it sounds, but it's been worth it. Makes the garden feel more like mine, y'know?\n",
 		image: assets.warm,
 		keys: [],
 		nextPages: [150], // Converge to ending
@@ -648,7 +648,7 @@ function setupScenes() {
 
 	// ===== ENDING (converges from all branches) =====
 	scenes[150] = {
-		text: "They make the garden feel alive.",
+		text: "They make the garden feel more like a home, I think. I'm glad you like them.",
 		image: assets.smiling_waving,
 		keys: [],
 		nextPages: [], 
@@ -1037,14 +1037,14 @@ function setupScenes() {
 	};
 
 	scenes[515] = {
-		text: "All I can do is keep trying. Keep doing my best.",
+		text: "I just need to keep trying and hope it pulls through.",
 		image: assets.assured,
 		keys: [],
 		nextPages: [516],
 	};
 
 	scenes[516] = {
-		text: "And accept that my best might not be enough after all.",
+		text: "But if it doesn't... well, I guess that's just how it goes sometimes.",
 		image: assets.sad_peaceful,
 		keys: [],
 		nextPages: [550], // Converge to ending
@@ -1067,21 +1067,21 @@ function setupScenes() {
 
 	// Branch 5B-1: "I'm sorry"
 	scenes[522] = {
-		text: "Thanks. It's okay. Or it will be, either way.",
+		text: "Thanks. I don't mean to be a downer, it's just... hard not knowing.",
 		image: assets.sad_peaceful,
 		keys: [],
 		nextPages: [523],
 	};
 
 	scenes[523] = {
-		text: "Not everything makes it. That's just... how it is.",
+		text: "But not everything is up to me. I did what I could, and now I just have to wait and see.\n",
 		image: assets.wistful,
 		keys: [],
 		nextPages: [524],
 	};
 
 	scenes[524] = {
-		text: "But I have to keep trying. I want to see things through.",
+		text: "I want to see things through. I need to know I did everything I could.",
 		image: assets.rueful,
 		keys: [],
 		nextPages: [550], // Converge to ending
@@ -1112,7 +1112,7 @@ function setupScenes() {
 
 	// ===== ENDING (converges from all branches) =====
 	scenes[550] = {
-		text: "Even if it doesn't make it... I'm glad it sprouted at all.",
+		text: "Even if it doesn't make it... I'm just glad it sprouted at all.",
 		image: assets.peaceful,
 		keys: [],
 		nextPages: [], // Auto-return to garden after this
@@ -1726,7 +1726,7 @@ function setupScenes() {
 	};
 
 	scenes[1601] = {
-		text: "It'd seemed like forever since I'd felt rain. The shell had always kept me dry.",
+		text: "It seemed like forever since I'd felt rain. The shell had always kept me dry.",
 		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [1602]
