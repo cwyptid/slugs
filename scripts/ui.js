@@ -891,6 +891,8 @@ function drawCutsceneMode(currentTime) {
 		? (1 - fadeElapsed / fadeInDuration) * 255
 		: 0;
 
+	const cutsceneRainMode = currentScene >= 1505;
+
 	// ── PRE-DIALOGUE INTRO SEQUENCE ──────────────────────────────────────────
 	if (cutsceneIntroStep >= 0 && cutsceneIntroSequence.length > 0) {
 		const activeSprite = cutsceneIntroSequence[cutsceneIntroStep];
@@ -913,7 +915,20 @@ function drawCutsceneMode(currentTime) {
 			}
 		}
 
-		// Draw fade-in overlay on top of intro frames
+		// Draw textbox immediately (empty, no text) during intro sequence
+		if (skipCutsceneTextboxFade) {
+			let tbImg = cutsceneRainMode && gardenAssets.textboxRain ? gardenAssets.textboxRain : gardenAssets.textbox;
+			let tbW = tbImg.width * canvasScale;
+			let tbH = tbImg.height * canvasScale;
+			let tbX = (width - tbW) / 2;
+			let tbY = height - tbH - 20 * canvasScale;
+			push();
+			tint(255, 255);
+			image(tbImg, tbX, tbY, tbW, tbH);
+			pop();
+		}
+
+		// Draw fade-in overlay on top of intro frames (and textbox)
 		if (fadeInAlpha > 0) {
 			push();
 			fill(0, 0, 0, fadeInAlpha);
@@ -921,7 +936,7 @@ function drawCutsceneMode(currentTime) {
 			rect(0, 0, width, height);
 			pop();
 		}
-		return; // No textbox during intro sequence
+		return;
 	}
 
 	// ── DIALOGUE PHASE ───────────────────────────────────────────────────────
@@ -933,8 +948,6 @@ function drawCutsceneMode(currentTime) {
 	} else {
 		background(0);
 	}
-
-	const cutsceneRainMode = currentScene >= 1505;
 
 	// Draw centered textbox
 	let textboxImg = cutsceneRainMode && gardenAssets.textboxRain ? gardenAssets.textboxRain : gardenAssets.textbox;
@@ -1104,7 +1117,7 @@ function drawCutsceneMode(currentTime) {
 			fadingToCutscene = false;
 			currentScene = fadeToCutsceneTargetScene;
 			vnEntryTime = millis();
-			if (fadeToCutsceneTargetScene === 1102) skipCutsceneTextboxFade = true;
+			if (fadeToCutsceneTargetScene === 1115 || fadeToCutsceneTargetScene === 1200) skipCutsceneTextboxFade = true;
 			if (scenes[currentScene] && scenes[currentScene].cutsceneIntroSequence) {
 				cutsceneIntroSequence = scenes[currentScene].cutsceneIntroSequence;
 				cutsceneIntroStep = 0;

@@ -1469,11 +1469,18 @@ function setupScenes() {
 		text: "To me, being a slug meant being born to lose.",
 		cutsceneSprite: assets.cutscene_callback_1,
 		keys: [],
+		nextPages: [1119],
+	};
+
+	scenes[1119] = {
+		text: "Being a snail was the obvious choice.",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
 		nextPages: [1101],
 	};
 
 	scenes[1101] = {
-		text: "But I just couldn't win.",
+		text: "But it turns out I just couldn't win either way.",
 		cutsceneSprite: assets.cutscene_callback_1,
 		keys: [],
 		nextPages: [],
@@ -1514,7 +1521,7 @@ function setupScenes() {
 	};
 
 	scenes[1111] = {
-		text: "So much of my life started revolving AROUND wearing that shell, to the point where I wasn't actually enjoying the life it was… supposed to let me live.\n",
+		text: "It didn't fit around me anymore. I had to cast parts of who I was away just to stay inside.\n",
 		cutsceneSprite: assets.cutscene_callback_2,
 		keys: [],
 		nextPages: [1112]
@@ -1593,7 +1600,7 @@ function setupScenes() {
 	};
 
 	scenes[1352] = {
-		text: "Can't really say it helped. I think it made me even worse. But that's what I thought was best for me at the time.\n\n[1] I get it.\n[2] Some things just don't turn out right.",
+		text: "Can't say it helped. I think it messed me up a bit. But that's what I thought was best for me at the time.\n\n[1] I get it.\n[2] Some things just don't turn out right.",
 		image: assets.rueful,
 		keys: ["1", "2"],
 		nextPages: [1353, 1353]
@@ -1712,7 +1719,7 @@ function setupScenes() {
 	};
 
 	scenes[1601] = {
-		text: "It'd been what seemed like forever since I'd felt rain. The shell had always kept me dry.\n",
+		text: "It'd seemed like forever since I'd felt rain. The shell had always kept me dry.\n",
 		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [1602]
@@ -1773,7 +1780,7 @@ function setupScenes() {
 	};
 
 	scenes[1609] = {
-		text: "I wanted to understand what these plants needed, so that's when I started learning.\n",
+		text: "I wanted to understand what these plants needed that day, so that's when I started learning.\n",
 		cutsceneSprite: assets.cutscene_rainfall,
 		keys: [],
 		nextPages: [1610]
