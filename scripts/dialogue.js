@@ -1719,7 +1719,7 @@ function setupScenes() {
 	};
 
 	scenes[1601] = {
-		text: "It'd seemed like forever since I'd felt rain. The shell had always kept me dry.\n",
+		text: "It'd seemed like forever since I'd felt rain. The shell had always kept me dry.",
 		cutsceneSprite: assets.cutscene_kneeling_rain,
 		keys: [],
 		nextPages: [1602]
