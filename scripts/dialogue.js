@@ -1469,6 +1469,13 @@ function setupScenes() {
 		text: "To me, being a slug meant being born to lose.",
 		cutsceneSprite: assets.cutscene_callback_1,
 		keys: [],
+		nextPages: [1120],
+	};
+
+	scenes[1120] = {
+		text: "Or even worse, loseable.",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
 		nextPages: [1119],
 	};
 
