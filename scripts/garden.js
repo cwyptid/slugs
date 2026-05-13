@@ -1,6 +1,4 @@
-// ========================
-// GARDEN MODE
-// ========================
+// Garden Mode Logic
 
 function initializeGarden() {
 	// Initialize all plant sprites - dry versions

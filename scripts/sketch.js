@@ -1,4 +1,4 @@
-// A Game About Slugs - Entry Point
+// Entry Point
 
 function preload() {
 	loadGameAssets();

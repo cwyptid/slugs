@@ -1,4 +1,4 @@
-// A Game About Slugs - Sprite System & Character Initialization
+// Sprite & Character Initialization
 
 // ========================
 // SPRITE ANIMATION SYSTEM
