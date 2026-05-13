@@ -5,10 +5,10 @@
 const DEBUG_MODE = false;
 // DEBUG_CUTSCENE - set to true to skip straight to cutscene 1 on load
 // Backtick (`) key also jumps back to cutscene 1 from any screen while this is on
-const DEBUG_CUTSCENE = true;
+const DEBUG_CUTSCENE = false;
 // DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
 // ] key also jumps to ending VN from any screen while this is on
-const DEBUG_ENDING = false;
+const DEBUG_ENDING = true;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
@@ -97,6 +97,26 @@ let justReturnedFromVN = false; // Flag to skip hover check on frame we return f
 let flavorText = "";
 let flavorTextTimer = 0;
 const FLAVOR_TEXT_DURATION = 2500;
+
+const WATERED_FLAVOR = {
+	thyme:      "Smells nice.",
+	rosemary:   "Looking good.",
+	sunflowers: "They're soaking up the sun.",
+	tulips:     "All taken care of.",
+	wildpatch:  "Just doing its thing.",
+	tomatoes:   "Getting closer to ready.",
+	seedling:   "Hanging in there..."
+};
+
+const RAIN_FLAVOR = {
+	thyme:      "Smells like wet thyme.",
+	rosemary:   "Rosemary doesn't seem to mind.",
+	sunflowers: "Soaking up the... rain, I guess.",
+	tulips:     "The rain somehow makes them even prettier.",
+	wildpatch:  "Happy about all this, probably.",
+	tomatoes:   "These sure are sturdy.",
+	seedling:   "Hopefully the rain helps..."
+};
 
 // Name input screen
 let currentNameInput = ""; // Name being typed

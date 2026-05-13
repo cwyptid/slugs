@@ -1706,7 +1706,7 @@ function mousePressed() {
 					tulips:     "Someone clearly put some love into this.",
 					wildpatch:  "It's unruly.",
 					tomatoes:   "These look almost ready to pick.",
-					seedling:   "This one doesn't look so great..."
+					seedling:   "This one doesn't look too hot..."
 				};
 				flavorText = plantFlavor[plant.id] || "Looks like someone's been gardening...";
 				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
@@ -1718,7 +1718,7 @@ function mousePressed() {
 			const area = gardenState.shell;
 			if (mouseX > area.x && mouseX < area.x + area.width &&
 				mouseY > area.y && mouseY < area.y + area.height) {
-				flavorText = "Weird.";
+				flavorText = "Weird. Some birds have been nesting here.";
 				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
 				return false;
 			}
@@ -1791,16 +1791,8 @@ function mousePressed() {
 				if (!plant.watered || DEBUG_MODE) {
 					waterPlant(plant.id);
 				} else {
-					const wateredFlavor = {
-						thyme:      "The thyme smells wonderful.",
-						rosemary:   "The rosemary is looking good.",
-						sunflowers: "They're soaking up the sun.",
-						tulips:     "All taken care of.",
-						wildpatch:  "Doing its own thing, as usual.",
-						tomatoes:   "Getting closer to ready.",
-						seedling:   "Hanging in there."
-					};
-					flavorText = wateredFlavor[plant.id] || "Already watered.";
+					const flavor = isRaining ? RAIN_FLAVOR : WATERED_FLAVOR;
+					flavorText = flavor[plant.id] || (isRaining ? "The rain feels nice." : "Already watered.");
 					flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
 				}
 				return false;
@@ -1954,21 +1946,12 @@ function mousePressed() {
 			return false;
 		}
 
-		// Plant clicks - show watered flavor text
+		// Plant clicks - show rain flavor text
 		let rainSectionPlants = getPlantsForSection(currentSection);
 		for (let plant of rainSectionPlants) {
 			if (mouseX > plant.x && mouseX < plant.x + plant.width &&
 				mouseY > plant.y && mouseY < plant.y + plant.height) {
-				const wateredFlavor = {
-					thyme:      "The thyme smells wonderful.",
-					rosemary:   "The rosemary is looking good.",
-					sunflowers: "They're soaking up the sun.",
-					tulips:     "All taken care of.",
-					wildpatch:  "Doing its own thing, as usual.",
-					tomatoes:   "Getting closer to ready.",
-					seedling:   "Hanging in there."
-				};
-				flavorText = wateredFlavor[plant.id] || "The rain feels nice.";
+				flavorText = RAIN_FLAVOR[plant.id] || "The rain feels nice.";
 				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
 				return false;
 			}
@@ -1979,7 +1962,7 @@ function mousePressed() {
 			const area = gardenState.shell;
 			if (mouseX > area.x && mouseX < area.x + area.width &&
 				mouseY > area.y && mouseY < area.y + area.height) {
-				flavorText = "Still here.";
+				flavorText = "The birds inside are sleeping soundly.";
 				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
 				return false;
 			}
