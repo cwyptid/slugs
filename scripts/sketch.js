@@ -40,7 +40,7 @@ function setup() {
 		}
 		gardenState.emptyPlot.visited = true;
 		gameMode = 'cutscene';
-		currentScene = 1100;
+		currentScene = 1500;
 		vnEntryTime = millis();
 		skipCutsceneTextboxFade = true;
 		resetTypewriter();
