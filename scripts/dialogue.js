@@ -1535,7 +1535,7 @@ function setupScenes() {
 	};
 
 	scenes[1112] = {
-		text: "But I was scared to take it off. Without it, there'd be nothing left to protect me.\n",
+		text: "But I was scared to take it off. Without it, there was nothing left to protect me.\n",
 		cutsceneSprite: assets.cutscene_callback_2,
 		keys: [],
 		nextPages: [1113]
@@ -1659,7 +1659,7 @@ function setupScenes() {
 	// ===== CUTSCENE 6 =====
 
 	scenes[1500] = {
-		text: "The shell I left behind had become so much more. I couldn't believe my eyes.",
+		text: "The shell I left behind had become so much more! I couldn't believe my eyes.",
 		cutsceneSprite: assets.cutscene_kneeling_shell,
 		keys: [],
 		nextPages: [1501],
@@ -1673,28 +1673,42 @@ function setupScenes() {
 	};
 
 	scenes[1502] = {
-		text: "But it was…beautiful.\n[1] What happened to it?\n[2] What'd you do then?",
+		text: "But it was still part of me in a way. And it was just... beautiful.\n[1] What happened to it?\n[2] What'd you do then?",
 		cutsceneSprite: assets.cutscene_kneeling_shell,
 		keys: ["1", "2"],
-		nextPages: [1503, 1503]
+		nextPages: [1503, 1503],
 	};
 
 	// Both choices converge here
 	scenes[1503] = {
-		text: "It could've been mere minutes, could've been hours. Hard to tell looking back on it.\n",
+		text: "It could've just been minutes, could've been hours, I wasn't keeping track. But I just sat here.\n",
 		cutsceneSprite: assets.cutscene_kneeling_shell,
 		keys: [],
 		nextPages: [1504]
 	};
 
 	scenes[1504] = {
-		text: "But I just took it in.",
+		text: "I was so tired of being mad at it. I was mad at myself for being mad at it.",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [1407],
+	};
+
+	scenes[1407] = {
+		text: "I didn't want to go again.",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [1408],
+	};
+
+	scenes[1408] = {
+		text: "I didn't want to do anything else.",
 		cutsceneSprite: assets.cutscene_kneeling_shell,
 		keys: [],
 		nextPages: [],
 		isEndingScene: true,
 		startsCutscene: true,
-		cutsceneTarget: 1505
+		cutsceneTarget: 1505,
 	};
 
 	// ===== CUTSCENE 6 =====
@@ -1856,7 +1870,7 @@ function setupScenes() {
 	};
 
 	scenes[2006] = {
-		text: "I used to think being a snail was so much better. Hated being a slug for as long as I can remember.\n",
+		text: "I used to think being a snail was so much better. I hated everything about being a slug.\n",
 		image: assets.wistful_rain,
 		keys: [],
 		nextPages: [2007]
