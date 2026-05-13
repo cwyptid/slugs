@@ -1856,7 +1856,7 @@ function setupScenes() {
 	};
 
 	scenes[2006] = {
-		text: "I used to think being a snail was so much better. I hated being a slug for as long as I could remember.\n",
+		text: "I used to think being a snail was so much better. Hated being a slug for as long as I can remember.\n",
 		image: assets.wistful_rain,
 		keys: [],
 		nextPages: [2007]
