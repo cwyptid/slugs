@@ -1,4 +1,4 @@
-// A Game About Slugs - UI & Input Handling
+// UI & Input Handling
 
 // ========================
 // NAME INPUT SCREEN

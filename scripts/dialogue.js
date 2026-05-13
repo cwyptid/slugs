@@ -1,4 +1,4 @@
-// A Game About Slugs - Dialogue & Scene Data
+// Dialogue & Scene Data
 
 function startPlantConversation(groupId) {
 

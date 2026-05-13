@@ -1,4 +1,4 @@
-// A Game About Slugs - Asset Loading
+// Asset Loading
 
 function loadGameAssets() {
 	// Title screen

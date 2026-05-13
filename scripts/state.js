@@ -1,4 +1,4 @@
-// A Game About Slugs - State & Global Variables
+// State & Global Variables
 
 // ========================
 // DEBUG FLAG - set to true to replay conversations without restrictions
