@@ -51,7 +51,7 @@ body {
 	width: 480px;
 	height: 100vh;
 	max-height: 100vh;
-	background-image: url("/assets/UI/panel-2.png");
+	background-image: url("../assets/UI/panel-2.png");
 	background-repeat: repeat;
 	flex-shrink: 0;
 	display: none;
@@ -63,7 +63,7 @@ body {
 	width: 480px;
 	height: 100vh;
 	max-height: 100vh;
-	background-image: url("/assets/UI/panel-2.png");
+	background-image: url("../assets/UI/panel-2.png");
 	background-repeat: repeat;
 	flex-shrink: 0;
 	display: none;
