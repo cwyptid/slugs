@@ -1,6 +1,4 @@
-// ========================
-// GARDEN MODE
-// ========================
+// Garden Mode Logic
 
 function initializeGarden() {
 	// Initialize all plant sprites - dry versions
@@ -230,8 +228,9 @@ function updateAndDrawCursor() {
 		}
 	} else if (isHoveringInteractiveArea && cursorQuestionSprite) {
 		cursor('none');
-		cursorQuestionSprite.update();
-		let frame = cursorQuestionSprite.getCurrentFrame();
+		const activeQuestionSprite = isRaining && cursorQuestionRainSprite ? cursorQuestionRainSprite : cursorQuestionSprite;
+		activeQuestionSprite.update();
+		let frame = activeQuestionSprite.getCurrentFrame();
 		if (frame) {
 			push();
 			imageMode(CENTER);

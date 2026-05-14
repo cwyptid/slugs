@@ -1,8 +1,14 @@
-// A Game About Slugs - State & Global Variables
+// State & Global Variables
 
 // ========================
 // DEBUG FLAG - set to true to replay conversations without restrictions
 const DEBUG_MODE = false;
+// DEBUG_CUTSCENE - set to true to skip straight to cutscene 1 on load
+// Backtick (`) key also jumps back to cutscene 1 from any screen while this is on
+const DEBUG_CUTSCENE = false;
+// DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
+// ] key also jumps to ending VN from any screen while this is on
+const DEBUG_ENDING = false;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
@@ -83,6 +89,7 @@ let cursorOffsetY = 0; // Vertical offset from mouse position
 
 // Cursor question sprite (for interactive areas)
 let cursorQuestionSprite = null;
+let cursorQuestionRainSprite = null;
 let isHoveringInteractiveArea = false; // Track if hovering over interactive area
 let justReturnedFromVN = false; // Flag to skip hover check on frame we return from VN
 
@@ -91,14 +98,36 @@ let flavorText = "";
 let flavorTextTimer = 0;
 const FLAVOR_TEXT_DURATION = 2500;
 
+const WATERED_FLAVOR = {
+	thyme:      "Smells nice.",
+	rosemary:   "Looking good.",
+	sunflowers: "They're soaking up the sun.",
+	tulips:     "All taken care of.",
+	wildpatch:  "Just doing its thing.",
+	tomatoes:   "Getting closer to ready.",
+	seedling:   "Hanging in there..."
+};
+
+const RAIN_FLAVOR = {
+	thyme:      "Smells like wet thyme.",
+	rosemary:   "Rosemary doesn't seem to mind.",
+	sunflowers: "Soaking up the... rain, I guess.",
+	tulips:     "The rain somehow makes them even prettier.",
+	wildpatch:  "Happy about all this, probably.",
+	tomatoes:   "These sure are sturdy.",
+	seedling:   "Hopefully the rain helps..."
+};
+
 // Name input screen
 let currentNameInput = ""; // Name being typed
 let nameInputButtons = []; // Button objects for name input
 let hoveredButtonIndex = -1; // Which button is currently hovered by mouse
 let selectedButtonIndex = -1; // Which button is currently selected via keyboard (-1 = none)
 let nameBoxImage = null;
+let nameBoxRainImage = null;
 let textButtonImage = null;
 let otherBoxImage = null;
+let otherBoxRainImage = null;
 const NAME_MAX_LENGTH = 12;
 const LETTER_ROWS = 2;
 const LETTERS_PER_ROW = 13;
@@ -278,6 +307,53 @@ let fadingToTitleAfterShell = false; // DEMO END: Fade to white after shell dial
 let fadeToTitleStartTime = 0;
 const fadeToTitleDuration = 2000; // 2 second fade to white
 
+// Cutscene mode transition - fade to black then enter cutscene
+let fadingToCutscene = false;
+let fadeToCutsceneStartTime = 0;
+const fadeToCutsceneDuration = 800;
+let fadeToCutsceneTargetScene = 1100; // which scene to land on after fade
+
+// Cutscene pre-dialogue intro sequence state machine
+let cutsceneIntroSequence = []; // array of Sprite objects to play in order
+let cutsceneIntroStep = -1;     // -1 = not active (show dialogue), 0+ = current step
+
+// Cutscene end - fade to black and hold
+let cutsceneEndFading = false;
+let cutsceneEndFadeStartTime = 0;
+const cutsceneEndFadeDuration = 1500;
+
+// Cutscene-to-VN transition (after cutscene 6 → ending VN with rain)
+let fadingCutsceneToVN = false;
+let fadeCutsceneToVNStartTime = 0;
+const fadeCutsceneToVNDuration = 1000;
+let fadeCutsceneToVNTargetScene = 2000; // which VN scene to land on after fade
+let skipVNOverworldFade = false; // When true, suppresses overworld Tony fade-out (used for cutscene→VN transitions)
+let skipCutsceneTextboxFade = false; // When true, textbox appears instantly (black overlay still fades normally)
+
+// Cutscene-to-VN brief interlude transition (mid-story, no rain)
+let fadingCutsceneToVNBrief = false;
+let fadeCutsceneToVNBriefStartTime = 0;
+const fadeCutsceneToVNBriefDuration = 800;
+let fadeCutsceneToVNBriefTargetScene = 1350;
+
+// Rain state
+let isRaining = false;
+let rainParticles = [];
+
+// End screen ESC overlay ("Return to title?")
+let showESCOverlay = false;
+
+// Fade to title from ending (black fade)
+let fadingToTitleFromEnding = false;
+let fadeToTitleFromEndingStartTime = 0;
+const fadeToTitleFromEndingDuration = 1000;
+
+// Sounds
+let clickSound, returnSound, tonyClickSound, footstepSound, titleMusic, waterSound, sparkleSound, rainSound, conversationSound, hoverSound, mainTune, shellStory;
+let lastHoveredChoiceText = null;
+let mainTuneStarted = false;
+let lastESCHoveredButton = null;
+
 // UI and input
 let buttons = [];
 let inp;
@@ -357,10 +433,26 @@ function resetGame() {
 	// Reset fade flags
 	fadingToTitleAfterShell = false;
 	fadingOutFromVN = false;
+	fadingCutsceneToVN = false;
+	fadingCutsceneToVNBrief = false;
+	fadingToTitleFromEnding = false;
+	skipVNOverworldFade = false;
+
+	// Reset rain state
+	isRaining = false;
+	rainParticles = [];
+	showESCOverlay = false;
 
 	// Reset typewriter
 	resetTypewriter();
 
 	// Hide nameInput panel when returning to title
 	document.body.classList.remove('nameInput-active');
+	document.body.classList.remove('rain-active');
+
+	if (mainTune && mainTune.isPlaying()) mainTune.stop();
+	if (shellStory && shellStory.isPlaying()) shellStory.stop();
+	if (rainSound && rainSound.isPlaying()) rainSound.stop();
+	mainTuneStarted = false;
+	if (titleMusic && !titleMusic.isPlaying()) titleMusic.loop();
 }

@@ -1,4 +1,4 @@
-// A Game About Slugs - Dialogue & Scene Data
+// Dialogue & Scene Data
 
 function startPlantConversation(groupId) {
 
@@ -110,8 +110,30 @@ function handleVNChoice(choiceIndex) {
 
 	// Check if this is an ending scene
 	if (scenes[currentScene].isEndingScene) {
-		// Shell ending scenes trigger demo end fade-to-title
-		if (currentScene >= 800 && currentScene <= 999) {
+		if (scenes[currentScene].startsCutscene) {
+			// Fade to black then enter cutscene mode
+			fadeToCutsceneTargetScene = scenes[currentScene].cutsceneTarget || 1100;
+			fadingToCutscene = true;
+			fadeToCutsceneStartTime = millis();
+		} else if (scenes[currentScene].endsToVNBrief) {
+			// Cutscene → brief VN interlude (no rain), then back to cutscene
+			fadeCutsceneToVNBriefTargetScene = scenes[currentScene].cutsceneToVNBriefTarget || 1350;
+			fadingCutsceneToVNBrief = true;
+			fadeCutsceneToVNBriefStartTime = millis();
+		} else if (scenes[currentScene].endsToVN) {
+			// Cutscene ends - fade to black then enter VN with rain
+			fadeCutsceneToVNTargetScene = scenes[currentScene].cutsceneToVNTarget || 2000;
+			fadingCutsceneToVN = true;
+			fadeCutsceneToVNStartTime = millis();
+		} else if (scenes[currentScene].isStoryEnding) {
+			// Final VN dialogue done - show the two-button end screen
+			buttons = [];
+			gameMode = 'storyEnding';
+		} else if (scenes[currentScene].isCutsceneEnd) {
+			// Cutscene ended - fade to black and hold (placeholder)
+			cutsceneEndFading = true;
+			cutsceneEndFadeStartTime = millis();
+		} else if (currentScene >= 800 && currentScene <= 999) {
 			// Shell conversation ending - fade to white and return to title
 			fadingToTitleAfterShell = true;
 			fadeToTitleStartTime = millis();
@@ -253,6 +275,14 @@ function updateChoiceAreasWithYPositions(dialogX, dialogY, dialogWidth, dialogHe
 		}
 
 		yPos += lineHeight;
+	}
+
+	// Play hover sound when mouse enters a new choice (not Continue)
+	const nowHovered = buttons.find(b => b.isHovered && b.key !== null);
+	const nowHoveredText = nowHovered ? nowHovered.text : null;
+	if (nowHoveredText !== lastHoveredChoiceText) {
+		lastHoveredChoiceText = nowHoveredText;
+		if (nowHoveredText && hoverSound) { hoverSound.setVolume(0.2); hoverSound.play(); }
 	}
 }
 
@@ -611,14 +641,14 @@ function setupScenes() {
 	};
 
 	scenes[126] = {
-		text: "Listen to what I actually want instead of what I think I should want.",
+		text: "Listening to what I want instead of chickening out.",
 		image: assets.confident,
 		keys: [],
 		nextPages: [127],
 	};
 
 	scenes[127] = {
-		text: "It's harder than it sounds, but it's worth it.",
+		text: "It's harder than it sounds, but it's been worth it. Makes the garden feel more like mine, y'know?\n",
 		image: assets.warm,
 		keys: [],
 		nextPages: [150], // Converge to ending
@@ -626,7 +656,7 @@ function setupScenes() {
 
 	// ===== ENDING (converges from all branches) =====
 	scenes[150] = {
-		text: "They make the garden feel alive.",
+		text: "They make the garden feel more like a home, I think. I'm glad you like them.",
 		image: assets.smiling_waving,
 		keys: [],
 		nextPages: [], 
@@ -1015,14 +1045,14 @@ function setupScenes() {
 	};
 
 	scenes[515] = {
-		text: "All I can do is keep trying. Keep doing my best.",
+		text: "I just need to keep trying and hope it pulls through.",
 		image: assets.assured,
 		keys: [],
 		nextPages: [516],
 	};
 
 	scenes[516] = {
-		text: "And accept that my best might not be enough after all.",
+		text: "But if it doesn't... well, I guess that's just how it goes sometimes.",
 		image: assets.sad_peaceful,
 		keys: [],
 		nextPages: [550], // Converge to ending
@@ -1045,21 +1075,21 @@ function setupScenes() {
 
 	// Branch 5B-1: "I'm sorry"
 	scenes[522] = {
-		text: "Thanks. It's okay. Or it will be, either way.",
+		text: "Thanks. I don't mean to be a downer, it's just... hard not knowing.",
 		image: assets.sad_peaceful,
 		keys: [],
 		nextPages: [523],
 	};
 
 	scenes[523] = {
-		text: "Not everything makes it. That's just... how it is.",
+		text: "But not everything is up to me. I did what I could, and now I just have to wait and see.\n",
 		image: assets.wistful,
 		keys: [],
 		nextPages: [524],
 	};
 
 	scenes[524] = {
-		text: "But I have to keep trying. I want to see things through.",
+		text: "I want to see things through. I need to know I did everything I could.",
 		image: assets.rueful,
 		keys: [],
 		nextPages: [550], // Converge to ending
@@ -1090,7 +1120,7 @@ function setupScenes() {
 
 	// ===== ENDING (converges from all branches) =====
 	scenes[550] = {
-		text: "Even if it doesn't make it... I'm glad it sprouted at all.",
+		text: "Even if it doesn't make it... I'm just glad it sprouted at all.",
 		image: assets.peaceful,
 		keys: [],
 		nextPages: [], // Auto-return to garden after this
@@ -1415,6 +1445,514 @@ function setupScenes() {
 		image: assets.rueful,
 		keys: [],
 		nextPages: [],
-		isEndingScene: true
+		isEndingScene: true,
+		startsCutscene: true // transitions to cutscene mode instead of demo end
+	};
+
+	// ===== CUTSCENE 1 =====
+
+	// CUTSCENE 1-1: tony_callback_1 frames
+	scenes[1100] = {
+		text: "The shell was supposed to solve all my problems, and for a while, it pretty much did.\n",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1117],
+	};
+
+	scenes[1117] = {
+		text: "I felt safe. I felt like I could be myself without worrying about what would happen.\n",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1114],
+	};
+
+	scenes[1114] = {
+		text: "I was all like 'Man, being a snail rules! Slugs are totally missing out.'",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1118],
+	};
+
+	scenes[1118] = {
+		text: "To me, being a slug meant being born to lose.",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1120],
+	};
+
+	scenes[1120] = {
+		text: "Or even worse, loseable.",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1119],
+	};
+
+	scenes[1119] = {
+		text: "Being a snail was the obvious choice.",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [1101],
+	};
+
+	scenes[1101] = {
+		text: "But it turns out I just couldn't win either way.",
+		cutsceneSprite: assets.cutscene_callback_1,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1115
+	};
+
+	// CUTSCENE 1-2: tony_callback_2 frames
+
+	scenes[1115] = {
+		text: "After a while… it started to get heavy.",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1116],
+	};
+
+	scenes[1116] = {
+		text: "And being a snail became pretty bogus too.",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1102],
+	};
+
+	scenes[1102] = {
+		text: "I began to feel like I couldn't be myself and wear the shell.\n[1] What do you mean?\n[2] Why?",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: ["1", "2"],
+		nextPages: [1110, 1110]
+	};
+
+	// (both choices converge here)
+	scenes[1110] = {
+		text: "It's hard to explain, but I guess I'd put it this way.",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1111]
+	};
+
+	scenes[1111] = {
+		text: "It didn't fit around me anymore. I had to cast parts of who I was away just to stay inside.\n",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1112]
+	};
+
+	scenes[1112] = {
+		text: "But I was scared to take it off. Without it, there was nothing left to protect me.\n",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1113]
+	};
+
+	scenes[1113] = {
+		text: "And yet…",
+		cutsceneSprite: assets.cutscene_callback_2,
+		keys: [],
+		nextPages: [1200],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1200
+	};
+
+	// ===== CUTSCENE 2 =====
+	// Intro sequence: tony_remove_shell (once) → tony_remove_shell_after (once) → tony_ears (once) → tony_ears_after (loops, dialogue starts)
+
+	scenes[1200] = {
+		text: "I HAD to. I had to be me again.",
+		cutsceneSprite: assets.cutscene_ears_after,
+		cutsceneIntroSequence: [
+			assets.cutscene_remove_shell,
+			assets.cutscene_remove_shell_after,
+			assets.cutscene_ears
+		],
+		keys: [],
+		nextPages: [1201]
+	};
+
+	scenes[1201] = {
+		text: "I just left it here. Didn't quite know what to do with it.",
+		cutsceneSprite: assets.cutscene_ears_after,
+		keys: [],
+		nextPages: [1202]
+	};
+
+	scenes[1202] = {
+		text: "Thought about throwing it off a bridge honestly.",
+		cutsceneSprite: assets.cutscene_ears_after,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		endsToVNBrief: true,
+		cutsceneToVNBriefTarget: 1350
+	};
+
+	// ===== VN INTERLUDE (replaces cutscenes 3 and 4) =====
+
+	scenes[1350] = {
+		text: "Basically, I ran.",
+		image: assets.shy,
+		keys: [],
+		nextPages: [1351]
+	};
+
+	scenes[1351] = {
+		text: "I needed to be myself again, but I didn't even remember how.",
+		image: assets.assured,
+		keys: [],
+		nextPages: [1356]
+	};
+
+	scenes[1356] = {
+		text: "So I moved someplace nobody knew me.",
+		image: assets.wistful,
+		keys: [],
+		nextPages: [1352]
+	};
+
+	scenes[1352] = {
+		text: "Can't say it helped. I think it messed me up a bit. But that's what I thought was best for me at the time.\n\n[1] I get it.\n[2] Some things just don't turn out right.",
+		image: assets.rueful,
+		keys: ["1", "2"],
+		nextPages: [1353, 1353]
+	};
+
+	scenes[1353] = {
+		text: "Regardless, when I came back…",
+		image: assets.contemplative,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1354
+	};
+
+	// ===== CUTSCENE 5 =====
+
+	scenes[1354] = {
+		text: "It was still here. Right where I left it.",
+		cutsceneSprite: assets.cutscene_returning_shell,
+		keys: [],
+		nextPages: [1355]
+	};
+
+	scenes[1355] = {
+		text: "But it wasn't that same, suffocating shell anymore!",
+		cutsceneSprite: assets.cutscene_returning_shell,
+		keys: [],
+		nextPages: [1403],
+	};
+
+	scenes[1403] = {
+		text: "Moss, vines, little flowers sprouting through the cracks.",
+		cutsceneSprite: assets.cutscene_returning_shell,
+		keys: [],
+		nextPages: [1404],
+	};
+
+	scenes[1404] = {
+		text: "It was teeming with life.",
+		cutsceneSprite: assets.cutscene_returning_shell,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1500
+	};
+
+	// ===== CUTSCENE 6 =====
+
+	scenes[1500] = {
+		text: "The shell I left behind had become so much more! I couldn't believe my eyes.",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [1501],
+	};
+
+	scenes[1501] = {
+		text: "Until then, I wanted to forget it. Act like it never happened.",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [1502]
+	};
+
+	scenes[1502] = {
+		text: "But it was still part of me in a way. And it was just... beautiful.\n[1] What happened to it?\n[2] What'd you do then?",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: ["1", "2"],
+		nextPages: [1503, 1503],
+	};
+
+	// Both choices converge here
+	scenes[1503] = {
+		text: "It could've just been minutes, could've been hours, I wasn't keeping track. But I just sat here.\n",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [1504]
+	};
+
+	scenes[1504] = {
+		text: "I was so tired of being mad at it. I was mad at myself for being mad at it.",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [1407],
+	};
+
+	scenes[1407] = {
+		text: "I didn't want to go again.",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [1408],
+	};
+
+	scenes[1408] = {
+		text: "I didn't want to do anything else.",
+		cutsceneSprite: assets.cutscene_kneeling_shell,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1505,
+	};
+
+	// ===== CUTSCENE 6 =====
+
+	scenes[1505] = {
+		text: "…",
+		cutsceneSprite: assets.cutscene_kneeling_clouds,
+		keys: [],
+		nextPages: [1506]
+	};
+
+	scenes[1506] = {
+		text: "Eventually, though, it began to rain.",
+		cutsceneSprite: assets.cutscene_kneeling_clouds,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1600
+	};
+
+	// ===== CUTSCENE 8 =====
+
+	scenes[1600] = {
+		text: "I almost FLIPPED at first. I didn't have my shell on! Old habits, y'know?",
+		cutsceneSprite: assets.cutscene_kneeling_rain,
+		keys: [],
+		nextPages: [1601]
+	};
+
+	scenes[1601] = {
+		text: "It seemed like forever since I'd felt rain. The shell had always kept me dry.",
+		cutsceneSprite: assets.cutscene_kneeling_rain,
+		keys: [],
+		nextPages: [1602]
+	};
+
+	scenes[1602] = {
+		text: "But it felt… nice. Really, really nice.",
+		cutsceneSprite: assets.cutscene_kneeling_rain,
+		keys: [],
+		nextPages: [1603]
+	};
+
+	scenes[1603] = {
+		text: "That's when I realized that while the shell kept me safe for so long…",
+		cutsceneSprite: assets.cutscene_kneeling_rain,
+		keys: [],
+		nextPages: [1604]
+	};
+
+	scenes[1604] = {
+		text: "It also kept me from feeling anything at all.",
+		cutsceneSprite: assets.cutscene_kneeling_rain,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		startsCutscene: true,
+		cutsceneTarget: 1605
+	};
+
+	// ===== CUTSCENE 9 =====
+
+	scenes[1605] = {
+		text: "See, these plants are exposed! Out in the open.",
+		cutsceneSprite: assets.cutscene_rainfall,
+		keys: [],
+		nextPages: [1606]
+	};
+
+	scenes[1606] = {
+		text: "Birds could nab 'em, they could get trampled on, anything can happen really.",
+		cutsceneSprite: assets.cutscene_rainfall,
+		keys: [],
+		nextPages: [1607]
+	};
+
+	scenes[1607] = {
+		text: "But them being out in the open like this? That's the only way they're gonna grow.",
+		cutsceneSprite: assets.cutscene_rainfall,
+		keys: [],
+		nextPages: [1608]
+	};
+
+	scenes[1608] = {
+		text: "Getting their rain, sunshine, all of it.",
+		cutsceneSprite: assets.cutscene_rainfall,
+		keys: [],
+		nextPages: [1609]
+	};
+
+	scenes[1609] = {
+		text: "I wanted to understand what these plants needed that day, so that's when I started learning.\n",
+		cutsceneSprite: assets.cutscene_rainfall,
+		keys: [],
+		nextPages: [1610]
+	};
+
+	scenes[1610] = {
+		text: "About soil, light, water, growth. What it takes to live.",
+		cutsceneSprite: assets.cutscene_rainfall,
+		keys: [],
+		nextPages: [1611]
+	};
+
+	scenes[1611] = {
+		text: "Because then, maybe I could find my answer, too.",
+		cutsceneSprite: assets.cutscene_rainfall,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		endsToVN: true,
+		cutsceneToVNTarget: 2000 // Hand off to VN mode here
+	};
+
+	// ===== ENDING SEQUENCE (SCENES 2000-2016) =====
+	// Entered from cutscene 9 via endsToVN transition; isRaining = true at this point
+
+	scenes[2000] = {
+		text: "Oh! It's raining now, actually.",
+		image: assets.contemplative_rain,
+		keys: [],
+		nextPages: [2017]
+	};
+
+	scenes[2017] = {
+		text: "Funny timing.",
+		image: assets.warm_rain,
+		keys: [],
+		nextPages: [2001]
+	};
+
+	scenes[2001] = {
+		text: "I guess we didn't need to water the plants today, after all...\n[1] That's okay, we had a good time!\n[2] Who cares if it was necessary?",
+		image: assets.shy_rain,
+		keys: ["1", "2"],
+		nextPages: [2002, 2002]
+	};
+
+	scenes[2002] = {
+		text: "Haha, you're right!",
+		image: assets.happy_rain,
+		keys: [],
+		nextPages: [2003]
+	};
+
+	scenes[2003] = {
+		text: "Either way, it was great catching up with you, [PLAYER_NAME].",
+		image: assets.warm_rain,
+		keys: [],
+		nextPages: [2005]
+	};
+
+	scenes[2005] = {
+		text: "You know…",
+		image: assets.contemplative_rain,
+		keys: [],
+		nextPages: [2006]
+	};
+
+	scenes[2006] = {
+		text: "I used to think being a snail was so much better. I hated everything about being a slug.\n",
+		image: assets.wistful_rain,
+		keys: [],
+		nextPages: [2007]
+	};
+
+	scenes[2007] = {
+		text: "But it was less…me.",
+		image: assets.rueful_rain,
+		keys: [],
+		nextPages: [2008]
+	};
+
+	scenes[2008] = {
+		text: "After I ditched the shell, I felt ashamed for having tried something different. Really embarrassed that it didn't work out.\n",
+		image: assets.rueful_rain,
+		keys: [],
+		nextPages: [2009]
+	};
+
+	scenes[2009] = {
+		text: "But now, I'm just going to be myself.",
+		image: assets.confident_rain,
+		keys: [],
+		nextPages: [2010]
+	};
+
+	scenes[2010] = {
+		text: "Don't get me wrong, it was all me! Even with the shell.",
+		image: assets.happy_rain,
+		keys: [],
+		nextPages: [2011]
+	};
+
+	scenes[2011] = {
+		text: "But I just want to be present in the moment. Even if it means a more vulnerable mode of existence.\n",
+		image: assets.peaceful_rain,
+		keys: [],
+		nextPages: [2012]
+	};
+
+	scenes[2012] = {
+		text: "It has to be worth something.\n[1] I'm happy for you.\n[2] It is. I know it.",
+		image: assets.assured_rain,
+		keys: ["1", "2"],
+		nextPages: [2013, 2013]
+	};
+
+	scenes[2013] = {
+		text: "Thanks for hearing me out. It felt good to get that off my chest.",
+		image: assets.warm_rain,
+		keys: [],
+		nextPages: [2014]
+	};
+
+	scenes[2014] = {
+		text: "This rain'll keep falling for a while. I think I'll stay out here.",
+		image: assets.smile_rain,
+		keys: [],
+		nextPages: [2015]
+	};
+
+	scenes[2015] = {
+		text: "You're welcome to stick around. Or go if you need. Whatever floats your boat.",
+		image: assets.smile_rain,
+		keys: [],
+		nextPages: [2016]
+	};
+
+	scenes[2016] = {
+		text: "Just take care of yourself, okay?",
+		image: assets.warm_rain,
+		keys: [],
+		nextPages: [],
+		isEndingScene: true,
+		isStoryEnding: true // Triggers the two-button end screen
 	};
 }
