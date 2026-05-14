@@ -2,6 +2,18 @@
 
 function preload() {
 	loadGameAssets();
+	clickSound = loadSound('assets/sounds/button_go.wav');
+	returnSound = loadSound('assets/sounds/button_return.wav');
+	tonyClickSound = loadSound('assets/sounds/alert.wav');
+	footstepSound = loadSound('assets/sounds/footstep.wav');
+	titleMusic = loadSound('assets/sounds/title.wav');
+	waterSound = loadSound('assets/sounds/water.wav');
+	sparkleSound = loadSound('assets/sounds/success.mp3');
+	rainSound = loadSound('assets/sounds/rain.wav');
+	hoverSound = loadSound('assets/sounds/hover.wav');
+	mainTune = loadSound('assets/sounds/main_tune.wav');
+	shellStory = loadSound('assets/sounds/shell_story.flac');
+	conversationSound = loadSound('assets/sounds/talk.wav');
 }
 
 function setup() {
@@ -27,6 +39,9 @@ function setup() {
 
 	inp = createInput("");
 	inp.hide();
+
+	titleMusic.setVolume(0.12);
+	if (!DEBUG_CUTSCENE && !DEBUG_ENDING) titleMusic.loop();
 
 	initializeNameInputButtons();
 	gardenState.backgroundImage = gardenAssets.section1Background;
@@ -113,6 +128,12 @@ function draw() {
 				currentScene = 1000; // Start at opening dialogue scene
 				vnEntryTime = currentTime;
 				isIntroSequenceVN = true; // Use longer fade for intro sequence
+				if (!mainTuneStarted && mainTune) {
+					mainTuneStarted = true;
+					mainTune.setVolume(0);
+					mainTune.loop();
+					mainTune.setVolume(0.05, 2);
+				}
 				resetTypewriter();
 				lastClickTime = 0; // Reset click cooldown when entering VN mode
 				lastProcessedScene = -1; // Reset scene tracker to allow first click
