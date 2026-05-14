@@ -1411,7 +1411,7 @@ function setupScenes() {
 	};
 
 	scenes["830.5"] = {
-		text: "When we last talked, I wasn't just wearing it. I was practially living in it...",
+		text: "When we last talked, I wasn't just wearing it. I was practically living in it...",
 		image: assets.rueful,
 		keys: [],
 		nextPages: [],
