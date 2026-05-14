@@ -1204,7 +1204,7 @@ function setupScenes() {
 	};
 
 	scenes[625] = {
-		text: "Trusting what I want instead of overthinking all the time.",
+		text: "I don't wanna overthink it or try to optimize it, or whatever.",
 		image: assets.shy,
 		nextPages: [626],
 	};
@@ -1878,7 +1878,7 @@ function setupScenes() {
 	};
 
 	scenes[2006] = {
-		text: "I used to think being a snail was so much better. I hated everything about being a slug.\n",
+		text: "I used to think being a snail was so much better. I hated just about everything about being a slug.\n",
 		image: assets.wistful_rain,
 		keys: [],
 		nextPages: [2007]
