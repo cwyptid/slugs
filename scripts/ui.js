@@ -1,4 +1,4 @@
-// A Game About Slugs - UI & Input Handling
+// UI & Input Handling
 
 // ========================
 // NAME INPUT SCREEN
@@ -195,6 +195,8 @@ function handleNameInputClick() {
 			} else if (button.label === "DONE") {
 				// Validate and transition to story transition screen
 				if (currentNameInput.length > 0 && currentNameInput.length <= NAME_MAX_LENGTH) {
+					clickSound.play();
+					titleMusic.stop();
 					playerName = currentNameInput; // Store name in global variable
 					gameMode = 'storyTransition'; // Transition to story transition screen
 					fadingIntoStoryTransition = true;
@@ -218,6 +220,52 @@ function handleNameInputClick() {
 }
 
 // ========================
+// RAIN PARTICLE SYSTEM
+// ========================
+
+function initRainParticles() {
+	const counts = [8, 10, 8];
+	rainParticles = [[], [], []];
+	for (let b = 0; b < 3; b++) {
+		for (let i = 0; i < counts[b]; i++) {
+			rainParticles[b].push({
+				x: random(-50, width),
+				y: random(-height, height),
+				speed: random(7, 10)
+			});
+		}
+	}
+}
+
+function updateRainParticles() {
+	for (let bucket of rainParticles) {
+		for (let p of bucket) {
+			p.x += 2;
+			p.y += p.speed;
+			if (p.y > height + 12 || p.x > width + 12) {
+				p.x = random(-width * 0.1, width);
+				p.y = -12;
+			}
+		}
+	}
+}
+
+function drawRainParticles() {
+	const ctx = drawingContext;
+	const opacities = [0.4, 0.62, 0.82];
+	ctx.fillStyle = 'rgb(255, 253, 218)';
+	for (let b = 0; b < 3; b++) {
+		ctx.globalAlpha = opacities[b];
+		for (let p of rainParticles[b]) {
+			ctx.fillRect(p.x,     p.y,      3, 5);
+			ctx.fillRect(p.x + 2, p.y + 6,  3, 5);
+			ctx.fillRect(p.x + 4, p.y + 12, 3, 5);
+		}
+	}
+	ctx.globalAlpha = 1;
+}
+
+// ========================
 // GARDEN MODE
 // ========================
 
@@ -225,57 +273,56 @@ function drawGardenMode(currentTime) {
 	// Use frame-cached plants for drawing
 	let currentSectionPlants = frameCachedPlants;
 
-	// Draw appropriate background based on current section
+	// Draw appropriate background based on current section (rain variant when raining)
 	if (currentSection === 1) {
-		image(gardenAssets.section1Background, 0, 0, width, height);
+		image(isRaining ? gardenAssets.section1RainBackground : gardenAssets.section1Background, 0, 0, width, height);
 	} else if (currentSection === 2) {
-		image(gardenAssets.section2Background, 0, 0, width, height);
+		image(isRaining ? gardenAssets.section2RainBackground : gardenAssets.section2Background, 0, 0, width, height);
 	} else if (currentSection === 3) {
-		image(gardenAssets.section3Background, 0, 0, width, height);
+		image(isRaining ? gardenAssets.section3RainBackground : gardenAssets.section3Background, 0, 0, width, height);
 	}
 
-	// Draw all plants with sprite animations - only draw the ACTIVE sprite
+	// Draw all plants with sprite animations - rain sprite takes priority when raining
 	for (let plant of currentSectionPlants) {
-		if (plant.watered) {
-			// ONLY draw watered sprite
-			let frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+		let frame = null;
+		if (isRaining && plant.rainSprite) {
+			frame = plant.rainSprite.getCurrentFrame();
+		} else if (plant.watered) {
+			frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
 		} else {
-			// ONLY draw dry sprite
-			let frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+			frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
 		}
+		if (frame) image(frame, plant.x, plant.y, plant.width, plant.height);
 	}
 
 	// Draw empty plot sprite (only in section 3)
-	if (currentSection === 3 && gardenState.emptyPlot.sprite) {
-		let emptyPlotFrame = gardenState.emptyPlot.sprite.getCurrentFrame();
-		if (emptyPlotFrame) {
-			image(emptyPlotFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
+	if (currentSection === 3) {
+		const epSprite = isRaining ? gardenState.emptyPlot.rainSprite : gardenState.emptyPlot.sprite;
+		if (epSprite) {
+			let epFrame = epSprite.getCurrentFrame();
+			if (epFrame) image(epFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
 		}
 	}
 
 	// Draw shell sprite (only in section 2)
 	if (currentSection === 2) {
-		const allPlantsWatered = checkAllPlantsWatered();
-		const shellSpriteToUse = allPlantsWatered ? gardenState.shell.readySprite : gardenState.shell.sprite;
-
+		let shellSpriteToUse;
+		if (isRaining) {
+			shellSpriteToUse = gardenState.shell.rainSprite;
+		} else {
+			const allPlantsWatered = checkAllPlantsWatered() && gardenState.emptyPlot.visited && gameMode !== 'rain_ending';
+			shellSpriteToUse = allPlantsWatered ? gardenState.shell.readySprite : gardenState.shell.sprite;
+		}
 		if (shellSpriteToUse) {
 			let shellFrame = shellSpriteToUse.getCurrentFrame();
-			if (shellFrame) {
-				image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
-			}
+			if (shellFrame) image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
 		}
 	}
 
 	// Draw Tony's sprite animation (only when NOT in VN mode)
 	// Tony is scaled to 0.6x and positions scale with viewport
 	// In intro mode, only draw Tony in section 1
-	if ((gameMode === 'garden' || gameMode === 'transitioning' || (gameMode === 'intro' && currentSection === 1) || (isIntroSequenceVN && gameMode === 'vn'))) {
+	if ((gameMode === 'garden' || gameMode === 'rain_ending' || gameMode === 'transitioning' || (gameMode === 'intro' && currentSection === 1) || (isIntroSequenceVN && gameMode === 'vn'))) {
 		const tonyScale = 0.6;
 		// Position Tony based on current section
 		let tonyX, tonyY;
@@ -305,7 +352,10 @@ function drawGardenMode(currentTime) {
 			// During intro VN fade, use tonyStartIdleSprite
 			currentSprite = gardenState.tonyStartIdleSprite;
 		} else {
-			currentSprite = gardenState.tonyState.currentSprite;
+			// Use rain variant when raining (placeholder = same as idle)
+			currentSprite = (isRaining && gardenState.tonyState.tonyRainSprite)
+				? gardenState.tonyState.tonyRainSprite
+				: gardenState.tonyState.currentSprite;
 		}
 		let tonyFrame = currentSprite ? currentSprite.getCurrentFrame() : null;
 
@@ -365,6 +415,9 @@ function drawGardenMode(currentTime) {
 		}
 	}
 
+	// Draw rain particles over garden (before arrows and UI)
+	if (isRaining) drawRainParticles();
+
 	// Draw navigation arrows with bobbing animation
 	let isArrowHovered = false;
 	const arrowSize = 40 * 1.5;
@@ -374,7 +427,7 @@ function drawGardenMode(currentTime) {
 	const bobY = arrowBaseY + Math.sin(currentTime * bobSpeed) * bobAmount;
 
 	// Draw left arrow (go back to section 1) - only show on section 2+
-	if ((gameMode === 'garden' || gameMode === 'intro') && currentSection > 1 && gardenAssets.arrowLeft) {
+	if ((gameMode === 'garden' || gameMode === 'intro' || gameMode === 'rain_ending') && currentSection > 1 && gardenAssets.arrowLeft) {
 		const arrowLeftX = 20; // Left side
 		let leftArrowHovered = mouseX > arrowLeftX && mouseX < arrowLeftX + arrowSize &&
 			mouseY > arrowBaseY - bobAmount && mouseY < arrowBaseY + arrowSize + bobAmount;
@@ -387,12 +440,12 @@ function drawGardenMode(currentTime) {
 
 		push();
 		tint(255, arrowAlpha);
-		image(gardenAssets.arrowLeft, arrowLeftX, bobY, arrowSize, arrowSize);
+		image(isRaining && gardenAssets.arrowLeftRain ? gardenAssets.arrowLeftRain : gardenAssets.arrowLeft, arrowLeftX, bobY, arrowSize, arrowSize);
 		pop();
 	}
 
 	// Draw right arrow (navigate forward) - show on sections 1-2 only
-	if ((gameMode === 'garden' || gameMode === 'intro') && currentSection < 3 && gardenAssets.arrowRight) {
+	if ((gameMode === 'garden' || gameMode === 'intro' || gameMode === 'rain_ending') && currentSection < 3 && gardenAssets.arrowRight) {
 		const arrowRightX = width - arrowSize - 20; // Right side
 		let rightArrowHovered = mouseX > arrowRightX && mouseX < arrowRightX + arrowSize &&
 			mouseY > arrowBaseY - bobAmount && mouseY < arrowBaseY + arrowSize + bobAmount;
@@ -405,7 +458,7 @@ function drawGardenMode(currentTime) {
 
 		push();
 		tint(255, arrowAlpha);
-		image(gardenAssets.arrowRight, arrowRightX, bobY, arrowSize, arrowSize);
+		image(isRaining && gardenAssets.arrowRightRain ? gardenAssets.arrowRightRain : gardenAssets.arrowRight, arrowRightX, bobY, arrowSize, arrowSize);
 		pop();
 	}
 
@@ -414,20 +467,21 @@ function drawGardenMode(currentTime) {
 		const elapsed = currentTime - (flavorTextTimer - FLAVOR_TEXT_DURATION);
 		const fadeOut = Math.max(0, 1 - (elapsed - (FLAVOR_TEXT_DURATION * 0.7)) / (FLAVOR_TEXT_DURATION * 0.3));
 		const alpha = Math.min(1, elapsed / 200) * fadeOut;
-		if (gardenAssets.textbox) {
-			const tbW = gardenAssets.textbox.width * canvasScale;
-			const tbH = gardenAssets.textbox.height * canvasScale;
+		if (nameBoxImage) {
+			const tbW = 500 * canvasScale;
+			const tbH = 116 * canvasScale;
 			const tbX = (width - tbW) / 2;
 			const tbY = height - tbH - 10 * canvasScale;
+			const activeNameBox = isRaining && nameBoxRainImage ? nameBoxRainImage : nameBoxImage;
 			push();
 			tint(255, alpha * 255);
-			image(gardenAssets.textbox, tbX, tbY, tbW, tbH);
+			image(activeNameBox, tbX, tbY, tbW, tbH);
 			pop();
 			push();
 			textFont(myFont);
 			textSize(20 * canvasScale);
 			textAlign(CENTER, CENTER);
-			fill(74, 42, 60, alpha * 255);
+			fill(isRaining ? color(152, 77, 123, alpha * 255) : color(78, 30, 51, alpha * 255));
 			noStroke();
 			text(flavorText, tbX + tbW / 2, tbY + tbH / 2);
 			pop();
@@ -448,7 +502,8 @@ function drawGardenMode(currentTime) {
 		}
 	} else if (isHoveringInteractiveArea && cursorQuestionSprite && !(gameMode === 'intro' && introStarted)) {
 		cursor('none'); // Hide default cursor
-		let cursorFrame = cursorQuestionSprite.getCurrentFrame();
+		const activeQuestionSprite = isRaining && cursorQuestionRainSprite ? cursorQuestionRainSprite : cursorQuestionSprite;
+		let cursorFrame = activeQuestionSprite.getCurrentFrame();
 		if (cursorFrame) {
 			push();
 			imageMode(CENTER);
@@ -494,42 +549,52 @@ function drawGardenMode(currentTime) {
 // ========================
 
 function drawVNMode(currentTime) {
-	// Draw garden background
-	if (gardenState.backgroundImage) {
-		image(gardenState.backgroundImage, 0, 0, width, height);
+	// Start shell_story fading in at scene 830 (shell conversation)
+	if (currentScene >= 830 && currentScene < 1000 && shellStory && !shellStory.isPlaying()) {
+		if (mainTune && mainTune.isPlaying()) { mainTune.setVolume(0, 1.5); setTimeout(() => { if (mainTune.isPlaying()) mainTune.stop(); }, 1600); }
+		shellStory.setVolume(0);
+		shellStory.loop();
+		setTimeout(() => { shellStory.setVolume(0.15, 1.5); }, 2500);
 	}
+
+	// Draw garden background (rain variant if raining)
+	let vnBg = gardenState.backgroundImage;
+	if (isRaining) {
+		if (currentSection === 1) vnBg = gardenAssets.section1RainBackground;
+		else if (currentSection === 2) vnBg = gardenAssets.section2RainBackground;
+		else if (currentSection === 3) vnBg = gardenAssets.section3RainBackground;
+	}
+	if (vnBg) image(vnBg, 0, 0, width, height);
 
 	// Draw all plants with sprite animations so they're visible behind the VN UI
 	let currentSectionPlants = frameCachedPlants;
 	for (let plant of currentSectionPlants) {
-		if (plant.watered) {
-			// ONLY draw watered sprite
-			let frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+		let frame = null;
+		if (isRaining && plant.rainSprite) {
+			frame = plant.rainSprite.getCurrentFrame();
+		} else if (plant.watered) {
+			frame = plant.wateredSprite ? plant.wateredSprite.getCurrentFrame() : null;
 		} else {
-			// ONLY draw dry sprite
-			let frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
-			if (frame) {
-				image(frame, plant.x, plant.y, plant.width, plant.height);
-			}
+			frame = plant.drySprite ? plant.drySprite.getCurrentFrame() : null;
 		}
+		if (frame) image(frame, plant.x, plant.y, plant.width, plant.height);
 	}
 
 	// Draw empty plot sprite (only in section 3)
-	if (currentSection === 3 && gardenState.emptyPlot.sprite) {
-		let emptyPlotFrame = gardenState.emptyPlot.sprite.getCurrentFrame();
-		if (emptyPlotFrame) {
-			image(emptyPlotFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
+	if (currentSection === 3) {
+		const epSprite = isRaining ? gardenState.emptyPlot.rainSprite : gardenState.emptyPlot.sprite;
+		if (epSprite) {
+			let epFrame = epSprite.getCurrentFrame();
+			if (epFrame) image(epFrame, gardenState.emptyPlot.x, gardenState.emptyPlot.y, gardenState.emptyPlot.width, gardenState.emptyPlot.height);
 		}
 	}
 
 	// Draw shell sprite (only in section 2)
-	if (currentSection === 2 && gardenState.shell.sprite) {
-		let shellFrame = gardenState.shell.sprite.getCurrentFrame();
-		if (shellFrame) {
-			image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
+	if (currentSection === 2) {
+		const shellSprite = isRaining ? gardenState.shell.rainSprite : gardenState.shell.sprite;
+		if (shellSprite) {
+			let shellFrame = shellSprite.getCurrentFrame();
+			if (shellFrame) image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
 		}
 	}
 
@@ -551,7 +616,7 @@ function drawVNMode(currentTime) {
 	let fadeSprite = isIntroSequenceVN ? gardenState.tonyStartIdleSprite : gardenState.tonyState.currentSprite;
 	let tonyFadeFrame = fadeSprite ? fadeSprite.getCurrentFrame() : null;
 
-	if (tonyFadeFrame) {
+	if (tonyFadeFrame && !skipVNOverworldFade) {
 		const tonyWidth = tonyFadeFrame.width * tonyScale * canvasScale;
 		const tonyHeight = tonyFadeFrame.height * tonyScale * canvasScale;
 
@@ -587,6 +652,9 @@ function drawVNMode(currentTime) {
 		pop();
 	}
 
+	// Draw rain particles before the dark overlay (so rain is visible but behind UI)
+	if (isRaining) drawRainParticles();
+
 	// Only draw VN if we have a valid scene
 	if (!scenes[currentScene]) {
 		return;
@@ -602,6 +670,9 @@ function drawVNMode(currentTime) {
 
 	// Animate entry: fade in + slide up (subtle)
 	const fadeInDuration = isIntroSequenceVN ? introVNEntryDuration : vnEntryDuration;
+	if (skipVNOverworldFade && currentTime - vnEntryTime >= fadeInDuration) {
+		skipVNOverworldFade = false; // Entry fade complete, flag no longer needed
+	}
 	if (currentTime - vnEntryTime < fadeInDuration) {
 		const progress = (currentTime - vnEntryTime) / fadeInDuration;
 		// Slide up from 40px below (subtle)
@@ -644,7 +715,7 @@ function drawVNMode(currentTime) {
 	const dialogY = height - (175 * canvasScale);
 
 	// Draw textbox.png at its natural size without stretching
-	let textboxImg = gardenAssets.textbox;
+	let textboxImg = isRaining && gardenAssets.textboxRain ? gardenAssets.textboxRain : gardenAssets.textbox;
 	let textboxWidth = textboxImg.width * canvasScale;
 	let textboxHeight = textboxImg.height * canvasScale;
 
@@ -667,7 +738,7 @@ function drawVNMode(currentTime) {
 	const dialogHeight = textboxHeight;
 
 	// Draw dialogue text (including choices)
-	fill(74, 42, 60); // White text for dark textbox
+	fill(isRaining ? color(30, 25, 83) : color(74, 42, 60));
 	textSize(20);
 	textAlign(LEFT, TOP);
 	textFont(myFont);
@@ -745,9 +816,9 @@ function drawVNMode(currentTime) {
 		let isHovered = hoveredButtonTexts.has(line);
 
 		if (isHovered) {
-			fill(40, 148, 102); // Hovered choices
+			fill(isRaining ? color(152, 77, 123) : color(40, 148, 102));
 		} else {
-			fill(74, 42, 60); // Normal text
+			fill(isRaining ? color(30, 25, 83) : color(74, 42, 60));
 		}
 
 		text(line, dialogX + 30, yPos, dialogWidth - 60);
@@ -779,6 +850,446 @@ function drawVNMode(currentTime) {
 			resetGame(); // Reset all game state for new playthrough
 		}
 	}
+
+	// Fade to black before entering cutscene mode
+	if (fadingToCutscene) {
+		const elapsed = currentTime - fadeToCutsceneStartTime;
+		const progress = Math.min(elapsed / fadeToCutsceneDuration, 1);
+		push();
+		fill(0, 0, 0, progress * 255);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+		if (progress >= 1) {
+			fadingToCutscene = false;
+			returnToGardenAfterVN = false;
+			currentScene = fadeToCutsceneTargetScene;
+			gameMode = 'cutscene';
+			if (mainTune && mainTune.isPlaying()) { mainTune.setVolume(0, 3); setTimeout(() => { if (mainTune.isPlaying()) mainTune.stop(); }, 3100); }
+			vnEntryTime = millis();
+			if (fadeToCutsceneTargetScene === 1100) skipCutsceneTextboxFade = true;
+			// Start pre-dialogue intro sequence if this scene has one
+			if (scenes[currentScene] && scenes[currentScene].cutsceneIntroSequence) {
+				cutsceneIntroSequence = scenes[currentScene].cutsceneIntroSequence;
+				cutsceneIntroStep = 0;
+				cutsceneIntroSequence[0].reset();
+				// Don't call resetTypewriter yet - it fires when the sequence finishes
+			} else {
+				cutsceneIntroSequence = [];
+				cutsceneIntroStep = -1;
+				resetTypewriter();
+			}
+		}
+	}
+}
+
+// ========================
+// CUTSCENE MODE
+// ========================
+
+function drawCutsceneMode(currentTime) {
+	if (!scenes[currentScene]) return;
+
+	// Switch side panels to rain variant starting at cutscene 6 (scene 1505)
+	if (currentScene >= 1505 && !document.body.classList.contains('rain-active')) {
+		document.body.classList.add('rain-active');
+	}
+
+
+	// Start rain audio loop at cutscene 8 (scene 1600)
+	if (currentScene >= 1600 && rainSound && !rainSound.isPlaying()) {
+		rainSound.setVolume(0.4);
+		rainSound.loop();
+	}
+
+	// Fade in from black at the very start of a cutscene
+	const fadeInDuration = 600;
+	const fadeElapsed = currentTime - vnEntryTime;
+	const fadeInAlpha = fadeElapsed < fadeInDuration
+		? (1 - fadeElapsed / fadeInDuration) * 255
+		: 0;
+
+	const cutsceneRainMode = currentScene >= 1505;
+
+	// ── PRE-DIALOGUE INTRO SEQUENCE ──────────────────────────────────────────
+	if (cutsceneIntroStep >= 0 && cutsceneIntroSequence.length > 0) {
+		const activeSprite = cutsceneIntroSequence[cutsceneIntroStep];
+		let frame = activeSprite.getCurrentFrame();
+		if (frame) image(frame, 0, 0, width, height);
+
+		// Advance when the current one-shot finishes
+		if (activeSprite.hasFinished) {
+			cutsceneIntroStep++;
+			if (cutsceneIntroStep >= cutsceneIntroSequence.length) {
+				// Sequence done — start looping dialogue sprite and typewriter
+				cutsceneIntroStep = -1;
+				cutsceneIntroSequence = [];
+				if (scenes[currentScene].cutsceneSprite) {
+					scenes[currentScene].cutsceneSprite.reset();
+				}
+				resetTypewriter();
+			} else {
+				cutsceneIntroSequence[cutsceneIntroStep].reset();
+			}
+		}
+
+		// Draw textbox immediately (empty, no text) during intro sequence
+		if (skipCutsceneTextboxFade) {
+			let tbImg = cutsceneRainMode && gardenAssets.textboxRain ? gardenAssets.textboxRain : gardenAssets.textbox;
+			let tbW = tbImg.width * canvasScale;
+			let tbH = tbImg.height * canvasScale;
+			let tbX = (width - tbW) / 2;
+			let tbY = height - tbH - 20 * canvasScale;
+			push();
+			tint(255, 255);
+			image(tbImg, tbX, tbY, tbW, tbH);
+			pop();
+		}
+
+		// Draw fade-in overlay on top of intro frames (and textbox)
+		if (fadeInAlpha > 0) {
+			push();
+			fill(0, 0, 0, fadeInAlpha);
+			noStroke();
+			rect(0, 0, width, height);
+			pop();
+		}
+		return;
+	}
+
+	// ── DIALOGUE PHASE ───────────────────────────────────────────────────────
+
+	// Draw full-screen looping cutscene sprite
+	if (scenes[currentScene].cutsceneSprite) {
+		let frame = scenes[currentScene].cutsceneSprite.getCurrentFrame();
+		if (frame) image(frame, 0, 0, width, height);
+	} else {
+		background(0);
+	}
+
+	// Draw centered textbox
+	let textboxImg = cutsceneRainMode && gardenAssets.textboxRain ? gardenAssets.textboxRain : gardenAssets.textbox;
+	let textboxWidth = textboxImg.width * canvasScale;
+	let textboxHeight = textboxImg.height * canvasScale;
+	let dialogX = (width - textboxWidth) / 2;
+	let dialogY = height - textboxHeight - 20 * canvasScale;
+
+	if (skipCutsceneTextboxFade && fadeElapsed >= fadeInDuration) skipCutsceneTextboxFade = false;
+	let textboxAlpha = skipCutsceneTextboxFade ? 255 : fadeElapsed < fadeInDuration
+		? (fadeElapsed / fadeInDuration) * 255
+		: 255;
+
+	push();
+	tint(255, textboxAlpha);
+	image(textboxImg, dialogX, dialogY, textboxWidth, textboxHeight);
+	pop();
+
+	const dialogWidth = textboxWidth;
+
+	// Typewriter logic
+	typewriterJustFinishedThisFrame = false;
+	let rawElapsedTime = currentTime - typewriterStartTime;
+	let charsToShow = Math.floor(rawElapsedTime / typewriterSpeed);
+
+	let dialogueText = "";
+	if (cachedDialogueOnly && cachedDialogueOnly.length > 0 && charsToShow >= cachedDialogueOnly.length) {
+		if (!typewriterFinished) {
+			typewriterJustFinishedThisFrame = true;
+		}
+		typewriterFinished = true;
+		if (lastCachedTypewriterChars !== cachedDialogueOnly.length) {
+			let fullText = cachedDialogueOnly;
+			if (cachedChoiceLines.length > 0) {
+				fullText += '\n' + cachedChoiceLines.join('\n');
+			} else if (!scenes[currentScene].keys || scenes[currentScene].keys.length === 0) {
+				fullText += '\n> Continue';
+			}
+			cachedFullDialogueWithChoices = fullText;
+			lastCachedTypewriterChars = cachedDialogueOnly.length;
+		}
+		dialogueText = cachedFullDialogueWithChoices;
+	} else {
+		dialogueText = cachedDialogueOnly.substring(0, charsToShow);
+	}
+
+	if (typewriterFinished) {
+		updateChoiceAreasWithYPositions(dialogX, dialogY, dialogWidth, textboxHeight, dialogueText);
+	} else {
+		buttons = [];
+	}
+
+	// Draw text
+	const cutsceneNormalColor = color(74, 42, 60);
+	const cutsceneRainColor = color(30, 25, 83);
+	const cutsceneNormalHover = color(40, 148, 102);
+	const cutsceneRainHover = color(152, 77, 123);
+	fill(cutsceneRainMode ? cutsceneRainColor : cutsceneNormalColor);
+	textSize(20);
+	textAlign(LEFT, TOP);
+	textFont(myFont);
+	textWrap(WORD);
+
+	push();
+	let lines = dialogueText.split('\n');
+	let yPos = dialogY + (30 * canvasScale);
+	const lineHeight = 28;
+
+	let hoveredButtonTexts = new Set();
+	for (let button of buttons) {
+		if (button.isHovered) hoveredButtonTexts.add(button.text);
+	}
+	for (let line of lines) {
+		fill(hoveredButtonTexts.has(line)
+			? (cutsceneRainMode ? cutsceneRainHover : cutsceneNormalHover)
+			: (cutsceneRainMode ? cutsceneRainColor : cutsceneNormalColor));
+		text(line, dialogX + 30, yPos, dialogWidth - 60);
+		yPos += lineHeight;
+	}
+	pop();
+
+	cursor('default');
+
+	// Fade-in overlay (from black at cutscene start)
+	if (fadeInAlpha > 0) {
+		push();
+		fill(0, 0, 0, fadeInAlpha);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+	}
+
+	// Cutscene 6 ends — fade to black then enter ending VN with rain
+	if (fadingCutsceneToVN) {
+		const elapsed = currentTime - fadeCutsceneToVNStartTime;
+		const progress = Math.min(elapsed / fadeCutsceneToVNDuration, 1);
+		push();
+		fill(0, 0, 0, progress * 255);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+		// Switch panels when screen is dark enough that the change isn't visible
+		if (progress >= 0.85 && !document.body.classList.contains('rain-active')) {
+			document.body.classList.add('rain-active');
+		}
+		if (progress >= 1) {
+			fadingCutsceneToVN = false;
+			isRaining = true;
+			initRainParticles();
+			if (shellStory && shellStory.isPlaying()) { shellStory.setVolume(0, 2); setTimeout(() => { if (shellStory.isPlaying()) shellStory.stop(); }, 2100); }
+			currentScene = fadeCutsceneToVNTargetScene;
+			gameMode = 'vn';
+			returnToGardenAfterVN = false;
+			currentSection = 2;
+			gardenState.backgroundImage = gardenAssets.section2RainBackground || gardenAssets.section2Background;
+			skipVNOverworldFade = true; // No overworld Tony to fade out — came from cutscene
+			vnEntryTime = millis(); // Fade in portrait + textbox from black
+			resetTypewriter();
+			lastClickTime = 0;
+			lastProcessedScene = -1;
+		}
+	}
+
+	// Cutscene → brief VN interlude transition (no rain)
+	if (fadingCutsceneToVNBrief) {
+		const elapsed = currentTime - fadeCutsceneToVNBriefStartTime;
+		const progress = Math.min(elapsed / fadeCutsceneToVNBriefDuration, 1);
+		push();
+		fill(0, 0, 0, progress * 255);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+		if (progress >= 1) {
+			fadingCutsceneToVNBrief = false;
+			currentScene = fadeCutsceneToVNBriefTargetScene;
+			gameMode = 'vn';
+			returnToGardenAfterVN = false;
+			currentSection = 2;
+			gardenState.backgroundImage = gardenAssets.section2Background;
+			vnEntryTime = millis() - (vnEntryDuration + 100); // Skip Tony fade-in, appear immediately
+			resetTypewriter();
+			lastClickTime = 0;
+			lastProcessedScene = -1;
+		}
+	}
+
+	// Cutscene end — fade to black and hold
+	if (cutsceneEndFading) {
+		const elapsed = currentTime - cutsceneEndFadeStartTime;
+		const progress = Math.min(elapsed / cutsceneEndFadeDuration, 1);
+		push();
+		fill(0, 0, 0, progress * 255);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+	}
+
+	// Cutscene-to-cutscene transition — fade to black then load next cutscene
+	if (fadingToCutscene) {
+		const elapsed = currentTime - fadeToCutsceneStartTime;
+		const progress = Math.min(elapsed / fadeToCutsceneDuration, 1);
+		push();
+		fill(0, 0, 0, progress * 255);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+		if (progress >= 1) {
+			fadingToCutscene = false;
+			currentScene = fadeToCutsceneTargetScene;
+			vnEntryTime = millis();
+			if (fadeToCutsceneTargetScene === 1115 || fadeToCutsceneTargetScene === 1200) skipCutsceneTextboxFade = true;
+			if (scenes[currentScene] && scenes[currentScene].cutsceneIntroSequence) {
+				cutsceneIntroSequence = scenes[currentScene].cutsceneIntroSequence;
+				cutsceneIntroStep = 0;
+				cutsceneIntroSequence[0].reset();
+			} else {
+				cutsceneIntroSequence = [];
+				cutsceneIntroStep = -1;
+				resetTypewriter();
+			}
+		}
+	}
+}
+
+// ========================
+// STORY ENDING SCREEN
+// ========================
+
+function drawStoryEndingMode(currentTime) {
+	// Draw section 2 rain background
+	const endBg = gardenAssets.section2RainBackground || gardenAssets.section2Background;
+	if (endBg) image(endBg, 0, 0, width, height);
+
+	// Draw section 2 rain plants
+	for (let plant of gardenState.section2Plants) {
+		const sprite = plant.rainSprite || plant.wateredSprite;
+		if (sprite) {
+			let frame = sprite.getCurrentFrame();
+			if (frame) image(frame, plant.x, plant.y, plant.width, plant.height);
+		}
+	}
+
+	// Draw shell rain sprite
+	const endShell = gardenState.shell.rainSprite || gardenState.shell.sprite;
+	if (endShell) {
+		let shellFrame = endShell.getCurrentFrame();
+		if (shellFrame) image(shellFrame, gardenState.shell.x, gardenState.shell.y, gardenState.shell.width, gardenState.shell.height);
+	}
+
+	// Draw rain
+	if (isRaining) drawRainParticles();
+
+	// Fade to title when triggered
+	if (fadingToTitleFromEnding) {
+		const elapsed = currentTime - fadeToTitleFromEndingStartTime;
+		const progress = Math.min(elapsed / fadeToTitleFromEndingDuration, 1);
+		push();
+		fill(0, 0, 0, progress * 255);
+		noStroke();
+		rect(0, 0, width, height);
+		pop();
+		if (progress >= 1) {
+			fadingToTitleFromEnding = false;
+			resetGame();
+			gameMode = 'title';
+		}
+		return;
+	}
+
+	// Semi-transparent dark overlay
+	push();
+	fill(0, 0, 0, 90);
+	noStroke();
+	rect(0, 0, width, height);
+	pop();
+
+	// Buttons using otherBoxImage (254×85 natural size)
+	const buttonW = 254 * canvasScale;
+	const buttonH = 85 * canvasScale;
+	const buttonY = height * 0.55;
+	const gap = 40 * canvasScale;
+	const leftBtnX = (width / 2) - buttonW - gap / 2;
+	const rightBtnX = (width / 2) + gap / 2;
+
+	const stayHovered = mouseX > leftBtnX && mouseX < leftBtnX + buttonW &&
+		mouseY > buttonY && mouseY < buttonY + buttonH;
+	const returnHovered = mouseX > rightBtnX && mouseX < rightBtnX + buttonW &&
+		mouseY > buttonY && mouseY < buttonY + buttonH;
+
+	const activeOtherBox = isRaining && otherBoxRainImage ? otherBoxRainImage : otherBoxImage;
+	const activeTextColor = isRaining ? color(30, 25, 83) : color(78, 30, 51);
+
+	textFont(myFont);
+	textSize(24);
+	textAlign(CENTER, CENTER);
+
+	// "Stay in garden" button
+	push();
+	translate(0, stayHovered ? -12 : 0);
+	if (activeOtherBox) image(activeOtherBox, leftBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
+	noStroke();
+	text("STAY IN GARDEN", leftBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
+	pop();
+
+	// "Return to title" button
+	push();
+	translate(0, returnHovered ? -12 : 0);
+	if (activeOtherBox) image(activeOtherBox, rightBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
+	noStroke();
+	text("RETURN TO TITLE", rightBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
+	pop();
+
+	if (stayHovered || returnHovered) cursor(HAND);
+	else cursor('default');
+}
+
+function drawESCOverlay() {
+	// Same layout as the story ending screen buttons
+	push();
+	fill(0, 0, 0, 90);
+	noStroke();
+	rect(0, 0, width, height);
+	pop();
+
+	const buttonW = 254 * canvasScale;
+	const buttonH = 85 * canvasScale;
+	const buttonY = height * 0.55;
+	const gap = 40 * canvasScale;
+	const leftBtnX = (width / 2) - buttonW - gap / 2;
+	const rightBtnX = (width / 2) + gap / 2;
+
+	const stayHovered = mouseX > leftBtnX && mouseX < leftBtnX + buttonW &&
+		mouseY > buttonY && mouseY < buttonY + buttonH;
+	const returnHovered = mouseX > rightBtnX && mouseX < rightBtnX + buttonW &&
+		mouseY > buttonY && mouseY < buttonY + buttonH;
+
+	const activeOtherBox = isRaining && otherBoxRainImage ? otherBoxRainImage : otherBoxImage;
+	const activeTextColor = isRaining ? color(30, 25, 83) : color(78, 30, 51);
+
+	textFont(myFont);
+	textSize(24);
+	textAlign(CENTER, CENTER);
+
+	push();
+	translate(0, stayHovered ? -12 : 0);
+	if (activeOtherBox) image(activeOtherBox, leftBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
+	noStroke();
+	text("STAY IN GARDEN", leftBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
+	pop();
+
+	push();
+	translate(0, returnHovered ? -12 : 0);
+	if (activeOtherBox) image(activeOtherBox, rightBtnX, buttonY, buttonW, buttonH);
+	fill(activeTextColor);
+	noStroke();
+	text("RETURN TO TITLE", rightBtnX + buttonW / 2, buttonY + buttonH / 2 - 4);
+	pop();
+
+	if (stayHovered || returnHovered) cursor(HAND);
+	else cursor('default');
+
 }
 
 // ========================
@@ -864,13 +1375,15 @@ function checkTextBoxVisibility() {
 // ========================
 
 function startSectionTransition(targetSection) {
-	// Start the fade transition to a new section
+	footstepSound.play();
 	isTransitioningSection = true;
 	nextSectionTarget = targetSection;
 	sectionTransitionTime = millis();
 }
 
 function waterPlant(plantId) {
+	waterSound.setVolume(0.3); waterSound.play();
+	setTimeout(() => { sparkleSound.setVolume(0.2); sparkleSound.play(); }, waterSound.duration() * 1000);
 	// Find the clicked plant and its group in current section
 	let currentSectionPlants = getPlantsForSection(currentSection);
 	let clickedPlant = currentSectionPlants.find(p => p.id === plantId);
@@ -900,8 +1413,48 @@ function waterPlant(plantId) {
 function keyPressed() {
 	userStartAudio();
 
+	// Debug shortcut: backtick jumps to cutscene 1 from any screen
+	if (DEBUG_CUTSCENE && key === '`') {
+		playerName = playerName || "Debug";
+		fadingToCutscene = false;
+		cutsceneEndFading = false;
+		fadingToTitleAfterShell = false;
+		isRaining = false;
+		showESCOverlay = false;
+		buttons = [];
+		currentScene = 1100;
+		gameMode = 'cutscene';
+		vnEntryTime = millis();
+		resetTypewriter();
+		return false;
+	}
+
+	// Debug shortcut: ] jumps to ending VN (scene 2000) with rain from any screen
+	if (DEBUG_ENDING && key === ']') {
+		playerName = playerName || "Debug";
+		fadingCutsceneToVN = false;
+		fadingToTitleFromEnding = false;
+		showESCOverlay = false;
+		buttons = [];
+		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
+			plant.watered = true;
+		}
+		gardenState.emptyPlot.visited = true;
+		isRaining = true;
+		initRainParticles();
+		document.body.classList.add('rain-active');
+		currentScene = 2000;
+		gameMode = 'vn';
+		currentSection = 2;
+		gardenState.backgroundImage = gardenAssets.section2RainBackground || gardenAssets.section2Background;
+		vnEntryTime = millis() - (vnEntryDuration + 100);
+		resetTypewriter();
+		return false;
+	}
+
 	// Title screen - start game with any key
 	if (gameMode === 'title') {
+		clickSound.play();
 		currentScene = 0;
 		gameMode = 'nameInput'; // Go to name input screen
 		currentNameInput = "";
@@ -939,6 +1492,8 @@ function keyPressed() {
 		// Enter to submit name (check FIRST before anything else)
 		if (keyCode === ENTER) {
 			if (currentNameInput.length > 0 && currentNameInput.length <= NAME_MAX_LENGTH) {
+				clickSound.play();
+				titleMusic.stop();
 				playerName = currentNameInput;
 				gameMode = 'storyTransition';
 				fadingIntoStoryTransition = true;
@@ -1035,8 +1590,25 @@ function keyPressed() {
 		return false;
 	}
 
-	// VN mode - input handling
-	if (gameMode === 'vn') {
+	// Story ending screen - block all key input while showing
+	if (gameMode === 'storyEnding') {
+		return false;
+	}
+
+	// Rain ending - ESC toggles the "Return to title?" overlay
+	if (gameMode === 'rain_ending') {
+		if (keyCode === ESCAPE) {
+			showESCOverlay = !showESCOverlay;
+			lastESCHoveredButton = null;
+			if (hoverSound) { hoverSound.setVolume(0.2); hoverSound.play(); }
+		}
+		return false;
+	}
+
+	// VN / cutscene mode - input handling
+	if (gameMode === 'vn' || gameMode === 'cutscene') {
+		// Block all input while the pre-dialogue intro sequence is playing
+		if (cutsceneIntroStep >= 0) return false;
 		// Safety check: ensure currentScene is valid
 		if (!scenes[currentScene]) {
 			return false;
@@ -1061,6 +1633,7 @@ function keyPressed() {
 			// Only accept valid choice keys
 			for (let i = 0; i < scenes[currentScene].keys.length; i++) {
 				if (key === scenes[currentScene].keys[i]) {
+					conversationSound.play();
 					handleVNChoice(i);
 					return false;
 				}
@@ -1087,6 +1660,7 @@ function mousePressed() {
 
 	// Title screen - start game with click
 	if (gameMode === 'title') {
+		clickSound.play();
 		currentScene = 0;
 		gameMode = 'nameInput'; // Go to name input screen
 		currentNameInput = "";
@@ -1161,7 +1735,7 @@ function mousePressed() {
 					tulips:     "Someone clearly put some love into this.",
 					wildpatch:  "It's unruly.",
 					tomatoes:   "These look almost ready to pick.",
-					seedling:   "This one doesn't look so great..."
+					seedling:   "This one doesn't look too hot..."
 				};
 				flavorText = plantFlavor[plant.id] || "Looks like someone's been gardening...";
 				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
@@ -1173,7 +1747,7 @@ function mousePressed() {
 			const area = gardenState.shell;
 			if (mouseX > area.x && mouseX < area.x + area.width &&
 				mouseY > area.y && mouseY < area.y + area.height) {
-				flavorText = "Weird.";
+				flavorText = "Weird. Some birds have been nesting here.";
 				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
 				return false;
 			}
@@ -1198,6 +1772,7 @@ function mousePressed() {
 				if (mouseX > tonyX && mouseX < tonyX + tonyWidth &&
 					mouseY > adjustedTonyY && mouseY < adjustedTonyY + tonyHeight) {
 					// Click detected on Tony - immediately go to surprised animation
+					tonyClickSound.play();
 					introStarted = true;
 					introPhase = 'tony_surprised';
 					introPhaseStartTime = millis();
@@ -1246,16 +1821,8 @@ function mousePressed() {
 				if (!plant.watered || DEBUG_MODE) {
 					waterPlant(plant.id);
 				} else {
-					const wateredFlavor = {
-						thyme:      "The thyme smells wonderful.",
-						rosemary:   "The rosemary is looking good.",
-						sunflowers: "They're soaking up the sun.",
-						tulips:     "All taken care of.",
-						wildpatch:  "Doing its own thing, as usual.",
-						tomatoes:   "Getting closer to ready.",
-						seedling:   "Hanging in there."
-					};
-					flavorText = wateredFlavor[plant.id] || "Already watered.";
+					const flavor = isRaining ? RAIN_FLAVOR : WATERED_FLAVOR;
+					flavorText = flavor[plant.id] || (isRaining ? "The rain feels nice." : "Already watered.");
 					flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
 				}
 				return false;
@@ -1290,8 +1857,10 @@ function mousePressed() {
 	return false;
 	}
 
-	// VN mode - click on choices or advance dialogue
-	if (gameMode === 'vn') {
+	// VN / cutscene mode - click on choices or advance dialogue
+	if (gameMode === 'vn' || gameMode === 'cutscene') {
+		// Block all input while the pre-dialogue intro sequence is playing
+		if (cutsceneIntroStep >= 0) return false;
 		// CRITICAL: Debounce clicks - prevent multiple mousePressed calls for same click
 		const currentTime = millis();
 		if (currentTime - lastClickTime < CLICK_COOLDOWN) {
@@ -1344,6 +1913,9 @@ function mousePressed() {
 			if (mouseX > button.x && mouseX < button.x + button.width &&
 				mouseY > button.y && mouseY < button.y + button.height) {
 				console.log(`[CLICK ${clickId}] Button clicked`);
+				if (scenes[currentScene].keys && scenes[currentScene].keys.length > 0) {
+					conversationSound.play();
+				}
 				handleVNChoice(button.index);
 				return false;
 			}
@@ -1351,6 +1923,110 @@ function mousePressed() {
 
 		// Click was not on any button - ignore it
 		console.log(`[CLICK ${clickId}] Click not on any button - ignoring`);
+		return false;
+	}
+
+	// Story ending screen - two-button end screen
+	if (gameMode === 'storyEnding') {
+		if (fadingToTitleFromEnding) return false;
+
+		const buttonW = 280 * canvasScale;
+		const buttonH = 65 * canvasScale;
+		const buttonY = height * 0.55;
+		const gap = 40 * canvasScale;
+		const leftBtnX = (width / 2) - buttonW - gap / 2;
+		const rightBtnX = (width / 2) + gap / 2;
+
+		// "Stay in the garden"
+		if (mouseX > leftBtnX && mouseX < leftBtnX + buttonW &&
+			mouseY > buttonY && mouseY < buttonY + buttonH) {
+			clickSound.play();
+			gameMode = 'rain_ending';
+			currentSection = 2;
+			return false;
+		}
+
+		// "Return to title"
+		if (mouseX > rightBtnX && mouseX < rightBtnX + buttonW &&
+			mouseY > buttonY && mouseY < buttonY + buttonH) {
+			returnSound.play();
+			fadingToTitleFromEnding = true;
+			fadeToTitleFromEndingStartTime = millis();
+			return false;
+		}
+
+		return false;
+	}
+
+	// Rain ending - allow section navigation; ESC overlay button clicks
+	if (gameMode === 'rain_ending') {
+		if (showESCOverlay) {
+			// Handle Stay/Return buttons (same layout as story ending screen)
+			const buttonW = 254 * canvasScale;
+			const buttonH = 85 * canvasScale;
+			const buttonY = height * 0.55;
+			const gap = 40 * canvasScale;
+			const leftBtnX = (width / 2) - buttonW - gap / 2;
+			const rightBtnX = (width / 2) + gap / 2;
+
+			if (mouseX > leftBtnX && mouseX < leftBtnX + buttonW && mouseY > buttonY && mouseY < buttonY + buttonH) {
+				// Stay in garden - close overlay
+				clickSound.play();
+				showESCOverlay = false;
+			} else if (mouseX > rightBtnX && mouseX < rightBtnX + buttonW && mouseY > buttonY && mouseY < buttonY + buttonH) {
+				// Return to title - fade to title
+				returnSound.play();
+				showESCOverlay = false;
+				fadingToTitleFromEnding = true;
+				fadeToTitleFromEndingStartTime = millis();
+			}
+			return false;
+		}
+
+		// Plant clicks - show rain flavor text
+		let rainSectionPlants = getPlantsForSection(currentSection);
+		for (let plant of rainSectionPlants) {
+			if (mouseX > plant.x && mouseX < plant.x + plant.width &&
+				mouseY > plant.y && mouseY < plant.y + plant.height) {
+				flavorText = RAIN_FLAVOR[plant.id] || "The rain feels nice.";
+				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
+				return false;
+			}
+		}
+
+		// Shell click - flavor text
+		if (currentSection === 2) {
+			const area = gardenState.shell;
+			if (mouseX > area.x && mouseX < area.x + area.width &&
+				mouseY > area.y && mouseY < area.y + area.height) {
+				flavorText = "The birds inside are sleeping soundly.";
+				flavorTextTimer = millis() + FLAVOR_TEXT_DURATION;
+				return false;
+			}
+		}
+
+		// Allow section navigation via arrows
+		const arrowSize = 40 * 1.5;
+		const arrowBaseY = 20;
+		const bobAmount = 1;
+
+		if (currentSection > 1) {
+			const arrowLeftX = 20;
+			if (mouseX > arrowLeftX && mouseX < arrowLeftX + arrowSize &&
+				mouseY > arrowBaseY - bobAmount && mouseY < arrowBaseY + arrowSize + bobAmount) {
+				startSectionTransition(currentSection - 1);
+				return false;
+			}
+		}
+		if (currentSection < 3) {
+			const arrowRightX = width - arrowSize - 20;
+			if (mouseX > arrowRightX && mouseX < arrowRightX + arrowSize &&
+				mouseY > arrowBaseY - bobAmount && mouseY < arrowBaseY + arrowSize + bobAmount) {
+				startSectionTransition(currentSection + 1);
+				return false;
+			}
+		}
+
 		return false;
 	}
 
@@ -1408,6 +2084,48 @@ function mouseMoved() {
 		return false;
 	}
 
+	// In rain_ending, hovering any plant or shell shows the question cursor
+	if (gameMode === 'rain_ending') {
+		if (showESCOverlay) {
+			isHoveringInteractiveArea = false;
+			isCurrentlyHoveringPlant = false;
+			const _bW = 254 * canvasScale, _bH = 85 * canvasScale, _bY = height * 0.55, _gap = 40 * canvasScale;
+			const _lX = (width / 2) - _bW - _gap / 2, _rX = (width / 2) + _gap / 2;
+			const _nowH = (mouseX > _lX && mouseX < _lX + _bW && mouseY > _bY && mouseY < _bY + _bH) ? 'stay'
+				: (mouseX > _rX && mouseX < _rX + _bW && mouseY > _bY && mouseY < _bY + _bH) ? 'return' : null;
+			if (_nowH !== lastESCHoveredButton) { lastESCHoveredButton = _nowH; if (_nowH && hoverSound) { hoverSound.setVolume(0.2); hoverSound.play(); } }
+			return false;
+		}
+		isHoveringInteractiveArea = false;
+		isCurrentlyHoveringPlant = false;
+		for (let plant of frameCachedPlants) {
+			if (mouseX > plant.x && mouseX < plant.x + plant.width &&
+				mouseY > plant.y && mouseY < plant.y + plant.height) {
+				isHoveringInteractiveArea = true;
+				return false;
+			}
+		}
+		if (currentSection === 2) {
+			const area = gardenState.shell;
+			if (mouseX > area.x && mouseX < area.x + area.width &&
+				mouseY > area.y && mouseY < area.y + area.height) {
+				isHoveringInteractiveArea = true;
+				return false;
+			}
+		}
+		return false;
+	}
+
+	// Story ending screen button hover sound
+	if (gameMode === 'storyEnding') {
+		const _bW = 254 * canvasScale, _bH = 85 * canvasScale, _bY = height * 0.55, _gap = 40 * canvasScale;
+		const _lX = (width / 2) - _bW - _gap / 2, _rX = (width / 2) + _gap / 2;
+		const _nowH = (mouseX > _lX && mouseX < _lX + _bW && mouseY > _bY && mouseY < _bY + _bH) ? 'stay'
+			: (mouseX > _rX && mouseX < _rX + _bW && mouseY > _bY && mouseY < _bY + _bH) ? 'return' : null;
+		if (_nowH !== lastESCHoveredButton) { lastESCHoveredButton = _nowH; if (_nowH && hoverSound) { hoverSound.setVolume(0.2); hoverSound.play(); } }
+		return false;
+	}
+
 	// Only check collision for cursor when in garden mode
 	if (gameMode !== 'garden') {
 		return false;
@@ -1415,32 +2133,30 @@ function mouseMoved() {
 
 	// Check if mouse is over any un-watered plants in current section
 	isCurrentlyHoveringPlant = false;
-	// Early exit after finding first hovered plant
+	isHoveringInteractiveArea = false;
 	for (let plant of frameCachedPlants) {
-		// Skip watered plants entirely
-		if (plant.watered) continue;
-
 		if (mouseX > plant.x && mouseX < plant.x + plant.width &&
 			mouseY > plant.y && mouseY < plant.y + plant.height) {
-			isCurrentlyHoveringPlant = true;
+			if (!plant.watered) {
+				isCurrentlyHoveringPlant = true;
+			} else {
+				isHoveringInteractiveArea = true;
+			}
 			break;
 		}
 	}
 
-	// Check if mouse is over interactive area in section 3 (avoid check if not in section 3)
-	// Only show question cursor if the area hasn't been visited yet
-	if (currentSection === 3 && (!gardenState.emptyPlot.visited || DEBUG_MODE)) {
-		const area = gardenState.emptyPlot;
-		isHoveringInteractiveArea = (mouseX > area.x && mouseX < area.x + area.width &&
-			mouseY > area.y && mouseY < area.y + area.height);
-	}
-	// Check if mouse is over shell interactive area in section 2
-	else if (currentSection === 2 && (!gardenState.shell.visited || DEBUG_MODE)) {
-		const area = gardenState.shell;
-		isHoveringInteractiveArea = (mouseX > area.x && mouseX < area.x + area.width &&
-			mouseY > area.y && mouseY < area.y + area.height);
-	} else {
-		isHoveringInteractiveArea = false;
+	// If not hovering a plant, check section-specific interactive areas
+	if (!isCurrentlyHoveringPlant && !isHoveringInteractiveArea) {
+		if (currentSection === 3 && (!gardenState.emptyPlot.visited || DEBUG_MODE)) {
+			const area = gardenState.emptyPlot;
+			isHoveringInteractiveArea = (mouseX > area.x && mouseX < area.x + area.width &&
+				mouseY > area.y && mouseY < area.y + area.height);
+		} else if (currentSection === 2 && (!gardenState.shell.visited || DEBUG_MODE)) {
+			const area = gardenState.shell;
+			isHoveringInteractiveArea = (mouseX > area.x && mouseX < area.x + area.width &&
+				mouseY > area.y && mouseY < area.y + area.height);
+		}
 	}
 
 	// Note: Don't set cursor here - let drawGardenMode() handle all cursor display

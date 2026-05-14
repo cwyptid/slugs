@@ -1,7 +1,19 @@
-// A Game About Slugs - Entry Point
+// Entry Point
 
 function preload() {
 	loadGameAssets();
+	clickSound = loadSound('assets/sounds/button_go.wav');
+	returnSound = loadSound('assets/sounds/button_return.wav');
+	tonyClickSound = loadSound('assets/sounds/alert.wav');
+	footstepSound = loadSound('assets/sounds/footstep.wav');
+	titleMusic = loadSound('assets/sounds/title.wav');
+	waterSound = loadSound('assets/sounds/water.wav');
+	sparkleSound = loadSound('assets/sounds/success.mp3');
+	rainSound = loadSound('assets/sounds/rain.wav');
+	hoverSound = loadSound('assets/sounds/hover.wav');
+	mainTune = loadSound('assets/sounds/main_tune.wav');
+	shellStory = loadSound('assets/sounds/shell_story.flac');
+	conversationSound = loadSound('assets/sounds/talk.wav');
 }
 
 function setup() {
@@ -28,10 +40,43 @@ function setup() {
 	inp = createInput("");
 	inp.hide();
 
+	titleMusic.setVolume(0.12);
+	if (!DEBUG_CUTSCENE && !DEBUG_ENDING) titleMusic.loop();
+
 	initializeNameInputButtons();
 	gardenState.backgroundImage = gardenAssets.section1Background;
 	initializeSprites();
 	setupScenes();
+
+	if (DEBUG_CUTSCENE) {
+		playerName = "Debug";
+		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
+			plant.watered = true;
+		}
+		gardenState.emptyPlot.visited = true;
+		gameMode = 'cutscene';
+		currentScene = 1500;
+		vnEntryTime = millis();
+		skipCutsceneTextboxFade = true;
+		resetTypewriter();
+	}
+
+	if (DEBUG_ENDING) {
+		playerName = "Debug";
+		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
+			plant.watered = true;
+		}
+		gardenState.emptyPlot.visited = true;
+		isRaining = true;
+		initRainParticles();
+		document.body.classList.add('rain-active');
+		currentScene = 2000;
+		gameMode = 'vn';
+		currentSection = 2;
+		gardenState.backgroundImage = gardenAssets.section2RainBackground || gardenAssets.section2Background;
+		vnEntryTime = millis() - (vnEntryDuration + 100);
+		resetTypewriter();
+	}
 }
 
 function draw() {
@@ -46,6 +91,9 @@ function draw() {
 
 	// Update all sprites
 	updateAllSprites();
+
+	// Update rain particles each frame when raining
+	if (isRaining) updateRainParticles();
 
 	// Handle intro sequence - display sprite for a moment then start dialogue
 	if (gameMode === 'intro') {
@@ -80,6 +128,12 @@ function draw() {
 				currentScene = 1000; // Start at opening dialogue scene
 				vnEntryTime = currentTime;
 				isIntroSequenceVN = true; // Use longer fade for intro sequence
+				if (!mainTuneStarted && mainTune) {
+					mainTuneStarted = true;
+					mainTune.setVolume(0);
+					mainTune.loop();
+					mainTune.setVolume(0.05, 2);
+				}
 				resetTypewriter();
 				lastClickTime = 0; // Reset click cooldown when entering VN mode
 				lastProcessedScene = -1; // Reset scene tracker to allow first click
@@ -158,6 +212,31 @@ function draw() {
 				break;
 			case 'vn':
 				drawVNMode(currentTime);
+				break;
+			case 'cutscene':
+				drawCutsceneMode(currentTime);
+				break;
+			case 'storyEnding':
+				drawStoryEndingMode(currentTime);
+				break;
+			case 'rain_ending':
+				drawGardenMode(currentTime);
+				if (showESCOverlay) drawESCOverlay();
+				// Fade to title when triggered from rain_ending
+				if (fadingToTitleFromEnding) {
+					const elapsed = currentTime - fadeToTitleFromEndingStartTime;
+					const progress = Math.min(elapsed / fadeToTitleFromEndingDuration, 1);
+					push();
+					fill(0, 0, 0, progress * 255);
+					noStroke();
+					rect(0, 0, width, height);
+					pop();
+					if (progress >= 1) {
+						fadingToTitleFromEnding = false;
+						resetGame();
+						gameMode = 'title';
+					}
+				}
 				break;
 		}
 	}

@@ -88,6 +88,15 @@ body.nameInput-active .left-panel {
 body.nameInput-active .right-panel {
 	background-image: url("../assets/UI/panel-3.png");
 }
+
+/* Use panel-5 during rain ending sequence */
+body.rain-active .left-panel {
+	background-image: url("../assets/UI/panel-5.png");
+}
+
+body.rain-active .right-panel {
+	background-image: url("../assets/UI/panel-5.png");
+}
 input[type="text"],
 textarea {
 	background-color: rgb(20, 7, 36);
