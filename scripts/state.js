@@ -325,7 +325,7 @@ const cutsceneEndFadeDuration = 1500;
 // Cutscene-to-VN transition (after cutscene 6 → ending VN with rain)
 let fadingCutsceneToVN = false;
 let fadeCutsceneToVNStartTime = 0;
-const fadeCutsceneToVNDuration = 1000;
+let fadeCutsceneToVNDuration = 3500;
 let fadeCutsceneToVNTargetScene = 2000; // which VN scene to land on after fade
 let skipVNOverworldFade = false; // When true, suppresses overworld Tony fade-out (used for cutscene→VN transitions)
 let skipCutsceneTextboxFade = false; // When true, textbox appears instantly (black overlay still fades normally)

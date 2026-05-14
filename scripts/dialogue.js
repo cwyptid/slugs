@@ -1615,7 +1615,7 @@ function setupScenes() {
 	};
 
 	scenes[1352] = {
-		text: "Can't say it helped. I think it messed me up a bit. But that's what I thought was best for me at the time.\n\n[1] I get it.\n[2] Some things just don't turn out right.",
+		text: "Can't say it helped. But that's what I thought was best for me at the time.\n[1] I get it.\n[2] Some things just don't turn out right.",
 		image: assets.rueful,
 		keys: ["1", "2"],
 		nextPages: [1353, 1353]
@@ -1667,7 +1667,7 @@ function setupScenes() {
 	// ===== CUTSCENE 6 =====
 
 	scenes[1500] = {
-		text: "The shell I left behind had become so much more! I couldn't believe my eyes.",
+		text: "The shell I left behind had become so much more.",
 		cutsceneSprite: assets.cutscene_kneeling_shell,
 		keys: [],
 		nextPages: [1501],
@@ -1885,7 +1885,7 @@ function setupScenes() {
 	};
 
 	scenes[2007] = {
-		text: "But it was less…me.",
+		text: "But it was less… me.",
 		image: assets.rueful_rain,
 		keys: [],
 		nextPages: [2008]
