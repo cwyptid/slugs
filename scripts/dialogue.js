@@ -276,6 +276,14 @@ function updateChoiceAreasWithYPositions(dialogX, dialogY, dialogWidth, dialogHe
 
 		yPos += lineHeight;
 	}
+
+	// Play hover sound when mouse enters a new choice (not Continue)
+	const nowHovered = buttons.find(b => b.isHovered && b.key !== null);
+	const nowHoveredText = nowHovered ? nowHovered.text : null;
+	if (nowHoveredText !== lastHoveredChoiceText) {
+		lastHoveredChoiceText = nowHoveredText;
+		if (nowHoveredText && hoverSound) { hoverSound.setVolume(0.2); hoverSound.play(); }
+	}
 }
 
 // ========================
@@ -1433,7 +1441,7 @@ function setupScenes() {
 	};
 
 	scenes["830.5"] = {
-		text: "When we last talked, I wasn't just wearing it. I was practially living in it...",
+		text: "When we last talked, I wasn't just wearing it. I was practically living in it...",
 		image: assets.rueful,
 		keys: [],
 		nextPages: [],

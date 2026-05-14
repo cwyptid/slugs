@@ -8,7 +8,7 @@ const DEBUG_MODE = false;
 const DEBUG_CUTSCENE = false;
 // DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
 // ] key also jumps to ending VN from any screen while this is on
-const DEBUG_ENDING = true;
+const DEBUG_ENDING = false;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
@@ -348,6 +348,12 @@ let fadingToTitleFromEnding = false;
 let fadeToTitleFromEndingStartTime = 0;
 const fadeToTitleFromEndingDuration = 1000;
 
+// Sounds
+let clickSound, returnSound, tonyClickSound, footstepSound, titleMusic, waterSound, sparkleSound, rainSound, conversationSound, hoverSound, mainTune, shellStory;
+let lastHoveredChoiceText = null;
+let mainTuneStarted = false;
+let lastESCHoveredButton = null;
+
 // UI and input
 let buttons = [];
 let inp;
@@ -443,4 +449,10 @@ function resetGame() {
 	// Hide nameInput panel when returning to title
 	document.body.classList.remove('nameInput-active');
 	document.body.classList.remove('rain-active');
+
+	if (mainTune && mainTune.isPlaying()) mainTune.stop();
+	if (shellStory && shellStory.isPlaying()) shellStory.stop();
+	if (rainSound && rainSound.isPlaying()) rainSound.stop();
+	mainTuneStarted = false;
+	if (titleMusic && !titleMusic.isPlaying()) titleMusic.loop();
 }
