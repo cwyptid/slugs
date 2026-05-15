@@ -8,7 +8,7 @@ const DEBUG_MODE = false;
 const DEBUG_CUTSCENE = false;
 // DEBUG_ENDING - set to true to skip straight to the ending VN (scene 2000) with rain
 // ] key also jumps to ending VN from any screen while this is on
-const DEBUG_ENDING = true;
+const DEBUG_ENDING = false;
 // ========================
 
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
