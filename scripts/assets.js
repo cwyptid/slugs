@@ -15,6 +15,8 @@ function loadGameAssets() {
 	gardenAssets.section1Background = loadImage("assets/environment/section1_normal.png");
 	gardenAssets.section2Background = loadImage("assets/environment/section2_normal.png");
 	gardenAssets.section3Background = loadImage("assets/environment/section3_normal.png");
+	gardenAssets.rainSprite = loadImage("assets/environment/rain.png");
+	gardenAssets.rainCollisionSprite = loadImage("assets/environment/rain-collision.png");
 	gardenAssets.textbox = loadImage("assets/UI/textbox.png");
 	gardenAssets.textboxRain = loadImage("assets/UI/textbox_rain.png");
 	gardenAssets.arrowRight = loadImage("assets/UI/arrow_right.png");

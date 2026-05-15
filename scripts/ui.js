@@ -229,9 +229,13 @@ function initRainParticles() {
 	for (let b = 0; b < 3; b++) {
 		for (let i = 0; i < counts[b]; i++) {
 			rainParticles[b].push({
-				x: random(-50, width),
-				y: random(-height, height),
-				speed: random(7, 10)
+				x: random(-width * 0.5, width),
+				y: random(-height, height * 0.3),
+				speed: random(20, 28),
+				state: 'falling',
+				collisionFrame: 0,
+				collisionTimer: 0,
+				collisionY: random(height * 0.3, height * 0.8)
 			});
 		}
 	}
@@ -240,11 +244,31 @@ function initRainParticles() {
 function updateRainParticles() {
 	for (let bucket of rainParticles) {
 		for (let p of bucket) {
-			p.x += 2;
-			p.y += p.speed;
-			if (p.y > height + 12 || p.x > width + 12) {
-				p.x = random(-width * 0.1, width);
-				p.y = -12;
+			if (p.state === 'collision') {
+				p.collisionTimer++;
+				if (p.collisionTimer >= 6) {
+					p.collisionTimer = 0;
+					p.collisionFrame++;
+					if (p.collisionFrame >= 3) {
+						p.x = random(-width * 0.5, width);
+						p.y = random(-height, 0);
+						p.speed = random(20, 28);
+						p.collisionY = random(height * 0.3, height * 0.8);
+						p.state = 'falling';
+						p.collisionFrame = 0;
+					}
+				}
+			} else {
+				p.x += p.speed * 0.6;
+				p.y += p.speed;
+				if (p.y >= p.collisionY) {
+					p.state = 'collision';
+					p.collisionFrame = 0;
+					p.collisionTimer = 0;
+				} else if (p.x > width + 48) {
+					p.x = random(-width * 0.5, 0);
+					p.y = random(-height, height * 0.3);
+				}
 			}
 		}
 	}
@@ -253,13 +277,16 @@ function updateRainParticles() {
 function drawRainParticles() {
 	const ctx = drawingContext;
 	const opacities = [0.4, 0.62, 0.82];
-	ctx.fillStyle = 'rgb(255, 253, 218)';
+	const sprite = gardenAssets.rainSprite?.canvas;
+	const collision = gardenAssets.rainCollisionSprite?.canvas;
 	for (let b = 0; b < 3; b++) {
 		ctx.globalAlpha = opacities[b];
 		for (let p of rainParticles[b]) {
-			ctx.fillRect(p.x,     p.y,      3, 5);
-			ctx.fillRect(p.x + 2, p.y + 6,  3, 5);
-			ctx.fillRect(p.x + 4, p.y + 12, 3, 5);
+			if (p.state === 'collision' && collision) {
+				ctx.drawImage(collision, p.collisionFrame * 16, 0, 16, 16, p.x, p.collisionY, 48, 48);
+			} else if (sprite) {
+				ctx.drawImage(sprite, p.x, p.y, 48, 48);
+			}
 		}
 	}
 	ctx.globalAlpha = 1;
