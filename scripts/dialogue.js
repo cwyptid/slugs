@@ -1167,7 +1167,7 @@ function setupScenes() {
 	};
 
 	scenes[614] = {
-		text: "Uncertainty shouldnt be my enemy. I need the space to think things through.",
+		text: "Uncertainty shouldn't be my enemy. I need the space to think things through.",
 		image: assets.peaceful,
 		keys: [],
 		nextPages: [650], // Converge to ending
