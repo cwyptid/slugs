@@ -1480,7 +1480,7 @@ function keyPressed() {
 	}
 
 	// Title screen - start game with any key
-	if (gameMode === 'title') {
+	if (gameMode === 'title' && gameLoaded) {
 		clickSound.play();
 		currentScene = 0;
 		gameMode = 'nameInput'; // Go to name input screen
@@ -1686,7 +1686,7 @@ function mousePressed() {
 	userStartAudio();
 
 	// Title screen - start game with click
-	if (gameMode === 'title') {
+	if (gameMode === 'title' && gameLoaded) {
 		clickSound.play();
 		currentScene = 0;
 		gameMode = 'nameInput'; // Go to name input screen

@@ -11,6 +11,7 @@ const DEBUG_CUTSCENE = false;
 const DEBUG_ENDING = false;
 // ========================
 
+let gameLoaded = false; // true once preload + setup have finished
 let gameMode = 'title'; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn'
 let currentSection = 1; // Which section of the garden (1, 2, or 3)
 let playerName = ""; // Store the player's entered name

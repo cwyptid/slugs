@@ -61,6 +61,8 @@ function setup() {
 		resetTypewriter();
 	}
 
+	gameLoaded = true;
+
 	if (DEBUG_ENDING) {
 		playerName = "Debug";
 		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
