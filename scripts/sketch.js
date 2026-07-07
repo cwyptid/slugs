@@ -1,248 +1,270 @@
 // Entry Point
 
 function preload() {
-	loadGameAssets();
-	clickSound = loadSound('assets/sounds/button_go.wav');
-	returnSound = loadSound('assets/sounds/button_return.wav');
-	tonyClickSound = loadSound('assets/sounds/alert.wav');
-	footstepSound = loadSound('assets/sounds/footstep.wav');
-	titleMusic = loadSound('assets/sounds/title.wav');
-	waterSound = loadSound('assets/sounds/water.wav');
-	sparkleSound = loadSound('assets/sounds/success.mp3');
-	rainSound = loadSound('assets/sounds/rain.wav');
-	hoverSound = loadSound('assets/sounds/hover.wav');
-	mainTune = loadSound('assets/sounds/main_tune.wav');
-	shellStory = loadSound('assets/sounds/shell_story.flac');
-	conversationSound = loadSound('assets/sounds/talk.wav');
+  loadGameAssets();
+}
+
+function initializeLayout() {
+  // Scale plant positions and sizes based on canvas scale (not currently in use)
+  for (let plant of gardenState.section1Plants) {
+    plant.x *= canvasScale;
+    plant.y *= canvasScale;
+    plant.width *= canvasScale;
+    plant.height *= canvasScale;
+  }
+  for (let plant of gardenState.section2Plants) {
+    plant.x *= canvasScale;
+    plant.y *= canvasScale;
+    plant.width *= canvasScale;
+    plant.height *= canvasScale;
+  }
+  for (let plant of gardenState.section3Plants) {
+    plant.x *= canvasScale;
+    plant.y *= canvasScale;
+    plant.width *= canvasScale;
+    plant.height *= canvasScale;
+  }
+
+  // Scale interactive areas
+  gardenState.emptyPlot.x *= canvasScale;
+  gardenState.emptyPlot.y *= canvasScale;
+  gardenState.emptyPlot.width *= canvasScale;
+  gardenState.emptyPlot.height *= canvasScale;
+
+  gardenState.shell.x *= canvasScale;
+  gardenState.shell.y *= canvasScale;
+  gardenState.shell.width *= canvasScale;
+  gardenState.shell.height *= canvasScale;
 }
 
 function setup() {
-	let canvasWidth = 1280;
-	let canvasHeight = 720;
+  let canvasWidth = 1280;
+  let canvasHeight = 720;
 
-	if (windowWidth < 1300) {
-		canvasScale = (windowWidth - 20) / 1280;
-		canvasWidth = windowWidth - 20;
-		canvasHeight = 720 * canvasScale;
-	}
+  //if (windowWidth < 1300) {
+  //  canvasScale = (windowWidth - 20) / 1280;
+  //  canvasWidth = windowWidth - 20;
+  //  canvasHeight = 720 * canvasScale;
+  //}
 
-	createCanvas(canvasWidth, canvasHeight);
-	let p5Container = document.getElementById('p5-container');
-	if (p5Container && canvas.parentNode !== p5Container) {
-		p5Container.appendChild(canvas);
-	}
+  createCanvas(canvasWidth, canvasHeight);
+  let p5Container = document.getElementById("p5-container");
+  if (p5Container && canvas.parentNode !== p5Container) {
+    p5Container.appendChild(canvas);
+  }
 
-	textFont(myFont);
-	fill(255, 253, 191);
-	textSize(24);
-	rectMode(CORNER);
+  textFont(assets.myFont);
+  fill(255, 253, 191);
+  textSize(24);
+  rectMode(CORNER);
 
-	inp = createInput("");
-	inp.hide();
+  inp = createInput("");
+  inp.hide();
 
-	titleMusic.setVolume(0.12);
-	if (!DEBUG_CUTSCENE && !DEBUG_ENDING) titleMusic.loop();
+  assets.titleMusic.setVolume(0.12);
+  if (!DEBUG_CUTSCENE && !DEBUG_ENDING) assets.titleMusic.loop();
 
-	initializeNameInputButtons();
-	gardenState.backgroundImage = gardenAssets.section1Background;
-	initializeSprites();
-	setupScenes();
+  initializeNameInputButtons();
+  gardenState.backgroundImage = gardenAssets.section1Background;
+  initializeSprites();
+  initializeLayout();
+  setupScenes();
 
-	if (DEBUG_CUTSCENE) {
-		playerName = "Debug";
-		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
-			plant.watered = true;
-		}
-		gardenState.emptyPlot.visited = true;
-		gameMode = 'cutscene';
-		currentScene = 1500;
-		vnEntryTime = millis();
-		skipCutsceneTextboxFade = true;
-		resetTypewriter();
-	}
+  if (DEBUG_CUTSCENE) {
+    playerName = "TUGGITS";
+    for (let plant of [
+      ...gardenState.section1Plants,
+      ...gardenState.section2Plants,
+      ...gardenState.section3Plants,
+    ]) {
+      plant.watered = true;
+    }
+    gardenState.emptyPlot.visited = true;
+    gameMode = "cutscene";
+    currentScene = 1611;
+    skipCutsceneTextboxFade = true;
+    resetTypewriter();
+  }
 
-	gameLoaded = true;
+  gameLoaded = true;
 
-	if (DEBUG_ENDING) {
-		playerName = "Debug";
-		for (let plant of [...gardenState.section1Plants, ...gardenState.section2Plants, ...gardenState.section3Plants]) {
-			plant.watered = true;
-		}
-		gardenState.emptyPlot.visited = true;
-		isRaining = true;
-		initRainParticles();
-		document.body.classList.add('rain-active');
-		currentScene = 2000;
-		gameMode = 'vn';
-		currentSection = 2;
-		gardenState.backgroundImage = gardenAssets.section2RainBackground || gardenAssets.section2Background;
-		vnEntryTime = millis() - (vnEntryDuration + 100);
-		resetTypewriter();
-	}
+  if (DEBUG_ENDING) {
+    playerName = "TUGGITS";
+    for (let plant of [
+      ...gardenState.section1Plants,
+      ...gardenState.section2Plants,
+      ...gardenState.section3Plants,
+    ]) {
+      plant.watered = true;
+    }
+    gardenState.emptyPlot.visited = true;
+    isRaining = true;
+    initRainParticles();
+    document.body.classList.add("rain-active");
+    currentScene = 2016;
+    gameMode = "vn";
+    currentSection = 2;
+    gardenState.backgroundImage =
+      gardenAssets.section2RainBackground || gardenAssets.section2Background;
+    fades.toVNMode.startTime = millis() - (fades.toVNMode.duration + 100);
+    resetTypewriter();
+  }
 }
 
 function draw() {
-	// Reset click flag at start of frame to allow one click per frame
-	clickProcessedThisFrame = false;
+  // Reset click flag at start of frame to allow one click per frame
+  clickProcessedThisFrame = false;
 
-	// Cache current time to avoid calling millis() multiple times per frame
-	const currentTime = millis();
+  // Cache current time to avoid calling millis() multiple times per frame
+  const currentTime = millis();
 
-	// Cache plants for this frame to avoid multiple getPlantsForSection() calls
-	frameCachedPlants = getPlantsForSection(currentSection);
+  // Cache plants for this frame to avoid multiple getPlantsForSection() calls
+  cachedCurrentSectionPlants = getPlantsForSection(currentSection);
 
-	// Update all sprites
-	updateAllSprites();
+  // Update all sprites
+  updateAllSprites();
 
-	// Update rain particles each frame when raining
-	if (isRaining) updateRainParticles();
+  // Update rain particles each frame when raining
+  if (isRaining) updateRainParticles();
 
-	// Handle intro sequence - display sprite for a moment then start dialogue
-	if (gameMode === 'intro') {
-		drawGardenMode(currentTime); // Draw garden with start sprite
+  // Handle intro sequence - display sprite for a moment then start dialogue
+  if (gameMode === "intro") {
+    drawGardenMode(currentTime); // Draw garden with start sprite
 
-		const timeInPhase = currentTime - introPhaseStartTime;
+    const timeInPhase = currentTime - introPhaseStartTime;
 
-		if (introPhase === 'waiting') {
-			// Waiting for player to click Tony to start the sequence
-			// Do nothing, just display Tony with tony_start sprite (handled in rendering)
-		} else if (introPhase === 'tony_start') {
-			// Loop tony_start for 1.5 seconds
-			if (timeInPhase >= tonyStartDuration) {
-				introPhase = 'tony_surprised';
-				introPhaseStartTime = currentTime;
-				gardenState.tonySurprisedSprite.reset();
-				// Calculate duration based on frames and fps: 3 frames at 6fps = ~500ms
-				tonySurprisedDuration = (sprites.tonySurprisedFrames.length / 6) * 1000;
-			}
-		} else if (introPhase === 'tony_surprised') {
-			// Play tony_surprised once (no loop)
-			if (timeInPhase >= tonySurprisedDuration) {
-				introPhase = 'tony_start_idle';
-				introPhaseStartTime = currentTime;
-				gardenState.tonyStartIdleSprite.reset();
-			}
-		} else if (introPhase === 'tony_start_idle') {
-			// Loop tony_start_idle for 0.5 seconds
-			if (timeInPhase >= tonyStartIdleDuration) {
-				// Transition to VN mode for opening dialogue
-				gameMode = 'vn';
-				currentScene = 1000; // Start at opening dialogue scene
-				vnEntryTime = currentTime;
-				isIntroSequenceVN = true; // Use longer fade for intro sequence
-				if (!mainTuneStarted && mainTune) {
-					mainTuneStarted = true;
-					mainTune.setVolume(0);
-					mainTune.loop();
-					mainTune.setVolume(0.05, 2);
-				}
-				resetTypewriter();
-				lastClickTime = 0; // Reset click cooldown when entering VN mode
-				lastProcessedScene = -1; // Reset scene tracker to allow first click
+    if (introPhase === "none") {
+      // Waiting for player to click Tony to start the sequence
+    } else if (introPhase === "tony_surprised") {
+      // Play tony_surprised once (no loop)
+      if (timeInPhase >= tonySurprisedDuration) {
+        introPhase = "tony_start_idle";
+        introPhaseStartTime = currentTime;
+        gardenState.tonyStartIdleSprite.reset();
+      }
+    } else if (introPhase === "tony_start_idle") {
+      // Loop tony_start_idle for 0.5 seconds
+      if (timeInPhase >= tonyStartIdleDuration) {
+        // Transition to VN mode for opening dialogue
+        gameMode = "vn";
+        currentScene = 1000; // Start at opening dialogue scene
+        fades.toVNMode.startTime = currentTime;
+        toIntroVN = true; // Use longer fade for intro sequence
+        if (!mainTuneStarted && assets.mainTune) {
+          mainTuneStarted = true;
+          assets.mainTune.setVolume(0);
+          assets.mainTune.loop();
+          assets.mainTune.setVolume(0.05, 2);
+        }
+        resetTypewriter();
+        lastClickTime = 0; // Reset click cooldown when entering VN mode
 
-				// Set background based on current section before entering VN mode
-				if (currentSection === 1) {
-					gardenState.backgroundImage = gardenAssets.section1Background;
-				} else if (currentSection === 2) {
-					gardenState.backgroundImage = gardenAssets.section2Background;
-				} else if (currentSection === 3) {
-					gardenState.backgroundImage = gardenAssets.section3Background;
-				}
-			}
-		}
+        // Set background based on current section before entering VN mode
+        if (currentSection === 1) {
+          gardenState.backgroundImage = gardenAssets.section1Background;
+        } else if (currentSection === 2) {
+          gardenState.backgroundImage = gardenAssets.section2Background;
+        } else if (currentSection === 3) {
+          gardenState.backgroundImage = gardenAssets.section3Background;
+        }
+      }
+    }
 
-		// Draw fade in effect from name input
-		if (fadingIntoIntro) {
-			const elapsedFade = currentTime - fadeIntoIntroStartTime;
-			if (elapsedFade >= fadeIntoIntroDuration) {
-				fadingIntoIntro = false; // Fade is complete
-			} else {
-				// Draw black overlay that fades out
-				const fadeProgress = elapsedFade / fadeIntoIntroDuration; // 0 to 1
-				const fadeAlpha = (1 - fadeProgress) * 255; // Start opaque, fade to transparent
-				fill(0, fadeAlpha);
-				noStroke();
-				rect(0, 0, width, height);
-			}
-		}
-	} else if (gameMode === 'transitioning') {
-		drawGardenMode(currentTime); // Show garden with watered plants and Tony's action animations
+    // Draw fade in effect from name input
+    if (fades.toIntro.fading) {
+      const elapsedFade = currentTime - fades.toIntro.startTime;
+      if (elapsedFade >= fades.toIntro.duration) {
+        fades.toIntro.fading = false; // Fade is complete
+      } else {
+        // Draw black overlay that fades out
+        const fadeProgress = elapsedFade / fades.toIntro.duration; // 0 to 1
+        const fadeAlpha = (1 - fadeProgress) * 255; // Start opaque, fade to transparent
+        fill(0, fadeAlpha);
+        noStroke();
+        rect(0, 0, width, height);
+      }
+    }
+  } else if (gameMode === "transitioning") {
+    drawGardenMode(currentTime); // Show garden with watered plants and Tony's action animations
 
-		// Wait for action_idle to start, then wait vnTransitionDelay before transitioning
-		const isInActionIdle = gardenState.tonyState.currentSprite === gardenState.tonyState.tonyActionIdleSprite;
-		const timeSinceActionIdleStart = isInActionIdle ? currentTime - actionIdleStartTime : 0;
+    // Wait for action_idle to start, then wait vnTransitionDelay before transitioning
+    const isInActionIdle =
+      gardenState.tonyState.currentSprite ===
+      gardenState.tonyState.tonyActionIdleSprite;
+    const timeSinceActionIdleStart = isInActionIdle
+      ? currentTime - actionIdleStartTime
+      : 0;
 
-		// Only transition after action_idle has been looping for vnTransitionDelay
-		if (isInActionIdle && timeSinceActionIdleStart >= vnTransitionDelay) {
-			// Reset cursor states before entering VN mode
-			isCurrentlyHoveringPlant = false;
-			isHoveringInteractiveArea = false;
-			gameMode = 'vn'; // Enter VN mode after delay
-			vnEntryTime = currentTime; // Start entry animation timer
-			resetTypewriter(); // Start typewriter effect for current scene
-			lastClickTime = 0; // Reset click cooldown when entering VN mode
-			lastProcessedScene = -1; // Reset scene tracker to allow first click
-		}
-	} else {
-		// Route to appropriate draw function based on game mode
-		switch (gameMode) {
-			case 'title':
-				drawTitleScreen();
-				break;
-			case 'nameInput':
-				drawNameInputScreen();
-				// Draw fade in effect from title screen
-				if (fadingIntoNameInput) {
-					const elapsedFade = currentTime - fadeIntoNameInputStartTime;
-					if (elapsedFade >= fadeIntoNameInputDuration) {
-						fadingIntoNameInput = false; // Fade is complete
-					} else {
-						// Draw black overlay that fades out
-						const fadeProgress = elapsedFade / fadeIntoNameInputDuration; // 0 to 1
-						const fadeAlpha = (1 - fadeProgress) * 255; // Start opaque, fade to transparent
-						fill(0, fadeAlpha);
-						noStroke();
-						rect(0, 0, width, height);
-					}
-				}
-				break;
-			case 'storyTransition':
-				drawStoryTransitionScreen(currentTime);
-				break;
-			case 'garden':
-				drawGardenMode(currentTime);
-				break;
-			case 'vn':
-				drawVNMode(currentTime);
-				break;
-			case 'cutscene':
-				drawCutsceneMode(currentTime);
-				break;
-			case 'storyEnding':
-				drawStoryEndingMode(currentTime);
-				break;
-			case 'rain_ending':
-				drawGardenMode(currentTime);
-				if (showESCOverlay) drawESCOverlay();
-				// Fade to title when triggered from rain_ending
-				if (fadingToTitleFromEnding) {
-					const elapsed = currentTime - fadeToTitleFromEndingStartTime;
-					const progress = Math.min(elapsed / fadeToTitleFromEndingDuration, 1);
-					push();
-					fill(0, 0, 0, progress * 255);
-					noStroke();
-					rect(0, 0, width, height);
-					pop();
-					if (progress >= 1) {
-						fadingToTitleFromEnding = false;
-						resetGame();
-						gameMode = 'title';
-					}
-				}
-				break;
-		}
-	}
-
-	// Handle input visibility
-	checkTextBoxVisibility();
+    // Only transition after action_idle has been looping for vnTransitionDelay
+    if (isInActionIdle && timeSinceActionIdleStart >= vnTransitionDelay) {
+      // Reset cursor states before entering VN mode
+      isCurrentlyHoveringPlant = false;
+      isHoveringInteractiveArea = false;
+      gameMode = "vn"; // Enter VN mode after delay
+      fades.toVNMode.startTime = currentTime; // Start entry animation timer
+      resetTypewriter(); // Start typewriter effect for current scene
+      lastClickTime = 0; // Reset click cooldown when entering VN mode
+    }
+  } else {
+    // Route to appropriate draw function based on game mode
+    switch (gameMode) {
+      case "title":
+        drawTitleScreen();
+        break;
+      case "nameInput":
+        drawNameInputScreen();
+        // Draw fade in effect from title screen
+        if (fades.toNameInput.fading) {
+          const elapsedFade = currentTime - fades.toNameInput.startTime;
+          if (elapsedFade >= fades.toNameInput.duration) {
+            fades.toNameInput.fading = false; // Fade is complete
+          } else {
+            // Draw black overlay that fades out
+            const fadeProgress = elapsedFade / fades.toNameInput.duration; // 0 to 1
+            const fadeAlpha = (1 - fadeProgress) * 255; // Start opaque, fade to transparent
+            fill(0, fadeAlpha);
+            noStroke();
+            rect(0, 0, width, height);
+          }
+        }
+        break;
+      case "storyTransition":
+        drawStoryTransitionScreen(currentTime);
+        break;
+      case "garden":
+        drawGardenMode(currentTime);
+        break;
+      case "vn":
+        drawVNMode(currentTime);
+        break;
+      case "cutscene":
+        drawCutsceneMode(currentTime);
+        break;
+      case "storyEnding":
+        drawStoryEndingMode(currentTime);
+        break;
+      case "rain_ending":
+        drawGardenMode(currentTime);
+        if (showESCOverlay) drawESCOverlay();
+        // Fade to title when triggered from rain_ending
+        if (fades.toTitleFromEnding.fading) {
+          const elapsed = currentTime - fades.toTitleFromEnding.startTime;
+          const progress = Math.min(
+            elapsed / fades.toTitleFromEnding.duration,
+            1,
+          );
+          push();
+          fill(0, 0, 0, progress * 255);
+          noStroke();
+          rect(0, 0, width, height);
+          pop();
+          if (progress >= 1) {
+            fades.toTitleFromEnding.fading = false;
+            resetGame();
+            gameMode = "title";
+          }
+        }
+        break;
+    }
+  }
 }
