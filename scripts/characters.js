@@ -1,4 +1,5 @@
 // Sprite & Character Initialization
+"use strict";
 
 // ========================
 // SPRITE ANIMATION SYSTEM
@@ -63,119 +64,20 @@ class Sprite {
 // ========================
 
 function initializeSprites() {
-  // Initialize plant sprites (3 fps, looping)
-  // Create both dry and watered sprites for each plant in section 1
-  gardenState.section1Plants[0].drySprite = new Sprite(
-    sprites.thymeDryFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[0].wateredSprite = new Sprite(
-    sprites.thymeWateredFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[1].drySprite = new Sprite(
-    sprites.rosemaryDryFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[1].wateredSprite = new Sprite(
-    sprites.rosemaryWateredFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[2].drySprite = new Sprite(
-    sprites.sunflowersDryFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[2].wateredSprite = new Sprite(
-    sprites.sunflowersWateredFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[3].drySprite = new Sprite(
-    sprites.tulipsDryFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[3].wateredSprite = new Sprite(
-    sprites.tulipsWateredFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[4].drySprite = new Sprite(
-    sprites.wildpatchDryFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[4].wateredSprite = new Sprite(
-    sprites.wildpatchWateredFrames,
-    3,
-    true,
-  );
-
-  // Rain sprites for section 1
-  gardenState.section1Plants[0].rainSprite = new Sprite(
-    sprites.thymeRainFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[1].rainSprite = new Sprite(
-    sprites.rosemaryRainFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[2].rainSprite = new Sprite(
-    sprites.sunflowersRainFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[3].rainSprite = new Sprite(
-    sprites.tulipsRainFrames,
-    3,
-    true,
-  );
-  gardenState.section1Plants[4].rainSprite = new Sprite(
-    sprites.wildpatchRainFrames,
-    3,
-    true,
-  );
-
-  // Create both dry and watered sprites for each plant in section 2
-  gardenState.section2Plants[0].drySprite = new Sprite(
-    sprites.tomatoesDryFrames,
-    3,
-    true,
-  );
-  gardenState.section2Plants[0].wateredSprite = new Sprite(
-    sprites.tomatoesWateredFrames,
-    3,
-    true,
-  );
-  gardenState.section2Plants[0].rainSprite = new Sprite(
-    sprites.tomatoesRainFrames,
-    3,
-    true,
-  );
-
-  // Create both dry and watered sprites for each plant in section 3
-  gardenState.section3Plants[0].drySprite = new Sprite(
-    sprites.seedlingDryFrames,
-    3,
-    true,
-  );
-  gardenState.section3Plants[0].wateredSprite = new Sprite(
-    sprites.seedlingWateredFrames,
-    3,
-    true,
-  );
-  gardenState.section3Plants[0].rainSprite = new Sprite(
-    sprites.seedlingRainFrames,
-    3,
-    true,
-  );
+  // Initialize plant sprites (3 fps, looping) - dry, watered, and rain variants
+  for (let plant of [
+    ...gardenState.section1Plants,
+    ...gardenState.section2Plants,
+    ...gardenState.section3Plants,
+  ]) {
+    plant.drySprite = new Sprite(sprites[plant.id + "DryFrames"], 3, true);
+    plant.wateredSprite = new Sprite(
+      sprites[plant.id + "WateredFrames"],
+      3,
+      true,
+    );
+    plant.rainSprite = new Sprite(sprites[plant.id + "RainFrames"], 3, true);
+  }
 
   // Rain sprites for shell and empty plot
   gardenState.shell.rainSprite = new Sprite(sprites.shellRainFrames, 3, true);
@@ -204,18 +106,18 @@ function initializeSprites() {
   gardenState.tonyState.currentSprite = gardenState.tonyState.tonyIdleSprite;
 
   // Tony VN sprites (for dialogue scenes)
-  assets.smiling_waving = new Sprite(sprites.tonySmilingFrames, 3, true);
-  assets.smile_rain = new Sprite(sprites.tonySmilingRainFrames, 3, true);
+  assets.smilingWaving = new Sprite(sprites.tonySmilingFrames, 3, true);
+  assets.smileRain = new Sprite(sprites.tonySmilingRainFrames, 3, true);
   assets.explaining = new Sprite(sprites.tonyExplainingFrames, 3, true);
   assets.assured = new Sprite(sprites.tonyAssuredFrames, 3, true);
-  assets.assured_rain = new Sprite(sprites.tonyAssuredRainFrames, 3, true);
+  assets.assuredRain = new Sprite(sprites.tonyAssuredRainFrames, 3, true);
   assets.peaceful = new Sprite(sprites.tonyPeacefulFrames, 3, true);
-  assets.peaceful_rain = new Sprite(sprites.tonyPeacefulRainFrames, 3, true);
-  assets.sad_peaceful = new Sprite(sprites.tonySadPeacefulFrames, 3, true);
+  assets.peacefulRain = new Sprite(sprites.tonyPeacefulRainFrames, 3, true);
+  assets.sadPeaceful = new Sprite(sprites.tonySadPeacefulFrames, 3, true);
   assets.shy = new Sprite(sprites.tonyShyFrames, 3, true);
-  assets.shy_rain = new Sprite(sprites.tonyShyRainFrames, 3, true);
+  assets.shyRain = new Sprite(sprites.tonyShyRainFrames, 3, true);
   assets.contemplative = new Sprite(sprites.tonyContemplativeFrames, 3, true);
-  assets.contemplative_rain = new Sprite(
+  assets.contemplativeRain = new Sprite(
     sprites.tonyContemplativeRainFrames,
     3,
     true,
@@ -223,65 +125,61 @@ function initializeSprites() {
   assets.determined = new Sprite(sprites.tonyDeterminedFrames, 3, true);
   assets.anxious = new Sprite(sprites.tonyAnxiousFrames, 3, true);
   assets.confident = new Sprite(sprites.tonyConfidentFrames, 3, true);
-  assets.confident_rain = new Sprite(sprites.tonyConfidentRainFrames, 3, true);
+  assets.confidentRain = new Sprite(sprites.tonyConfidentRainFrames, 3, true);
   assets.hopeful = new Sprite(sprites.tonyHopefulFrames, 3, true);
   assets.rueful = new Sprite(sprites.tonyRuefulFrames, 3, true);
-  assets.rueful_rain = new Sprite(sprites.tonyRuefulRainFrames, 3, true);
+  assets.ruefulRain = new Sprite(sprites.tonyRuefulRainFrames, 3, true);
   assets.happy = new Sprite(sprites.tonyHappyFrames, 3, true);
-  assets.happy_rain = new Sprite(sprites.tonyHappyRainFrames, 3, true);
+  assets.happyRain = new Sprite(sprites.tonyHappyRainFrames, 3, true);
   assets.wistful = new Sprite(sprites.tonyWistfulFrames, 3, true);
-  assets.wistful_rain = new Sprite(sprites.tonyWistfulRainFrames, 3, true);
+  assets.wistfulRain = new Sprite(sprites.tonyWistfulRainFrames, 3, true);
   assets.warm = new Sprite(sprites.tonyWarmFrames, 3, true);
-  assets.warm_rain = new Sprite(sprites.tonyWarmRainFrames, 3, true);
+  assets.warmRain = new Sprite(sprites.tonyWarmRainFrames, 3, true);
 
   // Cutscene sprites
-  assets.cutscene_callback_1 = new Sprite(
+  assets.cutsceneCallback1 = new Sprite(
     sprites.cutsceneCallback1Frames,
     3,
     true,
   );
-  assets.cutscene_callback_2 = new Sprite(
+  assets.cutsceneCallback2 = new Sprite(
     sprites.cutsceneCallback2Frames,
     3,
     true,
   );
-  assets.cutscene_returning_shell = new Sprite(
+  assets.cutsceneReturningShell = new Sprite(
     sprites.cutsceneReturningShellFrames,
     3,
     true,
   );
-  assets.cutscene_kneeling_shell = new Sprite(
+  assets.cutsceneKneelingShell = new Sprite(
     sprites.cutsceneKneelingShellFrames,
     3,
     true,
   );
-  assets.cutscene_kneeling_clouds = new Sprite(
+  assets.cutsceneKneelingClouds = new Sprite(
     sprites.cutsceneKneelingCloudsFrames,
     3,
     true,
   );
-  assets.cutscene_kneeling_rain = new Sprite(
+  assets.cutsceneKneelingRain = new Sprite(
     sprites.cutsceneKneelingRainFrames,
     3,
     true,
   );
-  assets.cutscene_rainfall = new Sprite(
-    sprites.cutsceneRainfallFrames,
-    3,
-    true,
-  );
-  assets.cutscene_remove_shell = new Sprite(
+  assets.cutsceneRainfall = new Sprite(sprites.cutsceneRainfallFrames, 3, true);
+  assets.cutsceneRemoveShell = new Sprite(
     sprites.cutsceneRemoveShellFrames,
     3,
     false,
   );
-  assets.cutscene_remove_shell_after = new Sprite(
+  assets.cutsceneRemoveShellAfter = new Sprite(
     sprites.cutsceneRemoveShellAfterFrames,
     3,
     false,
   );
-  assets.cutscene_ears = new Sprite(sprites.cutsceneEarsFrames, 6, false);
-  assets.cutscene_ears_after = new Sprite(
+  assets.cutsceneEars = new Sprite(sprites.cutsceneEarsFrames, 6, false);
+  assets.cutsceneEarsAfter = new Sprite(
     sprites.cutsceneEarsAfterFrames,
     3,
     true,
@@ -391,11 +289,11 @@ function updateAllSprites() {
     if (cursorQuestionSprite) cursorQuestionSprite.update();
   } else if (gameMode === "cutscene") {
     if (
-      cutscenepreDialogueIndex >= 0 &&
+      cutscenePreDialogueIndex >= 0 &&
       cutscenePreDialogueSequence.length > 0
     ) {
       // Update only the currently active pre-dialogue index
-      cutscenePreDialogueSequence[cutscenepreDialogueIndex].update();
+      cutscenePreDialogueSequence[cutscenePreDialogueIndex].update();
     } else if (scenes[currentScene] && scenes[currentScene].cutsceneSprite) {
       // Update the dialogue-phase sprite
       scenes[currentScene].cutsceneSprite.update();
@@ -471,11 +369,11 @@ function updateAllSprites() {
         gardenState.tonyState.currentSprite =
           gardenState.tonyState.tonyRainSprite;
       }
-
-      // Update cursor sprites (only in garden mode)
-      if (cursorSprite) cursorSprite.update();
-      if (cursorQuestionSprite) cursorQuestionSprite.update();
-      if (cursorQuestionRainSprite) cursorQuestionRainSprite.update();
     }
+
+    // Update cursor sprites (only in garden mode)
+    if (cursorSprite) cursorSprite.update();
+    if (cursorQuestionSprite) cursorQuestionSprite.update();
+    if (cursorQuestionRainSprite) cursorQuestionRainSprite.update();
   }
 }

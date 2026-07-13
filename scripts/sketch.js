@@ -1,11 +1,12 @@
 // Entry Point
+"use strict";
 
 function preload() {
   loadGameAssets();
 }
 
 function initializeLayout() {
-  // Scale plant positions and sizes based on canvas scale (not currently in use)
+  // Scale plant positions and sizes based on canvas scale (baked in once at setup)
   for (let plant of gardenState.section1Plants) {
     plant.x *= canvasScale;
     plant.y *= canvasScale;
@@ -41,11 +42,12 @@ function setup() {
   let canvasWidth = 1280;
   let canvasHeight = 720;
 
-  //if (windowWidth < 1300) {
-  //  canvasScale = (windowWidth - 20) / 1280;
-  //  canvasWidth = windowWidth - 20;
-  //  canvasHeight = 720 * canvasScale;
-  //}
+  // Shrink to fit smaller windows, but never scale up past native 1280x720
+  if (windowWidth < 1300) {
+    canvasScale = (windowWidth - 20) / 1280;
+    canvasWidth = windowWidth - 20;
+    canvasHeight = 720 * canvasScale;
+  }
 
   createCanvas(canvasWidth, canvasHeight);
   let p5Container = document.getElementById("p5-container");
@@ -55,11 +57,8 @@ function setup() {
 
   textFont(assets.myFont);
   fill(255, 253, 191);
-  textSize(24);
+  textSize(24 * canvasScale);
   rectMode(CORNER);
-
-  inp = createInput("");
-  inp.hide();
 
   assets.titleMusic.setVolume(0.12);
   if (!DEBUG_CUTSCENE && !DEBUG_ENDING) assets.titleMusic.loop();
@@ -198,7 +197,7 @@ function draw() {
     // Only transition after action_idle has been looping for vnTransitionDelay
     if (isInActionIdle && timeSinceActionIdleStart >= vnTransitionDelay) {
       // Reset cursor states before entering VN mode
-      isCurrentlyHoveringPlant = false;
+      isHoveringPlant = false;
       isHoveringInteractiveArea = false;
       gameMode = "vn"; // Enter VN mode after delay
       fades.toVNMode.startTime = currentTime; // Start entry animation timer

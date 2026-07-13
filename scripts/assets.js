@@ -1,4 +1,5 @@
 // Asset Loading
+"use strict";
 
 function loadGameAssets() {
   // Font

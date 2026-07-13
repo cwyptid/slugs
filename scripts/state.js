@@ -1,4 +1,5 @@
 // State & Global Variables
+"use strict";
 
 // ========================
 // DEBUG FLAGS
@@ -13,13 +14,11 @@ let gameMode = "title"; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn' | '
 let currentSection = 1; // Which section of the garden (1, 2, or 3)
 let playerName = ""; // Store the player's entered name
 let currentScene = 0; // For VN mode (starts at 0)
-let canvasScale = 1; // Currently not in use, eventual scaling down the line
-let vnTransitionTime = 0; // Timer for delaying VN mode entry
+let canvasScale = 1;
 let vnTransitionDelay = 750; // Milliseconds to wait AFTER action_idle starts before fading to VN
 let textboxFadeInDuration = 400; // Duration for textbox fade (normal VN transitions)
 
 // Intro sequence state & timing
-let introStartTime = 0; // When intro sequence started
 let introPhaseStartTime = 0; // When current phase started
 let tonySurprisedDuration = 0; // Will be calculated based on sprite frames and fps
 let tonyStartIdleDuration = 500; // How long to loop tony_start_idle (.5 seconds)
@@ -207,7 +206,7 @@ let cachedCurrentSectionPlants = []; // Cache plants for current section (avoid 
 let lastCachedSection = -1; // Track which section was cached
 
 // Custom cursor animation
-let cursorSprite = null; //
+let cursorSprite = null; // Watering-can cursor sprite (garden mode)
 let cursorWidth = 125; // Cursor width in pixels
 let cursorHeight = 100; // Cursor height in pixels
 let cursorOffsetX = 0; // Horizontal offset from mouse position
@@ -217,14 +216,14 @@ let cursorOffsetY = 0; // Vertical offset from mouse position
 let cursorQuestionSprite = null;
 let cursorQuestionRainSprite = null;
 let isHoveringInteractiveArea = false; // Track if hovering over interactive area
-let isCurrentlyHoveringPlant = false; // Track hover state for watering can cursor
-let justReturnedFromVN = false; // Flag to skip hover check on frame we return from VN
+let isHoveringPlant = false; // Track hover state for watering can cursor
 
 // Fades and transitions
 const fades = {
   toNameInput: { fading: false, startTime: 0, duration: 400 }, // Fade from title to name input
   toStoryTransition: { fading: false, startTime: 0, duration: 400 }, // After name input
   toIntro: { fading: false, startTime: 0, duration: 400 }, // After post-name input intro
+  toNewSectionTransition: { fading: false, startTime: 0, duration: 300 }, // Move between garden sections
   toVNMode: { fading: false, startTime: 0, duration: 400 }, // Enter VN mode after watering / interacting
   toCutscene: { fading: false, startTime: 0, duration: 800, targetScene: 1100 }, // Enter cutscene mode when Tony talks about the shell
   // Returning to VN mode after the final cutscene
@@ -244,14 +243,6 @@ const fades = {
   toTitleFromEnding: { fading: false, startTime: 0, duration: 1000 }, // Return to title screen after beating the game
 };
 
-const sectionTransition = {
-  // Move between garden sections
-  fading: false,
-  startTime: 0,
-  duration: 300,
-  target: 1,
-};
-
 // Timer for what happens between the name-input screen and the start of the game
 const storyTransition = {
   finished: false,
@@ -262,11 +253,11 @@ const storyTransition = {
 // VN State persistence
 let actionIdleStartTime = 0; // Track when action_idle animation started
 let returnToGardenAfterVN = false; // For plants, shell-deflection, intro, empty plot , and "stay in garden"
-let triggeringPlantId = null; // What plant or interactible the player clicked
+let portraitSprite = null; // Currently displayed VN portrait sprite (persists across frames when a scene has no image)
 
 // Cutscene pre-dialogue intro sequence state machine & instant textbox
 let cutscenePreDialogueSequence = []; // array of Sprite objects to play in order
-let cutscenepreDialogueIndex = -1; // -1 = not active (show dialogue), 0+ = current step in the sequence til done
+let cutscenePreDialogueIndex = -1; // -1 = not active (show dialogue), 0+ = current step in the sequence til done
 let skipCutsceneTextboxFade = false; // When true, textbox appears instantly (black overlay still fades normally)
 
 // Rain state
@@ -283,7 +274,6 @@ let cachedDialogueText = ""; // Cache dialogue text to avoid re-parsing every fr
 let cachedDialogueOnly = ""; // Cache non-choice dialogue
 let cachedChoiceLines = []; // Cache choice lines
 let cachedChoiceSet = new Set(); // Set of choice lines for O(1) lookup instead of O(n)
-let cachedChoiceWidths = []; // Cache choice button widths to avoid expensive textWidth() calls
 let cachedFullDialogueWithChoices = ""; // Cache full dialogue with choices to avoid recalculating every frame
 let lastCachedTypewriterChars = -1; // Track last char count to know when to update display string
 
@@ -302,7 +292,6 @@ const BUTTON_SPACING = 10; // 10px apart
 const BUTTON_ROWS_START_Y = 280; // Start at y index 280
 let currentNameInput = ""; // Name being typed
 let nameInputButtons = []; // Button objects for name input
-let hoveredButtonIndex = -1; // Which button is currently hovered by mouse
 let selectedButtonIndex = -1; // Which button is currently selected via keyboard (-1 = none)
 
 // UI and input
@@ -365,7 +354,7 @@ function resetGame() {
 
   // Reset background to section 1
   if (gardenState.backgroundImage) {
-    gardenState.backgroundImage = gardenState.section1Background;
+    gardenState.backgroundImage = gardenAssets.section1Background;
   }
 
   // Reset intro sprites
@@ -398,21 +387,18 @@ function resetGame() {
   gardenState.emptyPlot.visited = false;
 
   // Reset shell
-  gardenState.shell.clicked = false;
   gardenState.shell.earlyConversationTriggered = false;
   gardenState.shell.endGameConversationStarted = false;
   if (gardenState.shell.sprite) gardenState.shell.sprite.reset();
   if (gardenState.shell.readySprite) gardenState.shell.readySprite.reset();
 
   // Reset UI state
-  isCurrentlyHoveringPlant = false;
+  isHoveringPlant = false;
   isHoveringInteractiveArea = false;
-  justReturnedFromVN = false;
   currentNameInput = "";
   selectedButtonIndex = -1; // Reset keyboard selection for name input buttons
 
   // Reset fade flags
-  fadingToTitleAfterShell = false;
   fades.cutsceneToVN.fading = false;
   fades.toTitleFromEnding.fading = false;
 
