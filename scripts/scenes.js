@@ -31,7 +31,7 @@ function setupScenes() {
 
   scenes[1003] = {
     text: "It's great seeing you again.\n[1] What are you up to? Someone's been gardening up a storm.\n[2] You know who's responsible for these plants?",
-    image: assets.smilingWaving,
+    image: assets.smile,
     keys: ["1", "2"],
     nextPages: [1010, 1010],
   };
@@ -68,7 +68,7 @@ function setupScenes() {
   // ===== BRANCH Y: "Sounds like a plan" =====
   scenes[1060] = {
     text: "Rad! It's nice to have company.",
-    image: assets.smilingWaving,
+    image: assets.smile,
     keys: [],
     nextPages: [1060.5],
   };
@@ -123,7 +123,7 @@ function setupScenes() {
 
   scenes[12] = {
     text: "I just read books and blogs mostly. Took more trial and error than I'd have liked.\n",
-    image: assets.smilingWaving,
+    image: assets.smile,
     keys: [],
     nextPages: [],
   };
@@ -182,7 +182,7 @@ function setupScenes() {
   // Branch 1B-2: "Must be nice to work with"
   scenes[25] = {
     text: "Yeah. There's something grounding about it.",
-    image: assets.smilingWaving,
+    image: assets.smile,
     keys: [],
     nextPages: [],
   };
@@ -204,7 +204,7 @@ function setupScenes() {
   // ===== BRANCH 1C: "Cook with them" =====
   scenes[30] = {
     text: "Sometimes! Not as much as I probably should.",
-    image: assets.smilingWaving,
+    image: assets.smile,
     keys: [],
     nextPages: [],
   };
@@ -372,7 +372,7 @@ function setupScenes() {
   // ===== ENDING (converges from all branches) =====
   scenes[150] = {
     text: "They make the garden feel more like a home, I think. I'm glad you like them.",
-    image: assets.smilingWaving,
+    image: assets.smile,
     keys: [],
     nextPages: [],
     isEndingScene: true,
@@ -532,7 +532,7 @@ function setupScenes() {
   // ===== ENDING (converges from all branches) =====
   scenes[300] = {
     text: "I like having it here. Reminds me to let things be.",
-    image: assets.smilingWaving,
+    image: assets.smile,
     keys: [],
     nextPages: [],
     isEndingScene: true,

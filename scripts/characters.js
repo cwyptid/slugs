@@ -106,7 +106,7 @@ function initializeSprites() {
   gardenState.tonyState.currentSprite = gardenState.tonyState.tonyIdleSprite;
 
   // Tony VN sprites (for dialogue scenes)
-  assets.smilingWaving = new Sprite(sprites.tonySmilingFrames, 3, true);
+  assets.smile = new Sprite(sprites.tonySmilingFrames, 3, true);
   assets.smileRain = new Sprite(sprites.tonySmilingRainFrames, 3, true);
   assets.explaining = new Sprite(sprites.tonyExplainingFrames, 3, true);
   assets.assured = new Sprite(sprites.tonyAssuredFrames, 3, true);
