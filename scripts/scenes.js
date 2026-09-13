@@ -10,7 +10,7 @@ function setupScenes() {
 
   scenes[1000] = {
     text: "Hey! Oh wow, hi!",
-    image: assets.hopeful, // TODO: Replace with caught_off_guard expression when available
+    image: assets.hopeful,
     keys: [],
     nextPages: [1001],
   };
@@ -1592,14 +1592,21 @@ function setupScenes() {
   };
 
   scenes[2006] = {
-    text: "I used to think being a snail was so much better. I hated just about everything about being a slug.\n",
+    text: "I was real happy when I was a snail. For a long time.",
     image: assets.wistfulRain,
     keys: [],
     nextPages: [2007],
   };
 
   scenes[2007] = {
-    text: "But it was less… me.",
+    text: "If things were different, maybe I would've never taken it off. Maybe it never would've gotten heavy.\n",
+    image: assets.sadPeacefulRain,
+    keys: [],
+    nextPages: [2021],
+  };
+
+  scenes[2021] = {
+    text: "But after a while, it became something less... me.",
     image: assets.ruefulRain,
     keys: [],
     nextPages: [2008],
@@ -1609,39 +1616,67 @@ function setupScenes() {
     text: "After I ditched the shell, I felt ashamed for having tried something different. Really embarrassed that it didn't work out.\n",
     image: assets.ruefulRain,
     keys: [],
-    nextPages: [2009],
-  };
-
-  scenes[2009] = {
-    text: "But now, I'm just going to be myself.",
-    image: assets.confidentRain,
-    keys: [],
-    nextPages: [2010],
-  };
-
-  scenes[2010] = {
-    text: "Don't get me wrong, it was all me! Even with the shell.",
-    image: assets.happyRain,
-    keys: [],
     nextPages: [2011],
   };
 
+  // scenes[2009] = {
+  //   text: "But now, I'm just gonna be myself.",
+  //   image: assets.confidentRain,
+  //   keys: [],
+  //   nextPages: [2010],
+  // };
+
+  // scenes[2010] = {
+  //   text: "Don't get me wrong, it was all me! Even with the shell.",
+  //   image: assets.happyRain,
+  //   keys: [],
+  //   nextPages: [2011],
+  // };
+
   scenes[2011] = {
-    text: "But I just want to be present in the moment. Even if it means a more vulnerable mode of existence.\n",
+    text: "It was lovely at first. I didn't want to take it off.",
     image: assets.peacefulRain,
     keys: [],
     nextPages: [2012],
   };
 
   scenes[2012] = {
-    text: "It has to be worth something.\n[1] I'm happy for you.\n[2] It is. I know it.",
+    text: "It wasn't a performance, or a costume, it just wasn't totally mine anymore.\n[1] You think you'll ever put it back on?\n[2] Would a different one be a better fit?",
     image: assets.assuredRain,
     keys: ["1", "2"],
-    nextPages: [2013, 2013],
+    nextPages: [2020, 2020],
+  };
+
+  scenes[2020] = {
+    text: "Maybe! If it feels right. I've been pulled in so many different directions.",
+    image: assets.shyRain,
+    keys: [],
+    nextPages: [2022],
+  };
+
+  scenes[2022] = {
+    text: "Taking it off... felt like the only survivable option at the time. I'm not sure if it was a free choice.\n",
+    image: assets.ruefulRain,
+    keys: [],
+    nextPages: [2018],
+  };
+
+  scenes[2018] = {
+    text: "And I haven't heard my own voice in so long...",
+    image: assets.wistfulRain,
+    keys: [],
+    nextPages: [2019],
+  };
+
+  scenes[2019] = {
+    text: "Wanna make sure the choice would actually stay mine this time, is all.",
+    image: assets.assuredRain,
+    keys: [],
+    nextPages: [2013],
   };
 
   scenes[2013] = {
-    text: "Thanks for hearing me out. It felt good to get that off my chest.",
+    text: "[PLAYER_NAME], thanks for hearing me out. It felt good to get that off my chest.",
     image: assets.warmRain,
     keys: [],
     nextPages: [2014],

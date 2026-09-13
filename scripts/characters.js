@@ -114,6 +114,11 @@ function initializeSprites() {
   assets.peaceful = new Sprite(sprites.tonyPeacefulFrames, 3, true);
   assets.peacefulRain = new Sprite(sprites.tonyPeacefulRainFrames, 3, true);
   assets.sadPeaceful = new Sprite(sprites.tonySadPeacefulFrames, 3, true);
+  assets.sadPeacefulRain = new Sprite(
+    sprites.tonySadPeacefulRainFrames,
+    3,
+    true,
+  );
   assets.shy = new Sprite(sprites.tonyShyFrames, 3, true);
   assets.shyRain = new Sprite(sprites.tonyShyRainFrames, 3, true);
   assets.contemplative = new Sprite(sprites.tonyContemplativeFrames, 3, true);

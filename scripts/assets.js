@@ -111,6 +111,16 @@ function loadGameAssets() {
     ),
   ];
 
+  // Tony VN Sprite (tony_sad_peaceful_rain) - 3 fps, loops
+  sprites.tonySadPeacefulRainFrames = [
+    loadImage(
+      "assets/sprites/tony_VN/tony_sad_peaceful_rain/tony_sad_peaceful_rain-1.png",
+    ),
+    loadImage(
+      "assets/sprites/tony_VN/tony_sad_peaceful_rain/tony_sad_peaceful_rain-2.png",
+    ),
+  ];
+
   // Tony VN Sprite (tony_shy) - 3 fps, loops
   sprites.tonyShyFrames = [
     loadImage("assets/sprites/tony_VN/tony_shy/tony_shy-1.png"),

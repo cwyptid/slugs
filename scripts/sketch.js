@@ -100,7 +100,7 @@ function setup() {
     isRaining = true;
     initRainParticles();
     document.body.classList.add("rain-active");
-    currentScene = 2016;
+    currentScene = 2000;
     gameMode = "vn";
     currentSection = 2;
     gardenState.backgroundImage =
