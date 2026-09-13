@@ -5,7 +5,7 @@
 // DEBUG FLAGS
 const DEBUG_MODE = false;
 const DEBUG_CUTSCENE = false;
-const DEBUG_ENDING = true;
+const DEBUG_ENDING = false;
 // ========================
 
 // Core game variables
