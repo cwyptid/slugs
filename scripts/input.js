@@ -8,6 +8,11 @@
 function keyPressed() {
   userStartAudio();
 
+  if (readyScreenActive) {
+    dismissReadyScreen();
+    return false;
+  }
+
   // Debug shortcut: backtick jumps to cutscene 1 from any screen
   if (DEBUG_CUTSCENE && key === "`") {
     playerName = playerName || "Debug";
@@ -270,6 +275,11 @@ function keyPressed() {
 
 function mousePressed() {
   userStartAudio();
+
+  if (readyScreenActive) {
+    dismissReadyScreen();
+    return false;
+  }
 
   // Title screen - start game with click
   if (gameMode === "title" && gameLoaded) {

@@ -111,6 +111,9 @@ function handleVNChoice(choiceIndex) {
         scenes[currentScene].cutsceneTarget || 1100;
       fades.toCutscene.fading = true;
       fades.toCutscene.startTime = millis();
+      if (fades.toCutscene.targetScene >= 1505) {
+        document.body.classList.add("rain-active");
+      }
     } else if (scenes[currentScene].endsToVNBrief) {
       // Cutscene → brief VN interlude (no rain), then back to cutscene
       fades.cutsceneToVNBrief.targetScene =

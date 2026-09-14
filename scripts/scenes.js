@@ -1174,7 +1174,7 @@ function setupScenes() {
   };
 
   scenes[1117] = {
-    text: "I felt safe. I felt like I could be myself without worrying about what would happen.\n",
+    text: "I wanted it for so long. Having that shell was just as rockin' as I had always dreamed.\n",
     cutsceneSprite: assets.cutsceneCallback1,
     keys: [],
     nextPages: [1114],
@@ -1198,15 +1198,15 @@ function setupScenes() {
     text: "Or even worse, loseable.",
     cutsceneSprite: assets.cutsceneCallback1,
     keys: [],
-    nextPages: [1119],
-  };
-
-  scenes[1119] = {
-    text: "Being a snail was the obvious choice.",
-    cutsceneSprite: assets.cutsceneCallback1,
-    keys: [],
     nextPages: [1101],
   };
+
+  // scenes[1119] = {
+  //   text: "Being a snail was the obvious choice.",
+  //   cutsceneSprite: assets.cutsceneCallback1,
+  //   keys: [],
+  //   nextPages: [1101],
+  // };
 
   scenes[1101] = {
     text: "But it turns out I just couldn't win either way.",
@@ -1250,34 +1250,37 @@ function setupScenes() {
   };
 
   scenes[1111] = {
-    text: "It didn't fit around me anymore. I had to cast parts of who I was away just to stay inside.\n",
+    text: "It didn't fit around me as easy anymore. I had to cast parts of who I was away just to stay inside.\n",
     cutsceneSprite: assets.cutsceneCallback2,
     keys: [],
-    nextPages: [1112],
-  };
-
-  scenes[1112] = {
-    text: "But I was scared to take it off. Without it, there was nothing left to protect me.\n",
-    cutsceneSprite: assets.cutsceneCallback2,
-    keys: [],
-    nextPages: [1113],
-  };
-
-  scenes[1113] = {
-    text: "And yet…",
-    cutsceneSprite: assets.cutsceneCallback2,
-    keys: [],
-    nextPages: [1200],
+    nextPages: [],
     isEndingScene: true,
     startsCutscene: true,
     cutsceneTarget: 1200,
   };
 
+  // scenes[1112] = {
+  //   text: "But I was scared to take it off. Without it, there was nothing left to protect me.\n",
+  //   cutsceneSprite: assets.cutsceneCallback2,
+  //   keys: [],
+  //   nextPages: [1113],
+  // };
+
+  // scenes[1113] = {
+  //   text: "And yet…",
+  //   cutsceneSprite: assets.cutsceneCallback2,
+  //   keys: [],
+  //   nextPages: [1200],
+  //   isEndingScene: true,
+  //   startsCutscene: true,
+  //   cutsceneTarget: 1200,
+  // };
+
   // ===== CUTSCENE 2 =====
   // Intro sequence: tony_remove_shell (once) → tony_remove_shell_after (once) → tony_ears (once) → tony_ears_after (loops, dialogue starts)
 
   scenes[1200] = {
-    text: "I HAD to. I had to be me again.",
+    text: "I HAD to get it off me. I couldn't stand it anymore.",
     cutsceneSprite: assets.cutsceneEarsAfter,
     cutscenePreDialogueSequence: [
       assets.cutsceneRemoveShell,
@@ -1476,7 +1479,7 @@ function setupScenes() {
   };
 
   scenes[1603] = {
-    text: "That's when I realized that while the shell kept me safe for so long…",
+    text: "That's when I realized that while the shell served me for so long…",
     cutsceneSprite: assets.cutsceneKneelingRain,
     keys: [],
     nextPages: [1604],
@@ -1599,25 +1602,25 @@ function setupScenes() {
   };
 
   scenes[2007] = {
-    text: "If things were different, maybe I would've never taken it off. Maybe it never would've gotten heavy.\n",
-    image: assets.sadPeacefulRain,
-    keys: [],
-    nextPages: [2021],
-  };
-
-  scenes[2021] = {
-    text: "But after a while, it became something less... me.",
-    image: assets.ruefulRain,
-    keys: [],
-    nextPages: [2008],
-  };
-
-  scenes[2008] = {
-    text: "After I ditched the shell, I felt ashamed for having tried something different. Really embarrassed that it didn't work out.\n",
+    text: "If things were different, maybe I would've never taken the shell off. Maybe it never would've gotten heavy.\n",
     image: assets.ruefulRain,
     keys: [],
     nextPages: [2011],
   };
+
+  // scenes[2021] = {
+  //   text: "But after a while, it became something less... me.",
+  //   image: assets.ruefulRain,
+  //   keys: [],
+  //   nextPages: [2008],
+  // };
+
+  // scenes[2008] = {
+  //   text: "After I ditched it, I felt ashamed for having tried something different. Really embarrassed that it didn't work out.\n",
+  //   image: assets.ruefulRain,
+  //   keys: [],
+  //   nextPages: [2011],
+  // };
 
   // scenes[2009] = {
   //   text: "But now, I'm just gonna be myself.",
@@ -1634,8 +1637,8 @@ function setupScenes() {
   // };
 
   scenes[2011] = {
-    text: "It was lovely at first. I didn't want to take it off.",
-    image: assets.peacefulRain,
+    text: "It was lovely at first. I didn't wanna take it off.",
+    image: assets.wistfulRain,
     keys: [],
     nextPages: [2012],
   };

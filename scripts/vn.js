@@ -378,14 +378,6 @@ function drawVNMode(currentTime) {
 function drawCutsceneMode(currentTime) {
   if (!scenes[currentScene]) return;
 
-  // Switch side panels to rain variant starting at cutscene 6 (scene 1505)
-  if (
-    currentScene >= 1505 &&
-    !document.body.classList.contains("rain-active")
-  ) {
-    document.body.classList.add("rain-active");
-  }
-
   // Start rain audio loop at cutscene 8 (scene 1600)
   if (
     currentScene >= 1600 &&
@@ -397,7 +389,7 @@ function drawCutsceneMode(currentTime) {
   }
 
   // Fade in from black at the very start of a cutscene
-  const fadeInDuration = 600;
+  const fadeInDuration = CUTSCENE_FADE_IN_DURATION;
   const fadeElapsed = currentTime - fades.toVNMode.startTime;
   const fadeInAlpha =
     fadeElapsed < fadeInDuration ? (1 - fadeElapsed / fadeInDuration) * 255 : 0;
@@ -539,10 +531,6 @@ function drawCutsceneMode(currentTime) {
     noStroke();
     rect(0, 0, width, height);
     pop();
-    // Switch panels when screen is dark enough that the change isn't visible
-    if (progress >= 0.85 && !document.body.classList.contains("rain-active")) {
-      document.body.classList.add("rain-active");
-    }
     if (progress >= 1) {
       fades.cutsceneToVN.fading = false;
       isRaining = true;

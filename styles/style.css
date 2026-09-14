@@ -77,22 +77,43 @@ body {
   }
 }
 
+/* Panel variants fade in over the base panel */
+.left-panel,
+.right-panel {
+  position: relative;
+}
+
+.left-panel::before,
+.right-panel::before,
+.left-panel::after,
+.right-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1400ms linear;
+}
+
 /* Use panel-3 during name input screen */
-body.nameInput-active .left-panel {
+.left-panel::before,
+.right-panel::before {
   background-image: url("../assets/UI/panel-3.png");
 }
 
-body.nameInput-active .right-panel {
-  background-image: url("../assets/UI/panel-3.png");
+body.nameInput-active .left-panel::before,
+body.nameInput-active .right-panel::before {
+  opacity: 1;
 }
 
 /* Use panel-5 during rain ending sequence */
-body.rain-active .left-panel {
+.left-panel::after,
+.right-panel::after {
   background-image: url("../assets/UI/panel-5.png");
 }
 
-body.rain-active .right-panel {
-  background-image: url("../assets/UI/panel-5.png");
+body.rain-active .left-panel::after,
+body.rain-active .right-panel::after {
+  opacity: 1;
 }
 input[type="text"],
 textarea {
@@ -106,20 +127,61 @@ textarea {
 
 /* Custom p5.js loading screen styling */
 #p5_loading {
-  display: flex !important;
+  display: none;
+}
+
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: transparent !important;
-  color: rgb(255, 253, 191) !important;
-  font-family: myFont, monospace !important;
-  font-size: 24px !important;
-  width: 100% !important;
-  height: 100% !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  z-index: 9999 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  gap: 24px;
+  background-color: #271e32;
+  color: rgb(255, 253, 191);
+  font-family: myFont, monospace;
+  font-size: 24px;
+  transition:
+    opacity 0.5s,
+    visibility 0s 0.5s;
+}
+
+#loading-screen.dismissed {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#loading-snail {
+  width: 160px;
+  height: 160px;
+  background-color: rgb(78, 30, 51);
+  -webkit-mask: url("../assets/UI/snail_icon.png") center / contain no-repeat;
+  mask: url("../assets/UI/snail_icon.png") center / contain no-repeat;
+}
+
+#loading-fill {
+  width: 0;
+  height: 100%;
+  background-color: rgb(255, 253, 191);
+  transition: background-color 0.4s;
+}
+
+#loading-screen.ready #loading-fill {
+  background-color: rgb(40, 148, 102);
+}
+
+#loading-text {
+  margin: 0;
+}
+
+#loading-screen.ready #loading-text {
+  animation: pulse 1257ms cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+  }
 }

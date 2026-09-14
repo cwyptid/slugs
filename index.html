@@ -10,12 +10,17 @@
 		 <link rel="icon" type="image/x-icon" href="favicon.ico">
 	</head>
 	<body>
+		<div id="loading-screen">
+			<div id="loading-snail"><div id="loading-fill"></div></div>
+			<p id="loading-text">Loading... 0%</p>
+		</div>
 		<div id="game-frame" class="game-frame">
 			<div class="left-panel"></div>
 			<div id="p5-container"></div>
 			<div class="right-panel"></div>
 		</div>
 		<script src="scripts/state.js"></script>
+		<script src="scripts/loading.js"></script>
 		<script src="scripts/assets.js"></script>
 		<script src="scripts/characters.js"></script>
 		<script src="scripts/scenes.js"></script>

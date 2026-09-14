@@ -10,6 +10,7 @@ const DEBUG_ENDING = false;
 
 // Core game variables
 let gameLoaded = false; // true once preload + setup have finished
+let readyScreenActive = false;
 let gameMode = "title"; // 'title' | 'nameInput' | 'intro' | 'garden' | 'vn' | 'transitioning' | 'cutscene'
 let currentSection = 1; // Which section of the garden (1, 2, or 3)
 let playerName = ""; // Store the player's entered name
@@ -242,6 +243,8 @@ const fades = {
   },
   toTitleFromEnding: { fading: false, startTime: 0, duration: 1000 }, // Return to title screen after beating the game
 };
+
+const CUTSCENE_FADE_IN_DURATION = 600;
 
 // Timer for what happens between the name-input screen and the start of the game
 const storyTransition = {

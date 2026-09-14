@@ -6,18 +6,18 @@ function loadGameAssets() {
   assets.myFont = loadFont("assets/boldpixels/BoldPixels.ttf");
 
   // Sounds
-  assets.clickSound = loadSound("assets/sounds/button_go.wav");
-  assets.returnSound = loadSound("assets/sounds/button_return.wav");
-  assets.tonyClickSound = loadSound("assets/sounds/alert.wav");
-  assets.footstepSound = loadSound("assets/sounds/footstep.wav");
-  assets.titleMusic = loadSound("assets/sounds/title.wav");
-  assets.waterSound = loadSound("assets/sounds/water.wav");
-  assets.sparkleSound = loadSound("assets/sounds/success.mp3");
-  assets.rainSound = loadSound("assets/sounds/rain.wav");
-  assets.hoverSound = loadSound("assets/sounds/hover.wav");
-  assets.mainTune = loadSound("assets/sounds/main_tune.wav");
-  assets.shellStory = loadSound("assets/sounds/shell_story.flac");
-  assets.conversationSound = loadSound("assets/sounds/talk.wav");
+  assets.clickSound = loadTrackedSound("assets/sounds/button_go.wav");
+  assets.returnSound = loadTrackedSound("assets/sounds/button_return.wav");
+  assets.tonyClickSound = loadTrackedSound("assets/sounds/alert.wav");
+  assets.footstepSound = loadTrackedSound("assets/sounds/footstep.wav");
+  assets.titleMusic = loadTrackedSound("assets/sounds/title.wav");
+  assets.waterSound = loadTrackedSound("assets/sounds/water.wav");
+  assets.sparkleSound = loadTrackedSound("assets/sounds/success.mp3");
+  assets.rainSound = loadTrackedSound("assets/sounds/rain.wav");
+  assets.hoverSound = loadTrackedSound("assets/sounds/hover.wav");
+  assets.mainTune = loadTrackedSound("assets/sounds/main_tune.wav");
+  assets.shellStory = loadTrackedSound("assets/sounds/shell_story.flac");
+  assets.conversationSound = loadTrackedSound("assets/sounds/talk.wav");
 
   // Title screen
   assets.titleImage = loadImage("assets/UI/titlescreen.gif");
@@ -108,16 +108,6 @@ function loadGameAssets() {
     ),
     loadImage(
       "assets/sprites/tony_VN/tony_sad_peaceful/tony_sad_peaceful-2.png",
-    ),
-  ];
-
-  // Tony VN Sprite (tony_sad_peaceful_rain) - 3 fps, loops
-  sprites.tonySadPeacefulRainFrames = [
-    loadImage(
-      "assets/sprites/tony_VN/tony_sad_peaceful_rain/tony_sad_peaceful_rain-1.png",
-    ),
-    loadImage(
-      "assets/sprites/tony_VN/tony_sad_peaceful_rain/tony_sad_peaceful_rain-2.png",
     ),
   ];
 

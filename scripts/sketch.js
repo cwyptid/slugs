@@ -3,6 +3,7 @@
 
 function preload() {
   loadGameAssets();
+  startLoadingMeter();
 }
 
 function initializeLayout() {
@@ -61,7 +62,6 @@ function setup() {
   rectMode(CORNER);
 
   assets.titleMusic.setVolume(0.12);
-  if (!DEBUG_CUTSCENE && !DEBUG_ENDING) assets.titleMusic.loop();
 
   initializeNameInputButtons();
   gardenState.backgroundImage = gardenAssets.section1Background;
@@ -80,12 +80,13 @@ function setup() {
     }
     gardenState.emptyPlot.visited = true;
     gameMode = "cutscene";
-    currentScene = 1611;
+    currentScene = 1100;
     skipCutsceneTextboxFade = true;
     resetTypewriter();
   }
 
   gameLoaded = true;
+  showReadyScreen();
 
   if (DEBUG_ENDING) {
     playerName = "TUGGITS";
@@ -153,7 +154,7 @@ function draw() {
           mainTuneStarted = true;
           assets.mainTune.setVolume(0);
           assets.mainTune.loop();
-          assets.mainTune.setVolume(0.05, 2);
+          assets.mainTune.setVolume(0.12, 2);
         }
         resetTypewriter();
         lastClickTime = 0; // Reset click cooldown when entering VN mode
